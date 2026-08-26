@@ -1,0 +1,96 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "foundation-architecture-onboarding",
+  "project": "callersignal",
+  "status": "done",
+  "summary": "Document the architecture, safety model, plan, and fresh-clone onboarding",
+  "description": "Give developers and agents a concrete map of the product contract, boundaries, and dependency-ordered backlog.",
+  "depends_on": [
+    "foundation-vision-contracts"
+  ],
+  "scope": {
+    "read": [
+      ".go/**",
+      "docs/vision.json"
+    ],
+    "modify": [
+      "README.md",
+      "docs/architecture.md",
+      "docs/onboarding.md",
+      "docs/data-safety.md",
+      "docs/implementation-plan.md",
+      "docs/agent-contract.md",
+      "scripts/check-docs.sh"
+    ]
+  },
+  "acceptance": [
+    "R-1: README leads with the product promise and gives concrete CLI and MCP examples without claiming implemented product behavior.",
+    "R-2: Architecture and onboarding docs identify entry points, domain flows, storage and side-effect boundaries, gates, risks, and extension points.",
+    "R-3: The implementation plan mirrors every open product task in dependency order with scope, acceptance, and verification."
+  ],
+  "verification": [
+    "uv run pytest -q",
+    "bash scripts/check-docs.sh"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-26T14:12:03+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-26T14:17:49+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "Reviewed all architecture and onboarding artifacts against R-1 through R-3; interfaces are clearly planned, boundaries and extension points are concrete, and each open product task has scope-level intent, acceptance, and verification."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-26T14:17:49+02:00",
+      "task_id": "foundation-architecture-onboarding",
+      "agent": "codex",
+      "summary": "changed_files=README.md,docs/architecture.md,docs/onboarding.md,docs/data-safety.md,docs/implementation-plan.md,docs/agent-contract.md,scripts/check-docs.sh,.go/tasks/active/foundation-architecture-onboarding.json; verification=uv run pytest -q && bash scripts/check-docs.sh && ./go validate . && git diff --check rc=0; critic=passed manual review confirmed product maturity is explicit, all sixteen product tasks are dependency-ordered, safety language fails closed, and fresh-clone guidance names the local gate",
+      "changed_files": [
+        "README.md",
+        "docs/architecture.md",
+        "docs/onboarding.md",
+        "docs/data-safety.md",
+        "docs/implementation-plan.md",
+        "docs/agent-contract.md",
+        "scripts/check-docs.sh",
+        ".go/tasks/active/foundation-architecture-onboarding.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest -q && bash scripts/check-docs.sh && ./go validate . && git diff --check rc=0",
+        "result": "uv run pytest -q && bash scripts/check-docs.sh && ./go validate . && git diff --check rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "passed manual review confirmed product maturity is explicit, all sixteen product tasks are dependency-ordered, safety language fails closed, and fresh-clone guidance names the local gate",
+        "skip_reason": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-operational-safety",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Add production observability, abuse controls, and privacy operations",
+  "description": "Make the service operable without logging sensitive request data by default.",
+  "depends_on": [
+    "product-http-read-api",
+    "product-report-ingestion",
+    "product-reputation-aggregation"
+  ],
+  "scope": {
+    "read": [
+      "docs/data-safety.md",
+      "src/callersignal/**"
+    ],
+    "modify": [
+      "src/callersignal/operations/**",
+      "tests/operations/**",
+      "docs/operations.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: Metrics expose service health and coverage gaps without raw phone-number cardinality or personal request trails.",
+    "R-2: Incident, deletion, correction, source-takedown, and abuse-response runbooks are executable."
+  ],
+  "verification": [
+    "uv run pytest tests/operations -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

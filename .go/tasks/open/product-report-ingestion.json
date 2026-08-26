@@ -1,0 +1,40 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-report-ingestion",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Add privacy-aware call-report ingestion and moderation",
+  "description": "Accept explicit reports as unverified observations with correction, abuse, and spoofing safeguards.",
+  "depends_on": [
+    "product-evidence-ledger",
+    "product-lookup-orchestrator"
+  ],
+  "scope": {
+    "read": [
+      "schemas/call-report.schema.json",
+      "docs/data-safety.md"
+    ],
+    "modify": [
+      "src/callersignal/reports/**",
+      "tests/integration/test_reports.py",
+      "docs/moderation.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: Reports describe calls displaying a number and never assert subscriber guilt or identity by default.",
+    "R-2: Retention, correction, deletion, rate limiting, deduplication, and brigading controls are enforced."
+  ],
+  "verification": [
+    "uv run pytest tests/integration/test_reports.py -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

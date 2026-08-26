@@ -1,0 +1,37 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-evidence-ledger",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Implement an append-only evidence ledger",
+  "description": "Persist source observations and lifecycle events without conflating them with mutable assessments.",
+  "depends_on": [
+    "product-domain-contracts"
+  ],
+  "scope": {
+    "read": [
+      "schemas/source-evidence.schema.json"
+    ],
+    "modify": [
+      "src/callersignal/evidence/**",
+      "tests/unit/test_evidence_ledger.py"
+    ]
+  },
+  "acceptance": [
+    "R-1: Evidence records are immutable, timestamped, source-attributed, and content-addressable.",
+    "R-2: Reprocessing can rebuild derived state without changing original observations."
+  ],
+  "verification": [
+    "uv run pytest tests/unit/test_evidence_ledger.py -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

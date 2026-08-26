@@ -1,0 +1,39 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-us-adapter",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Implement the United States official-numbering adapter",
+  "description": "Combine permitted NANPA and regulator evidence without treating numbering-plan validity as caller identity.",
+  "depends_on": [
+    "product-normalization-core",
+    "product-country-adapter-contract"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/adapters/base.py"
+    ],
+    "modify": [
+      "src/callersignal/adapters/us.py",
+      "tests/adapters/test_us.py",
+      "fixtures/us/**"
+    ]
+  },
+  "acceptance": [
+    "R-1: The adapter resolves covered US numbering evidence from pinned public-safe fixtures with provenance and freshness.",
+    "R-2: Reserved example numbers remain distinguishable from assignable and assigned numbers."
+  ],
+  "verification": [
+    "uv run pytest tests/adapters/test_us.py -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

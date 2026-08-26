@@ -1,0 +1,41 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-first-release",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Validate and publish the first functional CallerSignal release",
+  "description": "Ship the proven read-only wedge only after cross-surface parity, safety, and country-adapter gates pass.",
+  "depends_on": [
+    "product-cli-lookup",
+    "product-mcp-lookup",
+    "product-public-web-lookup",
+    "product-operational-safety"
+  ],
+  "scope": {
+    "read": [
+      "**"
+    ],
+    "modify": [
+      "CHANGELOG.md",
+      "docs/public-readiness.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: NL, GB, and US read-only lookups pass contract, integration, privacy, and cross-surface parity tests.",
+    "R-2: Release notes state supported evidence, unsupported claims, known gaps, and upgrade instructions."
+  ],
+  "verification": [
+    "make check",
+    "python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --remote-policy required --release-policy required --json-schema"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

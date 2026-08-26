@@ -1,0 +1,283 @@
+{
+  "$schema": "https://viggomeesters.github.io/schemas/repo-vision-contract.schema.json",
+  "schema_version": "1.0.0",
+  "artifact_kind": "repo_design_vision_contract",
+  "repo": {
+    "name": "CallerSignal",
+    "primary_users": [
+      "AI agents",
+      "CLI and MCP developers",
+      "public-safety product teams"
+    ],
+    "product_surface": "agent_first",
+    "canonical_repository": "https://github.com/viggomeesters/callersignal"
+  },
+  "vision": {
+    "one_line": "Evidence-backed international phone-number intelligence that agents can inspect and explain.",
+    "north_star": "Any agent can turn an unfamiliar phone number into a country-aware, source-backed, uncertainty-honest answer in one lookup.",
+    "promise": "Normalize once, check country-aware evidence, and explain exactly what is known, unknown, and source-supported.",
+    "wedge": "A read-only lookup contract shared by CLI, MCP, HTTP, and the web, starting with official numbering evidence for the Netherlands, United Kingdom, and United States.",
+    "target_users": [
+      "Agents deciding how to handle an unfamiliar phone number",
+      "Developers integrating caller context into safety-conscious products",
+      "Maintainers adding lawful, source-backed country coverage"
+    ]
+  },
+  "principles": [
+    {
+      "id": "agent-first",
+      "category": "product",
+      "title": "Agent-first product surface",
+      "rule": "Versioned structured output is canonical; prose, CLI tables, and web pages render the same result.",
+      "good": [
+        "MCP structuredContent and CLI JSON validate against one schema"
+      ],
+      "bad": [
+        "A web-only conclusion that cannot be reproduced by an agent"
+      ]
+    },
+    {
+      "id": "json-first",
+      "category": "engineering",
+      "title": "JSON-first durable contracts",
+      "rule": "Canonical product contracts, workflow state, evidence events, and acceptance records are machine-readable JSON or JSONL; Markdown explains rather than replaces them.",
+      "good": [
+        "A fresh agent can validate and route work without extracting state from prose"
+      ],
+      "bad": [
+        "A critical safety rule exists only inside a narrative planning page"
+      ]
+    },
+    {
+      "id": "displayed-number-not-caller",
+      "category": "safety",
+      "title": "Displayed number is not caller identity",
+      "rule": "Describe evidence about a call displaying a number; never present that display value as proof of the caller or subscriber.",
+      "good": [
+        "Reports say that a call displayed the number and explain spoofing risk"
+      ],
+      "bad": [
+        "The owner of this number is a scammer"
+      ]
+    },
+    {
+      "id": "separate-signals",
+      "category": "engineering",
+      "title": "Keep evidence classes separate",
+      "rule": "Lookup demand, number-plan facts, allocation evidence, identity claims, and call reports remain distinct records.",
+      "good": [
+        "Search activity is an aggregate demand metric only"
+      ],
+      "bad": [
+        "High lookup volume increases a fraud score"
+      ]
+    },
+    {
+      "id": "evidence-before-verdict",
+      "category": "safety",
+      "title": "Evidence before verdict",
+      "rule": "Every assessment exposes sources, retrieval time, confidence, reason codes, gaps, and residual uncertainty.",
+      "good": [
+        "Unknown is returned when evidence cannot support a stronger label"
+      ],
+      "bad": [
+        "A proprietary AI score with no inspectable evidence"
+      ]
+    },
+    {
+      "id": "country-aware-normalization",
+      "category": "engineering",
+      "title": "Country-aware number interpretation",
+      "rule": "Canonicalize to E.164 while retaining raw input, origin region, national display, and parsing decisions.",
+      "good": [
+        "National input without a country code requires an explicit origin region"
+      ],
+      "bad": [
+        "Guessing a country from deployment location or interface language"
+      ]
+    },
+    {
+      "id": "reliable-fail-closed",
+      "category": "engineering",
+      "title": "Fail closed and visibly",
+      "rule": "Unavailable, stale, contradictory, or unsupported evidence becomes a typed gap rather than an inferred identity or safety claim.",
+      "good": [
+        "One failed country source leaves a source-specific gap in the result"
+      ],
+      "bad": [
+        "A source timeout silently becomes no reports and therefore safe"
+      ]
+    },
+    {
+      "id": "public-safe-by-default",
+      "category": "safety",
+      "title": "Public-safe by default",
+      "rule": "Fixtures, documentation, logs, screenshots, and repository history exclude real personal numbers, secrets, and private reports.",
+      "good": [
+        "Documentation uses officially reserved fictional numbers"
+      ],
+      "bad": [
+        "A real missed-call number is committed as a convenient test fixture"
+      ]
+    },
+    {
+      "id": "source-rights-and-freshness",
+      "category": "engineering",
+      "title": "Sustainable source use",
+      "rule": "Every country adapter declares source authority, reuse basis, permitted fields, retrieval time, and portability limitations.",
+      "good": [
+        "Official datasets are pinned or fetched under documented reuse terms"
+      ],
+      "bad": [
+        "Unlicensed competitor pages are copied into a permanent database"
+      ]
+    },
+    {
+      "id": "accessible-uncertainty",
+      "category": "design",
+      "title": "Make uncertainty readable",
+      "rule": "Interfaces lead with normalized context and evidence, then state confidence and unknowns in plain language without alarmist decoration.",
+      "good": [
+        "Unknown, unverified, and verified states remain distinguishable without color alone"
+      ],
+      "bad": [
+        "A red warning implies fraud when the only fact is a new lookup"
+      ]
+    },
+    {
+      "id": "compact-not-shallow",
+      "category": "design",
+      "title": "Compact, not shallow",
+      "rule": "Default results stay concise while preserving stable handles for sources, gaps, evidence, and methodology.",
+      "good": [
+        "An agent can answer quickly and retrieve deeper evidence by identifier"
+      ],
+      "bad": [
+        "Verbose prose hides missing provenance or contradictory observations"
+      ]
+    }
+  ],
+  "non_goals": [
+    "Expose or infer private subscriber identities from contacts, breaches, or scraped profiles.",
+    "Track the physical location of a caller or claim that numbering geography is live location.",
+    "Treat number validity, range allocation, or an original carrier as proof of current assignment.",
+    "Let lookup volume, virality, or a single report create a fraud verdict.",
+    "Republish proprietary third-party reputation data without a permitted integration.",
+    "Build outbound calling, call recording, contact enrichment, or surveillance features."
+  ],
+  "assumptions": [
+    "Official numbering-allocation evidence is lawfully reusable for the initial three-country wedge.",
+    "Users can supply an origin region when a number lacks an international country code.",
+    "Agents and developers prefer calibrated uncertainty over an unsupported identity guess.",
+    "A read-only lookup product can establish trust before community reporting is accepted.",
+    "Source-specific adapters can remain independent while sharing one evidence contract.",
+    "Phone-number portability and spoofing will remain material limitations."
+  ],
+  "public_safety": {
+    "forbidden": [
+      "Secrets, access tokens, credentials, or private configuration",
+      "Real personal phone numbers in fixtures, screenshots, or documentation",
+      "Private subscriber identity sourced from contacts, breaches, or scraped profiles",
+      "Unlicensed third-party datasets or copied proprietary reports",
+      "Guilt, fraud, or safety conclusions derived from popularity alone",
+      "Raw requester IP addresses or personal lookup histories in product analytics"
+    ],
+    "required_boundaries": [
+      "State that caller ID can be spoofed and describes a displayed number",
+      "Distinguish allocation holder from current provider and subscriber",
+      "Treat no reports as unknown rather than safe",
+      "Keep lookup activity separate from reputation inputs",
+      "Attach source, retrieval time, confidence, and reason codes to assessments",
+      "Support correction, objection, deletion, moderation, and source takedown",
+      "Aggregate public search activity only above an anti-enumeration threshold"
+    ],
+    "privacy_posture": "Minimize collection, avoid raw personal lookup histories, document purpose and retention, and require a legal review before accepting public reports.",
+    "moderation_posture": "Community reports remain unverified observations until independent evidence, abuse controls, and correction processes support a stronger state."
+  },
+  "acceptance_scorecard": [
+    {
+      "id": "schema-valid",
+      "question": "Do machine-facing artifacts validate against committed schemas?",
+      "pass_condition": "The local contract suite parses and validates every canonical JSON artifact."
+    },
+    {
+      "id": "cross-surface-parity",
+      "question": "Do CLI, MCP, HTTP, and web surfaces render one shared result?",
+      "pass_condition": "Contract fixtures pass unchanged through every implemented adapter."
+    },
+    {
+      "id": "origin-explicit",
+      "question": "Is local-number interpretation explicit and reproducible?",
+      "pass_condition": "National input records an origin region; ambiguous input fails with typed guidance."
+    },
+    {
+      "id": "provenance-complete",
+      "question": "Can a reviewer trace every conclusion to evidence?",
+      "pass_condition": "Assessments expose source identifiers, retrieval times, reasons, gaps, and confidence."
+    },
+    {
+      "id": "spoofing-safe",
+      "question": "Does public wording avoid equating caller ID with caller identity?",
+      "pass_condition": "Schemas, fixtures, interfaces, and moderation language use displayed-number semantics."
+    },
+    {
+      "id": "signals-separated",
+      "question": "Are demand, facts, claims, reports, and assessments independent?",
+      "pass_condition": "Storage and aggregation tests prevent cross-class mutation and popularity scoring."
+    },
+    {
+      "id": "privacy-operable",
+      "question": "Can privacy and correction obligations be executed?",
+      "pass_condition": "Retention, correction, deletion, objection, and incident paths have tested runbooks."
+    },
+    {
+      "id": "fresh-clone-ready",
+      "question": "Can a new developer or agent continue from a clean clone?",
+      "pass_condition": "One documented command validates contracts, docs, workflow state, and public safety."
+    },
+    {
+      "id": "coverage-honest",
+      "question": "Does adding a country preserve evidence quality?",
+      "pass_condition": "Each adapter passes the same provenance, rights, freshness, and failure conformance suite."
+    }
+  ],
+  "review_checklist": [
+    "Confirm every public phone number is officially reserved or structurally redacted.",
+    "Confirm caller, subscriber, provider, and range-holder language is not conflated.",
+    "Confirm unavailable evidence produces an explicit gap rather than a safe result.",
+    "Confirm lookup activity cannot change reputation or moderation outcomes.",
+    "Confirm new sources document authority, reuse basis, freshness, and permitted fields.",
+    "Confirm every assessment includes provenance, reason codes, confidence, and residual risk.",
+    "Confirm logs and metrics avoid raw phone numbers, requester identities, and lookup trails.",
+    "Confirm schemas, fixtures, tests, documentation, and interfaces stay version-aligned.",
+    "Confirm public copy remains calm, accessible, specific, and non-accusatory.",
+    "Confirm a fresh clone passes the documented local gate without private dependencies."
+  ],
+  "maturity_model": [
+    {
+      "level": "L0",
+      "state": "foundation_valid",
+      "meaning": "Repository identity, workflow, vision, safety, public documentation, and validation contracts are complete.",
+      "exit_evidence": "Public repository gates pass and the product backlog is dependency-ordered."
+    },
+    {
+      "level": "L1",
+      "state": "read_only_wedge",
+      "meaning": "NL, GB, and US official evidence can be queried through one shared read-only result contract.",
+      "exit_evidence": "CLI, MCP, HTTP, and web parity plus country-adapter conformance tests pass."
+    },
+    {
+      "level": "L2",
+      "state": "moderated_reports",
+      "meaning": "Explicit community observations can be collected under privacy, abuse, and correction controls.",
+      "exit_evidence": "Moderation, retention, deletion, objection, and anti-brigading gates pass."
+    },
+    {
+      "level": "L3",
+      "state": "international_network",
+      "meaning": "New country adapters and evidence sources can expand coverage without weakening the contract.",
+      "exit_evidence": "Coverage growth remains source-rights compliant, measurable, and conformance-tested."
+    }
+  ],
+  "residual_risk_wording": "A phone-number lookup can describe numbering context and reported activity, but caller ID may be spoofed and the evidence does not prove who placed a call."
+}

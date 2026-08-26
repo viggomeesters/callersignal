@@ -1,0 +1,78 @@
+{
+  "schema": "go-workflow.repo-local.hierarchy.v1",
+  "kind": "hierarchy",
+  "project": "callersignal",
+  "epics": [
+    {
+      "id": "foundation",
+      "title": "Repository Foundation",
+      "features": [
+        {
+          "id": "vision-contracts",
+          "title": "Vision and design contracts",
+          "tasks": [
+            "foundation-vision-contracts",
+            "foundation-architecture-onboarding"
+          ]
+        },
+        {
+          "id": "public-readiness",
+          "title": "Public repository readiness",
+          "tasks": [
+            "foundation-public-hygiene",
+            "foundation-public-readiness"
+          ]
+        },
+        {
+          "id": "visual-identity",
+          "title": "Visual identity and proof",
+          "tasks": [
+            "foundation-visual-identity"
+          ]
+        }
+      ],
+      "tasks": []
+    },
+    {
+      "id": "product",
+      "title": "Product Delivery",
+      "features": [
+        {
+          "id": "number-core",
+          "title": "International number core",
+          "tasks": [
+            "product-domain-contracts",
+            "product-normalization-core"
+          ]
+        },
+        {
+          "id": "evidence-platform",
+          "title": "Evidence and country adapters",
+          "tasks": [
+            "product-evidence-ledger",
+            "product-country-adapter-contract",
+            "product-nl-adapter",
+            "product-gb-adapter",
+            "product-us-adapter",
+            "product-report-ingestion",
+            "product-reputation-aggregation"
+          ]
+        },
+        {
+          "id": "agent-surfaces",
+          "title": "CLI, MCP, API, and web surfaces",
+          "tasks": [
+            "product-lookup-orchestrator",
+            "product-cli-lookup",
+            "product-mcp-lookup",
+            "product-http-read-api",
+            "product-public-web-lookup",
+            "product-operational-safety",
+            "product-first-release"
+          ]
+        }
+      ],
+      "tasks": []
+    }
+  ]
+}

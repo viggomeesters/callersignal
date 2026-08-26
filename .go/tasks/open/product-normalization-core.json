@@ -1,0 +1,40 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-normalization-core",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Implement international phone-number normalization",
+  "description": "Parse national or international input using an explicit origin region and emit canonical E.164 plus display formats.",
+  "depends_on": [
+    "product-domain-contracts"
+  ],
+  "scope": {
+    "read": [
+      "schemas/phone-number.schema.json"
+    ],
+    "modify": [
+      "src/callersignal/numbering.py",
+      "tests/unit/test_numbering.py",
+      "pyproject.toml",
+      "uv.lock"
+    ]
+  },
+  "acceptance": [
+    "R-1: National input requires an origin region while + prefixed input is independently resolvable.",
+    "R-2: Tests cover NL, GB, US, invalid, ambiguous, non-geographic, and short-number cases."
+  ],
+  "verification": [
+    "uv run pytest tests/unit/test_numbering.py -q",
+    "uv run ruff check src tests"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

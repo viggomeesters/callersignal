@@ -1,0 +1,49 @@
+{
+  "schema": "go-workflow.repo-local.architecture-principles.v1",
+  "kind": "architecture_principles",
+  "project": "callersignal",
+  "principles": [
+    {
+      "id": "evidence-before-verdict",
+      "statement": "Evidence precedes assessment labels.",
+      "rationale": "Caller ID can be spoofed and public sources can be stale.",
+      "enforcement": "Schema validation and fixtures require source provenance, confidence, and residual-risk wording."
+    },
+    {
+      "id": "e164-canonical",
+      "statement": "E.164 is the canonical number key.",
+      "rationale": "Local formatting is contextual and ambiguous without a region.",
+      "enforcement": "Normalization tests must cover national, international, invalid, and ambiguous inputs."
+    },
+    {
+      "id": "separate-signals",
+      "statement": "Lookup demand, technical facts, identity claims, and call reports remain separate.",
+      "rationale": "Conflation creates false accusations and poisoning risk.",
+      "enforcement": "Schemas and aggregation tests forbid lookup counts from changing reputation."
+    },
+    {
+      "id": "privacy-by-default",
+      "statement": "Collect the minimum data needed for caller intelligence.",
+      "rationale": "Phone numbers and reports may be personal data.",
+      "enforcement": "Public fixtures use reserved examples; reports support correction, moderation, and retention controls."
+    },
+    {
+      "id": "agent-first",
+      "statement": "Structured contracts are the primary product surface.",
+      "rationale": "Agents need deterministic outputs rather than scraped prose.",
+      "enforcement": "CLI, MCP, HTTP, and web outputs validate against shared schemas."
+    },
+    {
+      "id": "fail-closed",
+      "statement": "Missing, stale, or contradictory evidence produces an explicit gap.",
+      "rationale": "Coverage pressure must never turn uncertainty into a safety or identity claim.",
+      "enforcement": "Contract tests require unknown outcomes and reason codes for incomplete evidence."
+    },
+    {
+      "id": "source-rights",
+      "statement": "Country adapters declare source authority, reuse terms, freshness, and permitted fields.",
+      "rationale": "International coverage is sustainable only when evidence is lawful and traceable.",
+      "enforcement": "Adapter conformance rejects sources without provenance or a documented reuse basis."
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "foundation-vision-contracts",
+  "project": "callersignal",
+  "status": "done",
+  "summary": "Establish durable product and repository design contracts",
+  "description": "Align the repo-local Go vision with a tested JSON-first design contract and schema.",
+  "depends_on": [],
+  "scope": {
+    "read": [
+      ".go/**"
+    ],
+    "modify": [
+      ".go/vision.json",
+      ".go/architecture-principles.json",
+      "docs/vision.json",
+      "schemas/repo-vision-contract.schema.json",
+      "tests/test_repository_contract.py",
+      "pyproject.toml",
+      "uv.lock",
+      "go",
+      "scripts/bootstrap-stack.sh",
+      "scripts/validate-go.sh"
+    ]
+  },
+  "acceptance": [
+    "R-1: .go/vision.json states the north star, target user, promise, wedge, principles, non-goals, assumptions, and measurable success criteria.",
+    "R-2: docs/vision.json expresses explicit design and engineering principles, public safety boundaries, and an acceptance scorecard.",
+    "R-3: The design contract validates against the committed JSON Schema in an automated test."
+  ],
+  "verification": [
+    "uv run pytest tests/test_repository_contract.py -q",
+    "./go validate ."
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-26T14:08:29+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-26T14:13:52+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "Schema validation passed with six tests; manual review confirmed explicit agent-first principles, privacy boundaries, non-goals, assumptions, measurable success criteria, and no implemented-product claims."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-26T14:13:52+02:00",
+      "task_id": "foundation-vision-contracts",
+      "agent": "codex",
+      "summary": "changed_files=.go/vision.json,.go/architecture-principles.json,docs/vision.json,schemas/repo-vision-contract.schema.json,tests/test_repository_contract.py,pyproject.toml,uv.lock,go,scripts/bootstrap-stack.sh,scripts/validate-go.sh; verification=uv run pytest tests/test_repository_contract.py -q && uv run ruff check tests/test_repository_contract.py && ./go validate . rc=0; critic=skipped solo foundation task; dedicated repository-wide review follows before publication",
+      "changed_files": [
+        ".go/vision.json",
+        ".go/architecture-principles.json",
+        "docs/vision.json",
+        "schemas/repo-vision-contract.schema.json",
+        "tests/test_repository_contract.py",
+        "pyproject.toml",
+        "uv.lock",
+        "go",
+        "scripts/bootstrap-stack.sh",
+        "scripts/validate-go.sh"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/test_repository_contract.py -q && uv run ruff check tests/test_repository_contract.py && ./go validate . rc=0",
+        "result": "uv run pytest tests/test_repository_contract.py -q && uv run ruff check tests/test_repository_contract.py && ./go validate . rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "skipped solo foundation task",
+        "skip_reason": null
+      }
+    }
+  ]
+}

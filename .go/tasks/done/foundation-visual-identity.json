@@ -1,0 +1,90 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "foundation-visual-identity",
+  "project": "callersignal",
+  "status": "done",
+  "summary": "Create and visually verify the CallerSignal repository hero",
+  "description": "Generate a distinctive public-safe raster hero, surface it at the top of README, and record concrete visual QA.",
+  "depends_on": [
+    "foundation-public-hygiene"
+  ],
+  "scope": {
+    "read": [
+      "README.md",
+      "docs/vision.json"
+    ],
+    "modify": [
+      "assets/hero.png",
+      "assets/social-preview.png",
+      "docs/visual-proof.md",
+      "README.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: README visibly renders a distinctive CallerSignal hero near the top of the page.",
+    "R-2: Hero and social preview contain no private numbers, logos, watermarks, placeholders, clipping, overlap, or unreadable contrast.",
+    "R-3: docs/visual-proof.md records dimensions, prompt intent, inspection date, and the completed visual checks."
+  ],
+  "verification": [
+    "bash scripts/check-assets.sh",
+    "uv run pytest -q"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-26T14:21:20+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-26T14:24:47+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "R-1 through R-3 approved: README renders the hero near the top; hero is 1672x941; social preview is 1774x887 at 2:1; visual proof records prompts, digests, inspection date, and every required check; assets contain no text, numbers, logos, watermarks, or private data."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-26T14:24:47+02:00",
+      "task_id": "foundation-visual-identity",
+      "agent": "codex",
+      "summary": "changed_files=assets/hero.png,assets/social-preview.png,docs/visual-proof.md,README.md,scripts/check-assets.sh; verification=bash scripts/check-assets.sh && uv run pytest -q && make check rc=0; critic=passed both PNGs were inspected at original resolution for clipping, overlap, contrast, readability, text, private data, watermarks, edge safety, and non-alarmist semantics",
+      "changed_files": [
+        "assets/hero.png",
+        "assets/social-preview.png",
+        "docs/visual-proof.md",
+        "README.md",
+        "scripts/check-assets.sh"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "bash scripts/check-assets.sh && uv run pytest -q && make check rc=0",
+        "result": "bash scripts/check-assets.sh && uv run pytest -q && make check rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "passed both PNGs were inspected at original resolution for clipping, overlap, contrast, readability, text, private data, watermarks, edge safety, and non-alarmist semantics",
+        "skip_reason": null
+      }
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-public-web-lookup",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Build the public read-only lookup experience",
+  "description": "Render the shared lookup result accessibly without introducing a browser-only truth path.",
+  "depends_on": [
+    "product-http-read-api"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/http_api.py",
+      "docs/vision.json"
+    ],
+    "modify": [
+      "web/**",
+      "tests/e2e/**",
+      "docs/web.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: The interface leads with normalized number context, evidence, unknowns, confidence, and spoofing-safe wording.",
+    "R-2: Accessibility, responsive layout, privacy, and no-results states have automated or documented proof."
+  ],
+  "verification": [
+    "uv run pytest tests/e2e -q",
+    "npm --prefix web test"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

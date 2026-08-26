@@ -1,0 +1,54 @@
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+.secrets/
+secrets/
+credentials/
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Private or downloaded data
+private/
+data/private/
+downloads/
+exports/
+recordings/
+screenshots/private/
+*.sqlite
+*.sqlite3
+*.db
+*.log
+
+# Generated Go workflow runtime state; canonical contracts and ledgers remain tracked
+.go/locks/
+.go/runs/latest.json
+.go/runs/resume.sh
+.go/runs/*/
+
+# Tooling and operating-system state
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.tmp
+
+# Local public-readiness output
+repo-complete-report.json

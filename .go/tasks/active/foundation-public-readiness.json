@@ -1,0 +1,39 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "foundation-public-readiness",
+  "project": "callersignal",
+  "status": "active",
+  "summary": "Prove public readiness and prepare the v0.1.0 foundation release",
+  "description": "Run all local gates, strict repo-complete checks, privacy/history scans, and publication readback without implementing product features.",
+  "depends_on": [
+    "foundation-visual-identity"
+  ],
+  "scope": {
+    "read": [
+      "**"
+    ],
+    "modify": [
+      "docs/public-readiness.md",
+      ".go/**"
+    ]
+  },
+  "acceptance": [
+    "R-1: All local tests, .go validation, content-first documentation checks, and repository gates pass.",
+    "R-2: repo-complete public validation reports no hard blockers after remote, release, and metadata proof.",
+    "R-3: Current files and Git history contain no secrets, private data, unsafe fixtures, or generated runtime state."
+  ],
+  "verification": [
+    "make check",
+    "python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --kind generic --remote-policy required --release-policy required --url-policy none --json-schema"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-26T14:25:18+02:00"
+  },
+  "work_status": "in_progress",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

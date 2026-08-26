@@ -1,0 +1,41 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-domain-contracts",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Define versioned phone-number, evidence, and assessment schemas",
+  "description": "Create the machine contracts that keep technical facts, lookup demand, identity claims, and call reports separate.",
+  "depends_on": [
+    "foundation-public-readiness"
+  ],
+  "scope": {
+    "read": [
+      "docs/vision.json",
+      "docs/architecture.md"
+    ],
+    "modify": [
+      "schemas/phone-number.schema.json",
+      "schemas/source-evidence.schema.json",
+      "schemas/lookup-result.schema.json",
+      "schemas/call-report.schema.json",
+      "tests/contracts/**"
+    ]
+  },
+  "acceptance": [
+    "R-1: Schemas distinguish canonical number facts, source observations, community reports, and computed assessments.",
+    "R-2: Every assessment requires provenance, freshness, confidence, reason codes, and residual-risk wording."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

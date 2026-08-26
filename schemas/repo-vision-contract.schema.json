@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/viggomeesters/callersignal/main/schemas/repo-vision-contract.schema.json",
+  "title": "CallerSignal Repository Design Vision Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "$schema",
+    "schema_version",
+    "artifact_kind",
+    "repo",
+    "vision",
+    "principles",
+    "non_goals",
+    "assumptions",
+    "public_safety",
+    "acceptance_scorecard",
+    "review_checklist",
+    "maturity_model",
+    "residual_risk_wording"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "artifact_kind": {
+      "const": "repo_design_vision_contract"
+    },
+    "repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "primary_users", "product_surface", "canonical_repository"],
+      "properties": {
+        "name": { "const": "CallerSignal" },
+        "primary_users": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "product_surface": { "const": "agent_first" },
+        "canonical_repository": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    },
+    "vision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["one_line", "north_star", "promise", "wedge", "target_users"],
+      "properties": {
+        "one_line": { "type": "string", "minLength": 20 },
+        "north_star": { "type": "string", "minLength": 20 },
+        "promise": { "type": "string", "minLength": 20 },
+        "wedge": { "type": "string", "minLength": 20 },
+        "target_users": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "principles": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "category", "title", "rule", "good", "bad"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "category": {
+            "enum": ["product", "design", "engineering", "safety"]
+          },
+          "title": { "type": "string", "minLength": 3 },
+          "rule": { "type": "string", "minLength": 20 },
+          "good": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 5 }
+          },
+          "bad": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 5 }
+          }
+        }
+      }
+    },
+    "non_goals": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 10 }
+    },
+    "assumptions": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 10 }
+    },
+    "public_safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "forbidden",
+        "required_boundaries",
+        "privacy_posture",
+        "moderation_posture"
+      ],
+      "properties": {
+        "forbidden": {
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 8 }
+        },
+        "required_boundaries": {
+          "type": "array",
+          "minItems": 5,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 8 }
+        },
+        "privacy_posture": { "type": "string", "minLength": 20 },
+        "moderation_posture": { "type": "string", "minLength": 20 }
+      }
+    },
+    "acceptance_scorecard": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "question", "pass_condition"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "question": { "type": "string", "minLength": 10 },
+          "pass_condition": { "type": "string", "minLength": 15 }
+        }
+      }
+    },
+    "review_checklist": {
+      "type": "array",
+      "minItems": 8,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 10 }
+    },
+    "maturity_model": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["level", "state", "meaning", "exit_evidence"],
+        "properties": {
+          "level": { "type": "string", "pattern": "^L[0-9]+$" },
+          "state": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+          },
+          "meaning": { "type": "string", "minLength": 15 },
+          "exit_evidence": { "type": "string", "minLength": 15 }
+        }
+      }
+    },
+    "residual_risk_wording": {
+      "type": "string",
+      "minLength": 40
+    }
+  }
+}

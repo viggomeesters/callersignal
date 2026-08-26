@@ -1,0 +1,11 @@
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+
+uv.lock linguist-generated=true
+.go/runs/events.jsonl linguist-generated=true
+.go/evidence/events.jsonl linguist-generated=true

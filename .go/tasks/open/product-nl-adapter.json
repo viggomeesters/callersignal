@@ -1,0 +1,39 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-nl-adapter",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Implement the Netherlands official-numbering adapter",
+  "description": "Ingest and query permitted ACM numbering evidence while labeling range holder versus current provider.",
+  "depends_on": [
+    "product-normalization-core",
+    "product-country-adapter-contract"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/adapters/base.py"
+    ],
+    "modify": [
+      "src/callersignal/adapters/nl.py",
+      "tests/adapters/test_nl.py",
+      "fixtures/nl/**"
+    ]
+  },
+  "acceptance": [
+    "R-1: The adapter resolves covered ACM ranges from a pinned public-safe fixture with provenance and freshness.",
+    "R-2: Results never present a range holder as subscriber identity or guaranteed current provider."
+  ],
+  "verification": [
+    "uv run pytest tests/adapters/test_nl.py -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

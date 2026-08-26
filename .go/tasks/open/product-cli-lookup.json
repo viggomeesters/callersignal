@@ -1,0 +1,38 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-cli-lookup",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Expose read-only lookup through the CLI",
+  "description": "Provide human and JSON output from the shared lookup service without a separate truth path.",
+  "depends_on": [
+    "product-lookup-orchestrator"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/lookup.py"
+    ],
+    "modify": [
+      "src/callersignal/cli.py",
+      "tests/integration/test_cli.py",
+      "docs/cli.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: callersignal lookup accepts national input with --region and international E.164 input directly.",
+    "R-2: --json output validates against the shared lookup-result schema."
+  ],
+  "verification": [
+    "uv run pytest tests/integration/test_cli.py -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

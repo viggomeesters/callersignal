@@ -1,0 +1,35 @@
+{
+  "schema": "go-workflow.repo-local.vision.v1",
+  "kind": "vision",
+  "project": "callersignal",
+  "status": "active",
+  "north_star": "Any agent can turn an unfamiliar phone number into a country-aware, source-backed, uncertainty-honest answer in one lookup.",
+  "wedge": "A read-only international lookup contract exposed identically through CLI, MCP, HTTP, and the web, beginning with official numbering evidence for NL, GB, and US.",
+  "target_user": "AI agents and developers building safe unknown-caller experiences.",
+  "core_promise": "Normalize once, check country-aware evidence, and explain exactly what is known, unknown, and source-supported.",
+  "product_principles": [
+    "Displayed number is evidence context, never proof of caller identity.",
+    "Lookups measure demand; only explicit reports affect community evidence.",
+    "Every conclusion carries provenance, freshness, and confidence.",
+    "Machine-readable contracts lead; human interfaces render the same truth."
+  ],
+  "non_goals": [
+    "Expose private subscriber identities or contact-book data.",
+    "Claim that a valid number is assigned, reachable, safe, or owned by a named person.",
+    "Scrape or republish third-party data without permission or provenance.",
+    "Build product features during repository foundation work."
+  ],
+  "assumptions": [
+    "Authoritative numbering-allocation data is legally reusable for at least the Netherlands, United Kingdom, and United States.",
+    "An explicit origin region is available whenever an input lacks an international country code.",
+    "Agents and developers value provenance and calibrated uncertainty over an unsupported identity guess.",
+    "A read-only lookup wedge can prove cross-surface parity before community reporting is introduced.",
+    "Phone-number portability and spoofing prevent allocation data from proving current provider, subscriber, or caller identity."
+  ],
+  "success_metrics": [
+    "A fresh clone validates all repository and .go contracts with one documented command.",
+    "CLI, MCP, HTTP, and web adapters can share one versioned lookup output schema.",
+    "Every published assessment can be traced to timestamped source evidence and explicit reason codes.",
+    "Country coverage can grow through independently testable adapters without weakening safety boundaries."
+  ]
+}

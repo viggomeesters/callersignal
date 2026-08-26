@@ -1,0 +1,38 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-country-adapter-contract",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Define the country-adapter protocol and conformance suite",
+  "description": "Make official numbering sources independently implementable and testable with explicit limitations.",
+  "depends_on": [
+    "product-domain-contracts"
+  ],
+  "scope": {
+    "read": [
+      "schemas/**"
+    ],
+    "modify": [
+      "src/callersignal/adapters/base.py",
+      "tests/contract/test_country_adapters.py",
+      "docs/country-adapters.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: Adapters declare country coverage, source authority, license, freshness, failure behavior, and portability limitations.",
+    "R-2: Missing or stale source evidence fails closed to unknown rather than a safe or identity verdict."
+  ],
+  "verification": [
+    "uv run pytest tests/contract/test_country_adapters.py -q"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}
