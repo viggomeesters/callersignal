@@ -5,6 +5,7 @@
   "id": "product-gb-adapter",
   "project": "callersignal",
   "status": "open",
+  "order": 310,
   "summary": "Implement the United Kingdom official-numbering adapter",
   "description": "Ingest and query permitted Ofcom numbering evidence with explicit allocation semantics.",
   "depends_on": [

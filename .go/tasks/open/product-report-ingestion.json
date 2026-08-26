@@ -5,6 +5,7 @@
   "id": "product-report-ingestion",
   "project": "callersignal",
   "status": "open",
+  "order": 600,
   "summary": "Add privacy-aware call-report ingestion and moderation",
   "description": "Accept explicit reports as unverified observations with correction, abuse, and spoofing safeguards.",
   "depends_on": [

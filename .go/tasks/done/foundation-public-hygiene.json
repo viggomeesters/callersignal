@@ -5,6 +5,7 @@
   "id": "foundation-public-hygiene",
   "project": "callersignal",
   "status": "done",
+  "order": 30,
   "summary": "Establish professional public repository hygiene and local gates",
   "description": "Create public policies, contribution guidance, secret/privacy exclusions, deterministic checks, and release documentation.",
   "depends_on": [

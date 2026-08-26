@@ -5,6 +5,7 @@
   "id": "product-first-release",
   "project": "callersignal",
   "status": "open",
+  "order": 700,
   "summary": "Validate and publish the first functional CallerSignal release",
   "description": "Ship the proven read-only wedge only after cross-surface parity, safety, and country-adapter gates pass.",
   "depends_on": [

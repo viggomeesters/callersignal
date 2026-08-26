@@ -5,6 +5,7 @@
   "id": "product-mcp-lookup",
   "project": "callersignal",
   "status": "open",
+  "order": 510,
   "summary": "Expose structured lookup through an MCP server",
   "description": "Publish a read-only lookup_phone_number tool with validated input and output schemas.",
   "depends_on": [

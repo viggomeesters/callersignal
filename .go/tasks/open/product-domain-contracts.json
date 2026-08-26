@@ -5,6 +5,7 @@
   "id": "product-domain-contracts",
   "project": "callersignal",
   "status": "open",
+  "order": 100,
   "summary": "Define versioned phone-number, evidence, and assessment schemas",
   "description": "Create the machine contracts that keep technical facts, lookup demand, identity claims, and call reports separate.",
   "depends_on": [

@@ -5,6 +5,7 @@
   "id": "product-public-web-lookup",
   "project": "callersignal",
   "status": "open",
+  "order": 530,
   "summary": "Build the public read-only lookup experience",
   "description": "Render the shared lookup result accessibly without introducing a browser-only truth path.",
   "depends_on": [

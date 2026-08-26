@@ -5,6 +5,7 @@
   "id": "product-lookup-orchestrator",
   "project": "callersignal",
   "status": "open",
+  "order": 400,
   "summary": "Build the source-backed lookup orchestrator",
   "description": "Normalize input, select country adapters, collect evidence, and emit one schema-valid uncertainty-honest result.",
   "depends_on": [

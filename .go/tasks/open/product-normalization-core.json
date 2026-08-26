@@ -5,6 +5,7 @@
   "id": "product-normalization-core",
   "project": "callersignal",
   "status": "open",
+  "order": 200,
   "summary": "Implement international phone-number normalization",
   "description": "Parse national or international input using an explicit origin region and emit canonical E.164 plus display formats.",
   "depends_on": [

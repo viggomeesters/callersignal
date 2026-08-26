@@ -5,6 +5,7 @@
   "id": "product-nl-adapter",
   "project": "callersignal",
   "status": "open",
+  "order": 300,
   "summary": "Implement the Netherlands official-numbering adapter",
   "description": "Ingest and query permitted ACM numbering evidence while labeling range holder versus current provider.",
   "depends_on": [

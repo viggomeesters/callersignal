@@ -5,6 +5,7 @@
   "id": "product-reputation-aggregation",
   "project": "callersignal",
   "status": "open",
+  "order": 610,
   "summary": "Compute explainable reputation signals from moderated evidence",
   "description": "Aggregate independent, recent evidence without allowing lookup counts to influence risk.",
   "depends_on": [

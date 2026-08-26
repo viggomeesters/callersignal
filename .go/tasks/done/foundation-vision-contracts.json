@@ -5,6 +5,7 @@
   "id": "foundation-vision-contracts",
   "project": "callersignal",
   "status": "done",
+  "order": 10,
   "summary": "Establish durable product and repository design contracts",
   "description": "Align the repo-local Go vision with a tested JSON-first design contract and schema.",
   "depends_on": [],

@@ -5,6 +5,7 @@
   "id": "foundation-visual-identity",
   "project": "callersignal",
   "status": "done",
+  "order": 40,
   "summary": "Create and visually verify the CallerSignal repository hero",
   "description": "Generate a distinctive public-safe raster hero, surface it at the top of README, and record concrete visual QA.",
   "depends_on": [

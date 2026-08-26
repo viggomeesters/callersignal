@@ -5,6 +5,7 @@
   "id": "product-evidence-ledger",
   "project": "callersignal",
   "status": "open",
+  "order": 210,
   "summary": "Implement an append-only evidence ledger",
   "description": "Persist source observations and lifecycle events without conflating them with mutable assessments.",
   "depends_on": [

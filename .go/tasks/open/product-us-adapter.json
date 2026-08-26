@@ -5,6 +5,7 @@
   "id": "product-us-adapter",
   "project": "callersignal",
   "status": "open",
+  "order": 320,
   "summary": "Implement the United States official-numbering adapter",
   "description": "Combine permitted NANPA and regulator evidence without treating numbering-plan validity as caller identity.",
   "depends_on": [

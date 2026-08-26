@@ -5,6 +5,7 @@
   "id": "product-country-adapter-contract",
   "project": "callersignal",
   "status": "open",
+  "order": 220,
   "summary": "Define the country-adapter protocol and conformance suite",
   "description": "Make official numbering sources independently implementable and testable with explicit limitations.",
   "depends_on": [

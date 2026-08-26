@@ -5,6 +5,7 @@
   "id": "product-cli-lookup",
   "project": "callersignal",
   "status": "open",
+  "order": 500,
   "summary": "Expose read-only lookup through the CLI",
   "description": "Provide human and JSON output from the shared lookup service without a separate truth path.",
   "depends_on": [

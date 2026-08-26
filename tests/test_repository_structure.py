@@ -54,6 +54,7 @@ def test_task_graph_is_complete_and_acyclic() -> None:
         visiting.add(task_id)
         for dependency in tasks[task_id].get("depends_on", []):
             assert dependency in tasks
+            assert tasks[dependency]["order"] < tasks[task_id]["order"]
             visit(dependency)
         visiting.remove(task_id)
         visited.add(task_id)

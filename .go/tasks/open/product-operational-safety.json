@@ -5,6 +5,7 @@
   "id": "product-operational-safety",
   "project": "callersignal",
   "status": "open",
+  "order": 620,
   "summary": "Add production observability, abuse controls, and privacy operations",
   "description": "Make the service operable without logging sensitive request data by default.",
   "depends_on": [

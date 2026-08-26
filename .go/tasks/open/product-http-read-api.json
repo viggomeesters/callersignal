@@ -5,6 +5,7 @@
   "id": "product-http-read-api",
   "project": "callersignal",
   "status": "open",
+  "order": 520,
   "summary": "Expose the read-only lookup HTTP API",
   "description": "Add a versioned, rate-limit-ready HTTP adapter over the shared lookup service.",
   "depends_on": [

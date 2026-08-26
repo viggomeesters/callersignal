@@ -5,6 +5,7 @@
   "id": "foundation-architecture-onboarding",
   "project": "callersignal",
   "status": "done",
+  "order": 20,
   "summary": "Document the architecture, safety model, plan, and fresh-clone onboarding",
   "description": "Give developers and agents a concrete map of the product contract, boundaries, and dependency-ordered backlog.",
   "depends_on": [

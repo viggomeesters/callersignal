@@ -93,6 +93,8 @@ def check_task_graph() -> None:
         for dependency in tasks[task_id].get("depends_on", []):
             if dependency not in tasks:
                 fail(f"{task_id} depends on missing task {dependency}")
+            if tasks[dependency].get("order", 999_999) >= tasks[task_id].get("order", 999_999):
+                fail(f"{task_id} is ordered before dependency {dependency}")
             visit(dependency)
         visiting.remove(task_id)
         visited.add(task_id)
