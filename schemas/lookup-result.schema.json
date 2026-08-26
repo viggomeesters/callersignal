@@ -1,0 +1,242 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/viggomeesters/callersignal/main/schemas/lookup-result.schema.json",
+  "title": "CallerSignal Lookup Result",
+  "description": "The canonical cross-surface result for CLI, MCP, HTTP, and web. It exposes evidence and gaps without treating lookup demand as reputation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "lookup_id",
+    "generated_at",
+    "phone_number",
+    "sources_checked",
+    "evidence",
+    "gaps",
+    "assessment"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "lookup_result" },
+    "lookup_id": {
+      "type": "string",
+      "pattern": "^lkp_[A-Za-z0-9_-]{8,64}$"
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "phone_number": {
+      "$ref": "phone-number.schema.json"
+    },
+    "sources_checked": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source_check" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          { "$ref": "source-evidence.schema.json" },
+          {
+            "properties": {
+              "observation": {
+                "properties": {
+                  "publication_status": { "const": "public" }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence_gap" }
+    },
+    "assessment": {
+      "$ref": "#/$defs/assessment"
+    }
+  },
+  "$defs": {
+    "token": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[_-][a-z0-9]+)*$"
+    },
+    "evidence_id": {
+      "type": "string",
+      "pattern": "^ev_[A-Za-z0-9_-]{8,96}$"
+    },
+    "gap_id": {
+      "type": "string",
+      "pattern": "^gap_[A-Za-z0-9_-]{8,64}$"
+    },
+    "source_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "jurisdiction", "status", "checked_at", "evidence_ids", "gap_ids"],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/token" },
+        "jurisdiction": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[A-Z]{2}$" },
+            { "const": "global" }
+          ]
+        },
+        "status": {
+          "enum": ["matched", "no_match", "unavailable", "unsupported", "stale", "error"]
+        },
+        "checked_at": { "type": "string", "format": "date-time" },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidence_id" }
+        },
+        "gap_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/gap_id" }
+        }
+      }
+    },
+    "evidence_gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gap_id", "source_id", "code", "message", "retryable"],
+      "properties": {
+        "gap_id": { "$ref": "#/$defs/gap_id" },
+        "source_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/token" },
+            { "type": "null" }
+          ]
+        },
+        "code": {
+          "enum": [
+            "invalid_input",
+            "ambiguous_input",
+            "unsupported_country",
+            "source_unavailable",
+            "source_stale",
+            "source_error",
+            "no_authoritative_data",
+            "conflicting_evidence",
+            "reuse_restricted"
+          ]
+        },
+        "message": { "type": "string", "minLength": 12, "maxLength": 500 },
+        "retryable": { "type": "boolean" }
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "confidence",
+        "reason_codes",
+        "provenance",
+        "freshness",
+        "conclusions",
+        "residual_risk"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "unknown",
+            "numbering_context_only",
+            "reported_activity",
+            "mixed_evidence",
+            "unavailable"
+          ]
+        },
+        "confidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["level", "score"],
+          "properties": {
+            "level": { "enum": ["none", "low", "medium", "high"] },
+            "score": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/token" }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["policy_version", "computed_at", "evidence_ids", "gap_ids"],
+          "properties": {
+            "policy_version": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "computed_at": { "type": "string", "format": "date-time" },
+            "evidence_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/evidence_id" }
+            },
+            "gap_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/gap_id" }
+            }
+          }
+        },
+        "freshness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["as_of", "oldest_evidence_at", "status"],
+          "properties": {
+            "as_of": { "type": "string", "format": "date-time" },
+            "oldest_evidence_at": {
+              "oneOf": [
+                { "type": "string", "format": "date-time" },
+                { "type": "null" }
+              ]
+            },
+            "status": { "enum": ["current", "mixed", "stale", "no_evidence"] }
+          }
+        },
+        "conclusions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["type", "value", "confidence", "evidence_ids", "wording"],
+            "properties": {
+              "type": {
+                "enum": [
+                  "country",
+                  "number_type",
+                  "range_holder",
+                  "provider_claim",
+                  "identity_claim",
+                  "regulatory_status",
+                  "reported_activity"
+                ]
+              },
+              "value": { "type": "string", "minLength": 1, "maxLength": 500 },
+              "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+              "evidence_ids": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": { "$ref": "#/$defs/evidence_id" }
+              },
+              "wording": { "type": "string", "minLength": 12, "maxLength": 500 }
+            }
+          }
+        },
+        "residual_risk": {
+          "type": "string",
+          "minLength": 40,
+          "maxLength": 800,
+          "pattern": "[Ss]poof"
+        }
+      }
+    }
+  }
+}

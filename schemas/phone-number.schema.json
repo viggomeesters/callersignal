@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/viggomeesters/callersignal/main/schemas/phone-number.schema.json",
+  "title": "CallerSignal Phone Number",
+  "description": "A reproducible interpretation of phone-number input. Validity describes numbering syntax only and never assignment, reachability, subscriber, or caller identity.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "raw_input",
+    "origin_region",
+    "interpretation",
+    "canonical",
+    "presentation"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "phone_number" },
+    "raw_input": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "origin_region": {
+      "oneOf": [
+        { "$ref": "#/$defs/region" },
+        { "type": "null" }
+      ]
+    },
+    "interpretation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_mode", "region_source", "status", "reason_codes"],
+      "properties": {
+        "input_mode": {
+          "enum": ["international", "national"]
+        },
+        "region_source": {
+          "enum": ["embedded_country_code", "explicit_origin_region"]
+        },
+        "status": {
+          "enum": ["valid", "possible", "invalid", "ambiguous", "unsupported"]
+        },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/reason_code" }
+        }
+      }
+    },
+    "canonical": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "e164",
+        "country_calling_code",
+        "region",
+        "national_significant_number",
+        "number_type"
+      ],
+      "properties": {
+        "e164": {
+          "oneOf": [
+            { "$ref": "#/$defs/e164" },
+            { "type": "null" }
+          ]
+        },
+        "country_calling_code": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[1-9][0-9]{0,2}$" },
+            { "type": "null" }
+          ]
+        },
+        "region": {
+          "oneOf": [
+            { "$ref": "#/$defs/region" },
+            { "type": "null" }
+          ]
+        },
+        "national_significant_number": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[0-9]{1,14}$" },
+            { "type": "null" }
+          ]
+        },
+        "number_type": {
+          "enum": [
+            "fixed_line",
+            "mobile",
+            "fixed_or_mobile",
+            "voip",
+            "toll_free",
+            "premium_rate",
+            "shared_cost",
+            "personal_number",
+            "pager",
+            "uan",
+            "voicemail",
+            "non_geographic",
+            "short_code",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["international", "national"],
+      "properties": {
+        "international": {
+          "oneOf": [
+            { "type": "string", "minLength": 2, "maxLength": 64 },
+            { "type": "null" }
+          ]
+        },
+        "national": {
+          "oneOf": [
+            { "type": "string", "minLength": 1, "maxLength": 64 },
+            { "type": "null" }
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "interpretation": {
+            "properties": { "input_mode": { "const": "national" } },
+            "required": ["input_mode"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "origin_region": { "$ref": "#/$defs/region" },
+          "interpretation": {
+            "properties": {
+              "region_source": { "const": "explicit_origin_region" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "interpretation": {
+            "properties": { "input_mode": { "const": "international" } },
+            "required": ["input_mode"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "origin_region": { "type": "null" },
+          "interpretation": {
+            "properties": {
+              "region_source": { "const": "embedded_country_code" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "interpretation": {
+            "properties": {
+              "status": { "enum": ["valid", "possible"] }
+            },
+            "required": ["status"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "canonical": {
+            "properties": {
+              "e164": { "$ref": "#/$defs/e164" },
+              "country_calling_code": {
+                "type": "string",
+                "pattern": "^[1-9][0-9]{0,2}$"
+              },
+              "national_significant_number": {
+                "type": "string",
+                "pattern": "^[0-9]{1,14}$"
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "e164": {
+      "type": "string",
+      "pattern": "^\\+[1-9][0-9]{1,14}$"
+    },
+    "region": {
+      "type": "string",
+      "pattern": "^[A-Z]{2}$"
+    },
+    "reason_code": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:_[a-z0-9]+)*$"
+    }
+  }
+}

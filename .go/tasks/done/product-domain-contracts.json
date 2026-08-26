@@ -1,0 +1,90 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-domain-contracts",
+  "project": "callersignal",
+  "status": "done",
+  "order": 100,
+  "summary": "Define versioned phone-number, evidence, and assessment schemas",
+  "description": "Create the machine contracts that keep technical facts, lookup demand, identity claims, and call reports separate.",
+  "depends_on": [
+    "foundation-public-readiness"
+  ],
+  "scope": {
+    "read": [
+      "docs/vision.json",
+      "docs/architecture.md"
+    ],
+    "modify": [
+      "schemas/phone-number.schema.json",
+      "schemas/source-evidence.schema.json",
+      "schemas/lookup-result.schema.json",
+      "schemas/call-report.schema.json",
+      "tests/contracts/**"
+    ]
+  },
+  "acceptance": [
+    "R-1: Schemas distinguish canonical number facts, source observations, community reports, and computed assessments.",
+    "R-2: Every assessment requires provenance, freshness, confidence, reason codes, and residual-risk wording."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts -q"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-26T15:22:25+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-26T15:28:45+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "R-1 approved: four strict schemas use distinct kind discriminators, call reports remain unverified displayed-number observations, lookup demand cannot enter assessments, and identity evidence is restricted from public results. R-2 approved: assessment schema requires provenance, freshness, confidence, reason codes, evidence-linked conclusions, and spoofing-aware residual-risk wording. Fifteen focused tests and all twenty-eight repository tests pass."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-26T15:28:45+02:00",
+      "task_id": "product-domain-contracts",
+      "agent": "codex",
+      "summary": "changed_files=schemas/phone-number.schema.json,schemas/source-evidence.schema.json,schemas/lookup-result.schema.json,schemas/call-report.schema.json,tests/contracts/test_domain_contracts.py; verification=jq empty schemas/phone-number.schema.json schemas/source-evidence.schema.json schemas/lookup-result.schema.json schemas/call-report.schema.json && uv run pytest tests/contracts -q && uv run ruff check tests/contracts && make check && ./go validate . && git diff --check rc=0; critic=passed domain-model review confirmed separate kinds for number facts, source evidence, community reports, and computed assessments; public lookup rejects restricted identity claims and lookup counts; every assessment requires confidence, reasons, provenance, freshness, and spoofing residual risk",
+      "changed_files": [
+        "schemas/phone-number.schema.json",
+        "schemas/source-evidence.schema.json",
+        "schemas/lookup-result.schema.json",
+        "schemas/call-report.schema.json",
+        "tests/contracts/test_domain_contracts.py"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "jq empty schemas/phone-number.schema.json schemas/source-evidence.schema.json schemas/lookup-result.schema.json schemas/call-report.schema.json && uv run pytest tests/contracts -q && uv run ruff check tests/contracts && make check && ./go validate . && git diff --check rc=0",
+        "result": "jq empty schemas/phone-number.schema.json schemas/source-evidence.schema.json schemas/lookup-result.schema.json schemas/call-report.schema.json && uv run pytest tests/contracts -q && uv run ruff check tests/contracts && make check && ./go validate . && git diff --check rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "passed domain-model review confirmed separate kinds for number facts, source evidence, community reports, and computed assessments",
+        "skip_reason": null
+      }
+    }
+  ]
+}
