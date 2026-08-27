@@ -52,3 +52,4 @@ screenshots/private/
 
 # Local public-readiness output
 repo-complete-report.json
+.vercel

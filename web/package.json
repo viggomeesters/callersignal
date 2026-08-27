@@ -1,0 +1,13 @@
+{
+  "name": "callersignal-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check assets/app.js && node --check tests/app.test.js",
+    "test": "npm run check && node --test tests/*.test.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

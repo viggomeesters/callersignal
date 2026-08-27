@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f2f4ef">
+    <meta
+      name="description"
+      content="Check public, country-aware phone-number evidence without guessing who called."
+    >
+    <meta property="og:title" content="CallerSignal, evidence before verdict">
+    <meta
+      property="og:description"
+      content="Inspect official numbering context, source evidence, gaps, and spoofing risk."
+    >
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary">
+    <title>CallerSignal | Evidence before verdict</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+    <script type="module" src="/assets/app.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#lookup">Skip to lookup</a>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="CallerSignal home" translate="no">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">
+          <path d="M5 16h5l3-8 5 16 3-8h6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="square" stroke-linejoin="miter"></path>
+        </svg>
+        <span>CallerSignal</span>
+      </a>
+      <nav aria-label="Main navigation">
+        <a href="#method">Method</a>
+        <a href="#agents">For agents</a>
+        <a href="https://github.com/viggomeesters/callersignal">GitHub</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero" id="lookup" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">Public numbering evidence</p>
+          <h1 id="hero-title">
+            <span>A number is a signal.</span>
+            <span>Not an identity.</span>
+          </h1>
+          <p class="hero-intro">
+            Normalize a displayed number, inspect official numbering evidence, and see what
+            remains unknown. No identity guesses.
+          </p>
+
+          <form id="lookup-form" class="lookup-form" novalidate>
+            <div class="field field-number">
+              <label for="number">Displayed phone number</label>
+              <input
+                id="number"
+                name="number"
+                type="tel"
+                autocomplete="tel"
+                inputmode="tel"
+                spellcheck="false"
+                aria-describedby="number-help"
+                required
+              >
+            </div>
+            <div class="field field-origin">
+              <label for="origin-region">Origin country</label>
+              <select id="origin-region" name="origin_region" aria-describedby="number-help">
+                <option value="">From +code</option>
+                <option value="NL">Netherlands</option>
+                <option value="GB">United Kingdom</option>
+                <option value="US">United States</option>
+              </select>
+            </div>
+            <button id="lookup-submit" type="submit">Check public evidence</button>
+            <p id="number-help" class="field-help">
+              National numbers need an origin country. We never infer it from your location.
+            </p>
+          </form>
+
+          <div class="demo-row" aria-label="Fictional or protected examples">
+            <span>Try a public-safe example:</span>
+            <button class="example-button" type="button" data-number="202-555-0147" data-region="US">US fictional range</button>
+            <button class="example-button" type="button" data-number="07700 900185" data-region="GB">GB drama range</button>
+          </div>
+
+          <p id="lookup-status" class="lookup-status" role="status" aria-live="polite">
+            Ready for a lookup.
+          </p>
+        </div>
+
+        <aside class="interpretation-rail" aria-labelledby="rail-title">
+          <h2 id="rail-title">How your input is read</h2>
+          <ol>
+            <li>
+              <strong>Origin stays explicit</strong>
+              <span>National input is never assigned a country silently.</span>
+            </li>
+            <li>
+              <strong>One canonical number</strong>
+              <span>Local display and E.164 remain linked in the result.</span>
+            </li>
+            <li>
+              <strong>Sources before labels</strong>
+              <span>Evidence, gaps, and residual risk remain inspectable.</span>
+            </li>
+          </ol>
+          <p class="rail-boundary">
+            Caller ID can be spoofed. Numbering evidence cannot prove who placed a call.
+          </p>
+        </aside>
+      </section>
+
+      <section id="result" class="result" aria-labelledby="result-title" hidden>
+        <header class="result-header">
+          <div>
+            <p class="eyebrow">Interpreted number</p>
+            <h2 id="result-title" tabindex="-1">Lookup result</h2>
+          </div>
+          <p id="result-reference" class="result-reference"></p>
+        </header>
+
+        <div class="number-transcript" aria-label="Normalized number context">
+          <div>
+            <span>Country context</span>
+            <strong id="result-country"></strong>
+          </div>
+          <div>
+            <span>Local display</span>
+            <strong id="result-local"></strong>
+          </div>
+          <div>
+            <span>International</span>
+            <strong id="result-international"></strong>
+          </div>
+          <div>
+            <span>Number type</span>
+            <strong id="result-type"></strong>
+          </div>
+        </div>
+
+        <div class="result-grid">
+          <section class="assessment-panel" aria-labelledby="assessment-title">
+            <p class="section-kicker">Assessment</p>
+            <h3 id="assessment-title">What the evidence can say</h3>
+            <p id="assessment-state" class="assessment-state"></p>
+            <div class="confidence" aria-labelledby="confidence-label">
+              <div class="confidence-copy">
+                <span id="confidence-label">Source confidence, not safety</span>
+                <strong id="confidence-value"></strong>
+              </div>
+              <div class="confidence-track" aria-hidden="true">
+                <span id="confidence-bar"></span>
+              </div>
+            </div>
+            <p id="residual-risk" class="residual-risk"></p>
+          </section>
+
+          <section class="records-panel" aria-labelledby="evidence-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Source records</p>
+                <h3 id="evidence-title">Evidence</h3>
+              </div>
+              <span id="evidence-count" class="count-label"></span>
+            </div>
+            <div id="evidence-list" class="evidence-list"></div>
+          </section>
+
+          <section class="unknowns-panel" aria-labelledby="unknowns-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Visible limitations</p>
+                <h3 id="unknowns-title">Unknowns and gaps</h3>
+              </div>
+              <span id="gap-count" class="count-label"></span>
+            </div>
+            <div id="gap-list" class="gap-list"></div>
+          </section>
+
+          <section class="sources-panel" aria-labelledby="sources-title">
+            <p class="section-kicker">Provenance</p>
+            <h3 id="sources-title">Sources checked</h3>
+            <ul id="sources-list" class="sources-list"></ul>
+            <p id="generated-at" class="generated-at"></p>
+          </section>
+        </div>
+      </section>
+
+      <section class="method" id="method" aria-labelledby="method-title">
+        <div class="method-heading">
+          <p class="eyebrow">The evidence protocol</p>
+          <h2 id="method-title">Unknown is a useful answer.</h2>
+          <p>
+            CallerSignal separates number-plan facts from identity, lookup demand, and call
+            reports. Missing evidence never becomes a “safe” badge.
+          </p>
+        </div>
+        <ol class="method-steps">
+          <li><strong>Normalize</strong><span>Record the input mode, origin decision, and canonical form.</span></li>
+          <li><strong>Check</strong><span>Route to declared public sources for the numbering jurisdiction.</span></li>
+          <li><strong>Explain</strong><span>Return evidence, gaps, confidence, freshness, and spoofing risk together.</span></li>
+        </ol>
+      </section>
+
+      <section class="agents" id="agents" aria-labelledby="agents-title">
+        <div>
+          <p class="eyebrow">Agent-first by contract</p>
+          <h2 id="agents-title">The website is one renderer, not a separate oracle.</h2>
+          <p>
+            CLI JSON, MCP structured content, HTTP, and this page consume the same versioned
+            lookup result.
+          </p>
+          <a href="https://github.com/viggomeesters/callersignal/blob/main/docs/mcp.md">Read the MCP contract</a>
+        </div>
+        <pre aria-label="MCP tool call example"><code>{
+  "name": "lookup_phone_number",
+  "arguments": {
+    "number": "202-555-0147",
+    "origin_region": "US"
+  }
+}</code></pre>
+      </section>
+    </main>
+
+    <footer>
+      <p><strong translate="no">CallerSignal</strong> is an open-source, read-only evidence project.</p>
+      <nav aria-label="Footer navigation">
+        <a href="https://github.com/viggomeesters/callersignal">Source</a>
+        <a href="https://github.com/viggomeesters/callersignal/blob/main/docs/data-safety.md">Data safety</a>
+        <a href="https://github.com/viggomeesters/callersignal/blob/main/LICENSE">MIT License</a>
+      </nav>
+    </footer>
+  </body>
+</html>
