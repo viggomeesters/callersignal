@@ -2,9 +2,9 @@
 
 ## Planning contract
 
-The repository foundation is complete at v0.1.0. The sixteen product tasks below remain open in `.go` and are individually claimable. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
+The repository foundation shipped at v0.1.0. On the unreleased `main` branch, twelve of the sixteen product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, and web. Four remain open: report ingestion, reputation aggregation, operational safety, and the first functional release. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
 
-No item in this plan is implemented merely because its target file or interface is described here.
+Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
 ## Phase 1 — Domain truth
 

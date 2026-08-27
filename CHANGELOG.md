@@ -2,6 +2,19 @@
 
 All notable changes to CallerSignal are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and releases use [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Versioned phone-number, source-evidence, lookup-result, and call-report contracts.
+- Country-aware normalization, immutable evidence records, and fail-closed NL, GB, and US numbering adapters backed by public-safe fixtures.
+- One read-only lookup service shared by CLI, MCP, HTTP, and responsive web interfaces.
+- A thin Vercel WSGI/static deployment adapter with same-origin routing and response-security headers.
+
+### Not included
+
+- Public report ingestion, reputation aggregation, production operations, and a stable owned Vercel deployment remain gated work.
+
 ## [0.1.0] - 2026-08-26
 
 ### Added
@@ -18,3 +31,4 @@ All notable changes to CallerSignal are documented here. The format follows [Kee
 - Phone-number lookup, normalization, evidence adapters, CLI, MCP, HTTP, web, community reporting, and reputation behavior remain open product work.
 
 [0.1.0]: https://github.com/viggomeesters/callersignal/releases/tag/v0.1.0
+[Unreleased]: https://github.com/viggomeesters/callersignal/compare/v0.1.0...HEAD

@@ -75,7 +75,9 @@ def test_readme_is_content_first_and_maturity_honest() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert readme.startswith("# CallerSignal\n")
     assert "Current maturity" in readme[:1_000]
-    assert "not implemented yet" in readme[:1_000]
+    assert "implements the read-only" in readme[:1_000]
+    assert "does not identify a caller" in readme[:1_000]
+    assert "persistent Vercel production URL" in readme[:1_000]
     assert "Go" in readme
     assert "202-555-0147" in readme
 

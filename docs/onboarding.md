@@ -2,13 +2,14 @@
 
 ## What you are joining
 
-CallerSignal is an agent-first international phone-number intelligence project. The repository foundation and product contracts are complete; the lookup product is intentionally represented as open `.go` work. Do not infer implementation from the planned command examples in the README.
+CallerSignal is an agent-first international phone-number intelligence project. The repository foundation and read-only lookup wedge are implemented: one domain service powers CLI, MCP, HTTP, and web surfaces for pinned public-safe NL, GB, and US numbering evidence. The `.go` backlog keeps privacy-sensitive reporting, reputation, production operations, and release work explicitly separate.
 
 ## Prerequisites
 
 - Git
 - Python 3.12 or newer
 - [uv](https://docs.astral.sh/uv/)
+- Node.js 20 or newer for the web unit suite
 - Network access on the first `./go` run so the pinned workflow stack can be cached
 
 No private account, API key, database, or proprietary dataset is required for repository validation.
@@ -19,6 +20,8 @@ No private account, API key, database, or proprietary dataset is required for re
 git clone https://github.com/viggomeesters/callersignal.git
 cd callersignal
 make check
+npm --prefix web ci
+npm --prefix web test
 ./go status .
 ./go next .
 ```
@@ -45,7 +48,7 @@ Run `Go` in an agent environment that supports the repository workflow, or inspe
 
 Claim one task only. Treat its `scope.modify`, acceptance criteria, and verification commands as a bounded contract. Preserve unrelated changes. When complete, run the task-specific verification and `make check`, then finish with structured evidence and obtain an explicit review decision. The process is described in [`docs/agent-contract.md`](agent-contract.md).
 
-Do not implement a downstream surface before its dependencies are done. In particular, do not create CLI, MCP, HTTP, or web-specific business logic; those surfaces must share the same lookup result.
+Do not implement a downstream surface before its dependencies are done. CLI, MCP, HTTP, and web already share the same lookup result; preserve that boundary rather than adding surface-specific business logic.
 
 ## Development conventions
 
@@ -63,6 +66,7 @@ Do not implement a downstream surface before its dependencies are done. In parti
 make check              # complete local gate
 make test               # repository contract tests
 make lint               # static checks
+npm --prefix web test   # browser-logic unit tests
 make validate-go        # repo-local workflow validation
 ./go status .           # task and workflow summary
 ./go next .             # next dependency-eligible task

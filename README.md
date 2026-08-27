@@ -6,19 +6,23 @@
 
 CallerSignal is an agent-first open-source project for answering “what can we responsibly say about this displayed phone number?” It normalizes a number with explicit country context, checks lawful country-specific evidence, and returns sources, gaps, confidence, and residual uncertainty instead of guessing a caller's identity.
 
-> **Current maturity:** v0.1.0 is the validated repository foundation. The product interfaces below are committed contracts in the dependency-ordered backlog; lookup behavior is not implemented yet.
+> **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge across CLI, MCP, HTTP, and web surfaces. It uses pinned public-safe numbering fixtures and does not identify a caller, query live subscriber data, accept public reports, or yet have an owned persistent Vercel production URL. The `v0.1.0` tag remains the earlier repository-foundation release.
 
-## Planned usage contract
+## Try the read-only lookup
 
-A national-format input is never interpreted without an origin region. International input is normalized directly. Every future interface will render the same versioned lookup result.
+A national-format input is never interpreted without an origin region. International input is normalized directly. Every interface renders the same versioned lookup result.
 
-Planned CLI contract, using a NANPA-reserved fictional number:
+CLI example using a NANPA-reserved fictional number:
 
 ```console
-callersignal lookup "202-555-0147" --region US --json
+PYTHONPATH=src uv run python -m callersignal.cli lookup "202-555-0147" --region US --json
 ```
 
-Planned MCP tool call:
+The MCP server exposes the same result through `lookup_phone_number`:
+
+```console
+PYTHONPATH=src uv run python -m callersignal.mcp_server
+```
 
 ```json
 {
@@ -30,7 +34,13 @@ Planned MCP tool call:
 }
 ```
 
-The response contract will preserve the raw input and interpretation context, provide canonical E.164 and national display forms, list every source checked, and distinguish evidence from gaps and assessments. It will also state that caller ID can be spoofed: a displayed number is not proof of the caller, subscriber, provider, safety, or reachability.
+For a local same-origin website and API:
+
+```console
+PYTHONPATH=src uv run python tests/e2e/site_server.py
+```
+
+Then open `http://127.0.0.1:8765/`. The response contract preserves the raw input and interpretation context, provides canonical E.164 and national display forms, lists every source checked, and distinguishes evidence from gaps and assessments. It also states that caller ID can be spoofed: a displayed number is not proof of the caller, subscriber, provider, safety, or reachability. See the [CLI](docs/cli.md), [MCP](docs/mcp.md), [HTTP](docs/http-api.md), and [web](docs/web.md) guides.
 
 ## Why this repository exists
 
@@ -50,11 +60,11 @@ The initial product wedge covers read-only official numbering evidence for the N
 | --- | --- |
 | [`.go/`](.go/) | Canonical repo-local goals, principles, tasks, evidence, and workflow events |
 | [`docs/vision.json`](docs/vision.json) | Schema-validated product, design, engineering, and public-safety contract |
-| [`docs/architecture.md`](docs/architecture.md) | Target architecture, boundaries, flows, risks, and extension points |
+| [`docs/architecture.md`](docs/architecture.md) | Implemented architecture, boundaries, flows, risks, and extension points |
 | [`docs/implementation-plan.md`](docs/implementation-plan.md) | Dependency-ordered product backlog with acceptance and verification |
 | [`docs/onboarding.md`](docs/onboarding.md) | Fresh-clone setup for developers and agents |
 | [`docs/data-safety.md`](docs/data-safety.md) | Privacy, evidence, moderation, and publication boundaries |
-| [`schemas/`](schemas/) | Committed schemas for repository and future product contracts |
+| [`schemas/`](schemas/) | Committed repository and versioned product contracts |
 | [`scripts/check.sh`](scripts/check.sh) | One-command local repository gate |
 
 ## Installation
@@ -71,9 +81,9 @@ make check
 
 `make check` installs only locked development dependencies and validates schemas, tests, documentation, assets, privacy rules, formatting, and `.go` state. See the complete [onboarding guide](docs/onboarding.md) and [agent contract](docs/agent-contract.md).
 
-## Development: work on the next task
+## Development: continue the backlog
 
-The repository foundation is complete; product implementation remains deliberately open in `.go`. Read [`AGENTS.md`](AGENTS.md), then run:
+The public read-only wedge is implemented. Privacy-sensitive reporting, reputation aggregation, operational safety, and the first functional release remain explicit `.go` work. Read [`AGENTS.md`](AGENTS.md), then run:
 
 ```console
 Go

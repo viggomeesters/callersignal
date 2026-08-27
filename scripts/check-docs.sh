@@ -22,7 +22,7 @@ for heading in \
   'Current maturity' \
   'Repository map' \
   'Installation' \
-  'Development: work on the next task' \
+  'Development: continue the backlog' \
   'Public-safety boundary' \
   'License'; do
   rg -q "$heading" README.md || { printf 'README section missing: %s\n' "$heading" >&2; exit 1; }

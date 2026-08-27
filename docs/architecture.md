@@ -2,7 +2,7 @@
 
 ## Status and intent
 
-CallerSignal is currently a validated repository foundation, not a running lookup service. This document defines the target architecture that the open `.go` product tasks must implement. The architecture keeps one domain truth behind CLI, MCP, HTTP, and web adapters, and it fails closed when evidence is missing or unreliable.
+CallerSignal's unreleased `main` branch is a running read-only lookup service backed by pinned public-safe NL, GB, and US numbering fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, and CLI, MCP, HTTP, and web surfaces are implemented. They keep one domain truth and fail closed when evidence is missing or unreliable. Report ingestion, reputation aggregation, production operations, and the first functional release remain open `.go` work.
 
 ## Context flow
 
@@ -47,7 +47,7 @@ Public reporting is outside the read-only wedge. It can start only after privacy
 
 The domain core remains deterministic: it receives normalized input and source observations, then emits a result. Network access belongs inside country adapters. Durable evidence writes belong behind the evidence-ledger interface. Report mutations belong behind the reporting service. Metrics, logs, caches, notifications, and rate limits are explicit ports rather than hidden domain side effects.
 
-The initial implementation should prefer replaceable local interfaces and deterministic public-safe fixtures. A production database, queue, cache, deployment platform, and analytics vendor are deferred decisions; choosing them before the read-only contracts are proven would harden assumptions without evidence.
+The read-only implementation uses replaceable local interfaces and deterministic public-safe fixtures. It includes a thin Vercel adapter, while an owned production deployment, database, queue, cache, analytics vendor, and all mutation infrastructure remain deferred decisions.
 
 ## Failure semantics
 

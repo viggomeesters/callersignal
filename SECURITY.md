@@ -18,7 +18,7 @@ Maintainers aim to acknowledge a complete report within five business days, asse
 
 ## Scope
 
-In scope are repository tooling, schemas, future product code, dependency or supply-chain risks, source-ingestion boundaries, authorization and rate-limit bypasses, privacy leaks, unsafe logging, and evidence or assessment integrity failures.
+In scope are repository tooling, schemas, product code, dependency or supply-chain risks, source-ingestion boundaries, authorization and rate-limit bypasses, privacy leaks, unsafe logging, and evidence or assessment integrity failures.
 
 Claims about a third-party phone number or caller are not security reports. Never submit real personal data as proof. Use [`SUPPORT.md`](SUPPORT.md) for ordinary project questions and [`docs/data-safety.md`](docs/data-safety.md) for the product's privacy boundary.
 
