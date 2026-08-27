@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "pinned_country_fixture",
+  "source": {
+    "source_id": "acm_number_register",
+    "name": "ACM public telephone number register",
+    "authority_type": "official_regulator",
+    "jurisdiction": "NL",
+    "registry_url": "https://www.acm.nl/nl/telefoonnummers-zoeken",
+    "download_url": "https://www.acm.nl/sites/default/files/registers/nummers_csv.zip",
+    "dataset_url": "https://data.overheid.nl/dataset/register-van-toegekende-telefoonnummers",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "retrieved_at": "2026-08-27T07:30:00Z",
+    "download_sha256": "342aa79251fb47112f4e26e8d6cfd85437174568ecefe31aa9fb68263b3a514f"
+  },
+  "records": [
+    {
+      "source_record_id": "74716",
+      "destination": "premium-rate information service with eight digits",
+      "national_range_from": "0906-8844",
+      "national_range_to": "0906-8844",
+      "register_status": "blocked",
+      "range_holder": "Autoriteit Consument en Markt (ACM)",
+      "source_changed_at": "2021-04-20T15:17:22",
+      "source_row_sha256": "000fa25e8ce745254d085260f7f81dd4810189afb6620a25cf96e89f445715b4"
+    }
+  ]
+}
