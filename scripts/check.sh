@@ -7,6 +7,7 @@ cd "$repo_root"
 uv sync --locked --dev
 uv run ruff check tests scripts/validate_repository.py
 uv run pytest -q
+npm test
 bash scripts/validate-go.sh
 bash scripts/check-docs.sh
 bash scripts/check-assets.sh

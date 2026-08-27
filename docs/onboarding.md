@@ -9,7 +9,7 @@ CallerSignal is an agent-first international phone-number intelligence project. 
 - Git
 - Python 3.12 or newer
 - [uv](https://docs.astral.sh/uv/)
-- Node.js 20 or newer for the web unit suite
+- Node.js 22 or newer for the web unit suite
 - Network access on the first `./go` run so the pinned workflow stack can be cached
 
 No private account, API key, database, or proprietary dataset is required for repository validation.
@@ -26,7 +26,7 @@ npm --prefix web test
 ./go next .
 ```
 
-`make check` synchronizes the locked development environment and runs every repository gate. The `go` launcher reads `.go/project.json`, installs the exact required stack version in a user cache, and validates repo-local workflow state before routing commands.
+`make check` synchronizes the locked development environment and runs every repository gate, including the Python and web suites. GitHub CI invokes the same command. The `go` launcher reads `.go/project.json`, installs the exact required stack version in a user cache, and validates repo-local workflow state before routing commands.
 
 ## Read in this order
 

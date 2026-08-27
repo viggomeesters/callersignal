@@ -8,7 +8,7 @@ CallerSignal is an agent-first open-source project for answering “what can we 
 
 > **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge across CLI, MCP, HTTP, and web surfaces. It uses pinned public-safe numbering fixtures and does not identify a caller, query live subscriber data, accept public reports, or yet have an owned persistent Vercel production URL. The `v0.1.0` tag remains the earlier repository-foundation release.
 
-## Try the read-only lookup
+## Usage: read-only lookup
 
 A national-format input is never interpreted without an origin region. International input is normalized directly. Every interface renders the same versioned lookup result.
 
@@ -69,7 +69,7 @@ The initial product wedge covers read-only official numbering evidence for the N
 
 ## Installation
 
-Prerequisites are Git, Python 3.12 or newer, and [uv](https://docs.astral.sh/uv/). The pinned Go workflow stack bootstraps itself through the repository launcher.
+Prerequisites are Git, Python 3.12 or newer, [uv](https://docs.astral.sh/uv/), and Node.js 22 or newer. The pinned Go workflow stack bootstraps itself through the repository launcher.
 
 ```console
 git clone https://github.com/viggomeesters/callersignal.git
@@ -79,7 +79,7 @@ make check
 ./go next .
 ```
 
-`make check` installs only locked development dependencies and validates schemas, tests, documentation, assets, privacy rules, formatting, and `.go` state. See the complete [onboarding guide](docs/onboarding.md) and [agent contract](docs/agent-contract.md).
+`make check` installs only locked development dependencies and validates Python and web tests, schemas, documentation, assets, privacy rules, formatting, and `.go` state. GitHub CI runs that same command. See the complete [onboarding guide](docs/onboarding.md) and [agent contract](docs/agent-contract.md).
 
 ## Development: continue the backlog
 

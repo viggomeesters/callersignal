@@ -1,5 +1,19 @@
 # Public Readiness Evidence
 
+## Current `main` revalidation — 2026-08-27
+
+The public/professional profile was revalidated after the read-only CLI, MCP, HTTP, and web surfaces were added. The current gate includes 105 Python tests, three web unit tests, schema and `.go` validation, documentation and asset checks, and privacy protections. A least-privilege GitHub workflow invokes the same `make check` command with immutable action revisions; it does not create a second validation path.
+
+The current web-profile command is:
+
+```console
+python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py \
+  --public --mode validate --path . --kind web-app \
+  --remote-policy required --release-policy required --url-policy optional --json-schema
+```
+
+The command returned `JA`, exit code `0`, and zero hard blockers. The only two missing checks were soft deploy-URL consistency and liveness checks, because GitHub intentionally has no homepage until an authenticated stable Vercel alias exists. That alias remains a separate publication action and must not be inferred from the anonymous preview proof. The rework is approved only after the pushed GitHub workflow also passes.
+
 ## Verdict
 
 CallerSignal's repository foundation passed the strict public/professional validation profile on 2026-08-26. `repo-complete` returned `JA`, exit code `0`, and `0` hard blockers with remote, release, and metadata policies required. The validated publication revision was `95572648d71e4df6ec2a7f0372a45d12112a8583`.

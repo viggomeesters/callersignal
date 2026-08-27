@@ -16,18 +16,29 @@
       "**"
     ],
     "modify": [
+      ".github/workflows/ci.yml",
+      "AGENTS.md",
+      "README.md",
+      "package.json",
+      "package-lock.json",
       "docs/public-readiness.md",
+      "docs/architecture.md",
+      "docs/agent-contract.md",
+      "docs/onboarding.md",
+      "scripts/check.sh",
       ".go/**"
     ]
   },
   "acceptance": [
     "R-1: All local tests, .go validation, content-first documentation checks, and repository gates pass.",
     "R-2: repo-complete public validation reports no hard blockers after remote, release, and metadata proof.",
-    "R-3: Current files and Git history contain no secrets, private data, unsafe fixtures, or generated runtime state."
+    "R-3: Current files and Git history contain no secrets, private data, unsafe fixtures, or generated runtime state.",
+    "R-4: GitHub CI runs the same complete local gate with least-privilege permissions and immutable third-party action revisions.",
+    "R-5: Root package metadata declares the web workspace without publishing or duplicating its implementation."
   ],
   "verification": [
     "make check",
-    "python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --kind generic --remote-policy required --release-policy required --url-policy none --json-schema"
+    "python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --kind web-app --remote-policy required --release-policy required --url-policy optional --json-schema"
   ],
   "claim": {
     "agent": "codex",
@@ -41,6 +52,19 @@
       "agent": "codex-reviewer",
       "status": "approved",
       "evidence": "R-1 through R-3 approved: thirteen tests and all local gates pass; repo-complete public validation is JA with zero hard blockers; public remote is main-based with description and eight topics; history and current-tree scans contain no original session numbers, high-confidence secrets, private filenames, unsafe fixtures, or generated runtime state."
+    },
+    {
+      "created_at": "2026-08-27T10:07:44+02:00",
+      "agent": "codex-reviewer",
+      "status": "needs_fix",
+      "evidence": "Strict public repo-complete revalidation after adding the product surfaces returned DEELTIJD with two hard blockers: no GitHub workflow and no literal README Usage section. The local gate remains green, but public readiness must include remote CI and checker-recognized usage documentation.",
+      "owner": "codex"
+    },
+    {
+      "created_at": "2026-08-27T10:12:26+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "Rework approved for R-1 through R-5: canonical local gate passes 105 Python and 3 web tests; workflow YAML is valid and pins official actions by immutable SHA with contents-read; strict public web-app repo-complete returns JA with zero hard blockers; privacy and history checks pass. Stable deploy URL remains an explicitly documented soft external-account boundary."
     }
   ],
   "evidence": [
@@ -78,6 +102,52 @@
       },
       "review": {
         "outcome": "passed strict repo-complete returned JA with zero hard blockers and independent tree, history, asset, remote, release, metadata, privacy, secret, generated-state, and large-binary readbacks agreed",
+        "skip_reason": null
+      }
+    },
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-27T10:12:26+02:00",
+      "task_id": "foundation-public-readiness",
+      "agent": "codex",
+      "summary": "changed_files=.github/workflows/ci.yml,package.json,package-lock.json,README.md,AGENTS.md,docs/architecture.md,docs/agent-contract.md,docs/onboarding.md,docs/public-readiness.md,scripts/check.sh,.go/tasks/active/foundation-public-readiness.json; verification=make check rc=0 (105 Python tests, 3 web tests, workflow/docs/assets/public-safety green); workflow YAML parse rc=0; npm lock audit rc=0; repo-complete public web-app validate status=JA exit_code=0 missing_hard_count=0; ./go validate . rc=0; git diff --check rc=0; critic=CI uses contents-read only, timeout/concurrency controls, and immutable official checkout/setup-uv/setup-node SHAs; local and remote gates share make check; root package is private workspace metadata; privacy/history/secret checks remain green; two expected soft deploy checks remain pending authenticated Vercel ownership",
+      "changed_files": [
+        ".github/workflows/ci.yml",
+        "package.json",
+        "package-lock.json",
+        "README.md",
+        "AGENTS.md",
+        "docs/architecture.md",
+        "docs/agent-contract.md",
+        "docs/onboarding.md",
+        "docs/public-readiness.md",
+        "scripts/check.sh",
+        ".go/tasks/active/foundation-public-readiness.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "make check rc=0 (105 Python tests, 3 web tests, workflow/docs/assets/public-safety green)",
+        "result": "make check rc=0 (105 Python tests, 3 web tests, workflow/docs/assets/public-safety green)"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "CI uses contents-read only, timeout/concurrency controls, and immutable official checkout/setup-uv/setup-node SHAs",
         "skip_reason": null
       }
     }

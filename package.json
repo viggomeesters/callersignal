@@ -1,0 +1,17 @@
+{
+  "name": "callersignal",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Evidence-backed international phone-number intelligence for agents and the web.",
+  "license": "MIT",
+  "workspaces": [
+    "web"
+  ],
+  "scripts": {
+    "check": "npm --prefix web run check",
+    "test": "npm --prefix web test"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

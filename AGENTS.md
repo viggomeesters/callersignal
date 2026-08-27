@@ -35,6 +35,6 @@ Stop for explicit direction when a change requires uncertain data rights, real-p
 
 ## Validation and release
 
-`make check` is the canonical local gate. GitHub Actions are intentionally not used. A public release additionally requires strict `repo-complete` validation, visual inspection, privacy and Git-history scans, a clean tree, and GitHub readback of visibility, default branch, metadata, tag, and release.
+`make check` is the canonical local gate, and GitHub CI must run that same command without introducing a second validation path. A public release additionally requires strict `repo-complete` validation, visual inspection, privacy and Git-history scans, a clean tree, and GitHub readback of visibility, default branch, metadata, tag, and release.
 
 See [`docs/agent-contract.md`](docs/agent-contract.md) for the full execution and evidence standard.

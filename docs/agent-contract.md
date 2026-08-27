@@ -32,7 +32,7 @@ The agent must fail closed on unavailable evidence, preserve unknowns, keep look
 
 - Use `apply_patch` for intentional file edits and deterministic tools for generated lock or asset files.
 - Keep canonical `.go` state tracked; keep locks, resumes, run snapshots, caches, and local environments ignored.
-- Do not add GitHub Actions; `make check` is the equivalent local gate for this repository.
+- Keep `make check` as the single validation truth; GitHub CI may invoke it but must not reimplement a divergent gate.
 - Never commit `.env` files, private keys, credentials, downloaded private datasets, recordings, screenshots with personal data, or raw lookup exports.
 - Keep commits scoped and reviewable. Release only from a clean tree after local, privacy, remote, and release readback checks pass.
 

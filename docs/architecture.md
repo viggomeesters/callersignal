@@ -75,6 +75,6 @@ Secrets and private data may exist only in ignored local configuration or an app
 
 ## Repository and validation architecture
 
-`.go` is the source of truth for objectives, dependency order, acceptance, verification, evidence, and task state. `docs/vision.json` is the tested design contract. `make check` is the public local gate; it validates both. GitHub Actions are intentionally absent, so contributors and agents run the same deterministic gate before review and release.
+`.go` is the source of truth for objectives, dependency order, acceptance, verification, evidence, and task state. `docs/vision.json` is the tested design contract. `make check` is the public local gate; it validates both. The least-privilege GitHub workflow runs that exact command, so local and remote validation have one deterministic truth path.
 
 Decisions that change a public boundary, schema, source-reuse basis, storage model, moderation policy, or supported claim require an architecture decision record and corresponding updates to the vision contract and affected `.go` tasks.
