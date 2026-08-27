@@ -134,6 +134,38 @@ def test_vercel_wsgi_entrypoint_delegates_to_canonical_http_result() -> None:
     lookup_validator().validate(result)
 
 
+def test_vercel_health_entrypoint_delegates_to_canonical_health_result() -> None:
+    entrypoint = ROOT / "api" / "healthz.py"
+    spec = importlib.util.spec_from_file_location("callersignal_web_health", entrypoint)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    captured: dict = {}
+
+    def start_response(status, headers):
+        captured["status"] = status
+        captured["headers"] = dict(headers)
+
+    body = b"".join(
+        module.app(
+            {
+                "REQUEST_METHOD": "GET",
+                "PATH_INFO": "/api/healthz",
+                "QUERY_STRING": "",
+            },
+            start_response,
+        )
+    )
+
+    assert captured["status"] == "200 OK"
+    assert captured["headers"]["Cache-Control"] == "no-store"
+    assert json.loads(body) == {
+        "schema_version": "1.0.0",
+        "service": "callersignal",
+        "status": "ok",
+    }
+
+
 def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> None:
     config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
 
@@ -142,6 +174,7 @@ def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> No
     }
     assert rewrites == {
         "/v1/lookup": "/api/index",
+        "/healthz": "/api/healthz",
         "/assets/:path*": "/web/assets/:path*",
         "/": "/web/index",
     }
