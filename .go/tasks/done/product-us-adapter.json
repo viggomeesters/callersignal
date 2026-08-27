@@ -1,0 +1,86 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-us-adapter",
+  "project": "callersignal",
+  "status": "done",
+  "order": 320,
+  "summary": "Implement the United States official-numbering adapter",
+  "description": "Combine permitted NANPA and regulator evidence without treating numbering-plan validity as caller identity.",
+  "depends_on": [
+    "product-normalization-core",
+    "product-country-adapter-contract"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/adapters/base.py"
+    ],
+    "modify": [
+      "src/callersignal/adapters/us.py",
+      "tests/adapters/test_us.py",
+      "fixtures/us/**"
+    ]
+  },
+  "acceptance": [
+    "R-1: The adapter resolves covered US numbering evidence from pinned public-safe fixtures with provenance and freshness.",
+    "R-2: Reserved example numbers remain distinguishable from assignable and assigned numbers."
+  ],
+  "verification": [
+    "uv run pytest tests/adapters/test_us.py -q"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-27T09:07:57+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-27T09:13:19+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "R-1 approved: seven focused tests prove covered US numbering context resolves from pinned NANPA facts with FCC regulatory context, complete provenance, declared freshness, and schema-valid evidence. R-2 approved: NPA-level assignment status and line-level fictional reservation remain separately scoped, no exact-number/provider/subscriber/caller inference exists, and unpinned, unsupported, and stale results are explicit. All 78 repository tests and public-safety gates pass."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-27T09:13:19+02:00",
+      "task_id": "product-us-adapter",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/adapters/us.py,tests/adapters/test_us.py,fixtures/us/nanpa_public_numbering.json; verification=uv run pytest tests/adapters/test_us.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 the public-safe fixture pins NANPA NPA and 555 references plus FCC regulatory context with retrieval timestamps, file/snapshot/report digests, record/fact digests, and schema-valid freshness. R-2 NPA assignable, assigned, and in-service status is scoped to numbering_plan while fictional_use is scoped to the exact reserved line range; limitations prohibit exact-number assignment, provider, subscriber, caller, or safety inference; unpinned, foreign, and stale paths fail closed",
+      "changed_files": [
+        "src/callersignal/adapters/us.py",
+        "tests/adapters/test_us.py",
+        "fixtures/us/nanpa_public_numbering.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/adapters/test_us.py -q && make check && git diff --check && ./go validate . rc=0",
+        "result": "uv run pytest tests/adapters/test_us.py -q && make check && git diff --check && ./go validate . rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved R-1 the public-safe fixture pins NANPA NPA and 555 references plus FCC regulatory context with retrieval timestamps, file/snapshot/report digests, record/fact digests, and schema-valid freshness. R-2 NPA assignable, assigned, and in-service status is scoped to numbering_plan while fictional_use is scoped to the exact reserved line range",
+        "skip_reason": null
+      }
+    }
+  ]
+}

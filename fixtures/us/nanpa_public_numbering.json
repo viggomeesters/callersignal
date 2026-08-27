@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "pinned_country_fixture",
+  "source": {
+    "source_id": "nanpa_public_numbering",
+    "name": "NANPA public numbering references",
+    "authority_type": "numbering_administrator",
+    "jurisdiction": "US",
+    "registry_url": "https://nanpa.com/numbering/555-line-numbers",
+    "license": "Public factual extract with source attribution",
+    "retrieved_at": "2026-08-27T08:00:00Z"
+  },
+  "regulatory_context": {
+    "source": "Federal Communications Commission",
+    "report_url": "https://docs.fcc.gov/public/attachments/DOC-408489A1.pdf",
+    "report_sha256": "e934040e5e6106a67eea45b89d0e8075f8a28dbcfcafcfdd6c418b344506afe6",
+    "basis": "The FCC report identifies NANPA and the public NPA report as numbering sources."
+  },
+  "documents": {
+    "npa_report": {
+      "url": "https://reports.nanpa.com/public/npa_report.csv",
+      "file_date": "2026-08-27",
+      "download_sha256": "8b99abce580d2974633edcda7e75f0c7502cd35dab268daff6aa21834327ef37"
+    },
+    "line_555_reference": {
+      "url": "https://nanpa.com/numbering/555-line-numbers",
+      "snapshot_sha256": "8d162ae0a410f69a621297aaf03f7bf113699501f25f37ed99b8901ca0f173df"
+    }
+  },
+  "records": {
+    "npa": [
+      {
+        "source_record_id": "npa-202",
+        "npa": "202",
+        "country": "US",
+        "assignable": true,
+        "assigned": true,
+        "in_service": true,
+        "source_row_sha256": "4c1611c09388c2c9a032fccc7d5ac553e1e9d2e939232c94b6b025d1b15b085f"
+      }
+    ],
+    "reserved_lines": [
+      {
+        "source_record_id": "555-fictional-line-range",
+        "nxx": "555",
+        "line_from": "0100",
+        "line_to": "0199",
+        "designation": "fictional_use",
+        "source_fact_sha256": "1f059eb55910da3304fe5e027d55dec4d5c99d9d4d0c70400c03e38518736a59"
+      }
+    ]
+  }
+}
