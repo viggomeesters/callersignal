@@ -26,7 +26,7 @@ npm --prefix web test
 ./go next .
 ```
 
-`make check` synchronizes the locked development environment and runs every repository gate, including the Python and web suites. GitHub CI invokes the same command. The `go` launcher reads `.go/project.json`, installs the exact required stack version in a user cache, and validates repo-local workflow state before routing commands.
+`make check` synchronizes the locked development environment and runs every repository gate, including the Python and web suites. The GitHub workflow is configured to invoke the same command. The `go` launcher reads `.go/project.json`, installs the exact required stack version in a user cache, and validates repo-local workflow state before routing commands.
 
 ## Read in this order
 

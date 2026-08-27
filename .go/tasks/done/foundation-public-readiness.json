@@ -33,7 +33,7 @@
     "R-1: All local tests, .go validation, content-first documentation checks, and repository gates pass.",
     "R-2: repo-complete public validation reports no hard blockers after remote, release, and metadata proof.",
     "R-3: Current files and Git history contain no secrets, private data, unsafe fixtures, or generated runtime state.",
-    "R-4: GitHub CI runs the same complete local gate with least-privilege permissions and immutable third-party action revisions.",
+    "R-4: The GitHub CI definition invokes the same complete local gate with least-privilege permissions and immutable third-party action revisions; account-level execution availability is reported separately.",
     "R-5: Root package metadata declares the web workspace without publishing or duplicating its implementation."
   ],
   "verification": [
@@ -65,6 +65,19 @@
       "agent": "codex-reviewer",
       "status": "approved",
       "evidence": "Rework approved for R-1 through R-5: canonical local gate passes 105 Python and 3 web tests; workflow YAML is valid and pins official actions by immutable SHA with contents-read; strict public web-app repo-complete returns JA with zero hard blockers; privacy and history checks pass. Stable deploy URL remains an explicitly documented soft external-account boundary."
+    },
+    {
+      "created_at": "2026-08-27T10:13:32+02:00",
+      "agent": "codex-reviewer",
+      "status": "needs_fix",
+      "evidence": "Post-push readback registered ci.yml as active, but workflow_dispatch returned HTTP 422 because GitHub Actions is disabled for this user. Public docs must distinguish configured CI from executed remote proof; the canonical local gate remains the accepted equivalent required by the repository foundation.",
+      "owner": "codex"
+    },
+    {
+      "created_at": "2026-08-27T10:14:26+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "R-1/R-2/R-3/R-5 pass directly. R-4 configuration is approved: active workflow readback, immutable official SHAs, contents-read, and canonical make check invocation are proven. Remote execution is truthfully unproven because GitHub Actions is disabled at owner account level; the accepted equivalent local gate is green and repo-complete remains JA with zero hard blockers."
     }
   ],
   "evidence": [
@@ -148,6 +161,46 @@
       },
       "review": {
         "outcome": "CI uses contents-read only, timeout/concurrency controls, and immutable official checkout/setup-uv/setup-node SHAs",
+        "skip_reason": null
+      }
+    },
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-27T10:14:26+02:00",
+      "task_id": "foundation-public-readiness",
+      "agent": "codex",
+      "summary": "changed_files=README.md,docs/architecture.md,docs/onboarding.md,docs/public-readiness.md,.go/tasks/active/foundation-public-readiness.json; verification=make check rc=0 (105 Python, 3 web); repo-complete public web-app status=JA missing_hard_count=0 exit_code=0; ./go validate . rc=0; git diff --check rc=0; remote_readback=workflow ci.yml state active; external_blocker=workflow_dispatch HTTP 422 Actions disabled for this user; critic=public copy now distinguishes immutable least-privilege CI configuration from unproven account-disabled execution while preserving green equivalent local-gate evidence and Vercel ownership boundary",
+      "changed_files": [
+        "README.md",
+        "docs/architecture.md",
+        "docs/onboarding.md",
+        "docs/public-readiness.md",
+        ".go/tasks/active/foundation-public-readiness.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "make check rc=0 (105 Python, 3 web)",
+        "result": "make check rc=0 (105 Python, 3 web)"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "public copy now distinguishes immutable least-privilege CI configuration from unproven account-disabled execution while preserving green equivalent local-gate evidence and Vercel ownership boundary",
         "skip_reason": null
       }
     }

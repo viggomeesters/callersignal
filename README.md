@@ -79,7 +79,7 @@ make check
 ./go next .
 ```
 
-`make check` installs only locked development dependencies and validates Python and web tests, schemas, documentation, assets, privacy rules, formatting, and `.go` state. GitHub CI runs that same command. See the complete [onboarding guide](docs/onboarding.md) and [agent contract](docs/agent-contract.md).
+`make check` installs only locked development dependencies and validates Python and web tests, schemas, documentation, assets, privacy rules, formatting, and `.go` state. The GitHub workflow is configured to run that same command. See the complete [onboarding guide](docs/onboarding.md) and [agent contract](docs/agent-contract.md).
 
 ## Development: continue the backlog
 
