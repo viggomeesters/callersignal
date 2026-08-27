@@ -1,0 +1,85 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-country-adapter-contract",
+  "project": "callersignal",
+  "status": "done",
+  "order": 220,
+  "summary": "Define the country-adapter protocol and conformance suite",
+  "description": "Make official numbering sources independently implementable and testable with explicit limitations.",
+  "depends_on": [
+    "product-domain-contracts"
+  ],
+  "scope": {
+    "read": [
+      "schemas/**"
+    ],
+    "modify": [
+      "src/callersignal/adapters/base.py",
+      "tests/contract/test_country_adapters.py",
+      "docs/country-adapters.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: Adapters declare country coverage, source authority, license, freshness, failure behavior, and portability limitations.",
+    "R-2: Missing or stale source evidence fails closed to unknown rather than a safe or identity verdict."
+  ],
+  "verification": [
+    "uv run pytest tests/contract/test_country_adapters.py -q"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-27T08:48:56+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-27T08:56:46+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "R-1 approved: source declarations enforce country coverage, authority, reuse, license, freshness, failure, permitted-claim, and portability metadata. R-2 approved: 11 focused tests prove unavailable and missing evidence use typed gaps, stale observations remain marked stale and unknown, restricted identity claims fail closed, evidence views are immutable, and no adapter assessment or safety verdict exists. All 58 repository tests and public-safety gates pass."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-27T08:56:13+02:00",
+      "task_id": "product-country-adapter-contract",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/adapters/base.py,tests/contract/test_country_adapters.py,docs/country-adapters.md; verification=uv run pytest tests/contract/test_country_adapters.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 source declarations require country coverage, authority, URL, reuse basis, license, permitted claims, freshness, typed-gap failure behavior, and portability limitations; R-2 unavailable and missing evidence return typed gaps, stale observations must be marked stale, restricted identity evidence is rejected, and adapters expose no assessment or safety verdict; domain review reconciled stale-evidence visibility with fail-closed status and deliberately skipped ADR because this implements existing contracts",
+      "changed_files": [
+        "src/callersignal/adapters/base.py",
+        "tests/contract/test_country_adapters.py",
+        "docs/country-adapters.md"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/contract/test_country_adapters.py -q && make check && git diff --check && ./go validate . rc=0",
+        "result": "uv run pytest tests/contract/test_country_adapters.py -q && make check && git diff --check && ./go validate . rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved R-1 source declarations require country coverage, authority, URL, reuse basis, license, permitted claims, freshness, typed-gap failure behavior, and portability limitations",
+        "skip_reason": null
+      }
+    }
+  ]
+}
