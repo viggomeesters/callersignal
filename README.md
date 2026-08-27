@@ -6,11 +6,13 @@
 
 CallerSignal is an agent-first open-source project for answering “what can we responsibly say about this displayed phone number?” It normalizes a number with explicit country context, checks lawful country-specific evidence, and returns sources, gaps, confidence, and residual uncertainty instead of guessing a caller's identity.
 
-> **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge across CLI, MCP, HTTP, and web surfaces. It uses pinned public-safe numbering fixtures and does not identify a caller, query live subscriber data, accept public reports, or yet have an owned persistent Vercel production URL. The `v0.1.0` tag remains the earlier repository-foundation release.
+> **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge across CLI, MCP, HTTP, and web surfaces, persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It uses pinned public-safe numbering fixtures and does not identify a caller, query live subscriber data, or accept public reports. The `v0.1.0` tag remains the earlier repository-foundation release.
 
 ## Usage: read-only lookup
 
 A national-format input is never interpreted without an origin region. International input is normalized directly. Every interface renders the same versioned lookup result.
+
+Use the [public website](https://callersignal.vercel.app/) or run any interface locally.
 
 CLI example using a NANPA-reserved fictional number:
 

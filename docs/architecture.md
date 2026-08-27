@@ -47,7 +47,7 @@ Public reporting is outside the read-only wedge. It can start only after privacy
 
 The domain core remains deterministic: it receives normalized input and source observations, then emits a result. Network access belongs inside country adapters. Durable evidence writes belong behind the evidence-ledger interface. Report mutations belong behind the reporting service. Metrics, logs, caches, notifications, and rate limits are explicit ports rather than hidden domain side effects.
 
-The read-only implementation uses replaceable local interfaces and deterministic public-safe fixtures. It includes a thin Vercel adapter, while an owned production deployment, database, queue, cache, analytics vendor, and all mutation infrastructure remain deferred decisions.
+The read-only implementation uses replaceable local interfaces and deterministic public-safe fixtures. A thin Vercel adapter serves the owned production deployment, while a database, queue, cache, analytics vendor, and all mutation infrastructure remain deferred decisions.
 
 ## Failure semantics
 

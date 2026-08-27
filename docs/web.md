@@ -61,18 +61,20 @@ Visual evidence:
 
 ## Vercel shape
 
-`vercel.json` defines the static site, same-origin `/v1/lookup` rewrite, response-security headers, and Python function bundle. `api/index.py` exports the WSGI `app` expected by Vercel and only maps the platform path to the canonical HTTP application. The repository-root `pyproject.toml` and `uv.lock` provide the pinned production dependency.
+`vercel.json` defines the static site, same-origin `/v1/lookup` and `/healthz` rewrites, response-security headers, and Python function bundle. `api/index.py` and `api/healthz.py` export the WSGI apps expected by Vercel and map platform paths to the canonical HTTP application. The repository-root `pyproject.toml` and `uv.lock` provide the pinned production dependency.
 
 Deploy from the repository root. The function configuration explicitly includes `src/callersignal`; the deployment therefore bundles shared domain code without maintaining a copy or a browser-only truth path. No production secret is required for the read-only pinned-source wedge.
 
 ```bash
-npx vercel@latest deploy
+npx vercel@latest deploy --prod --yes
 ```
 
 Before treating a deployment as shipped, verify the production homepage, `/v1/lookup` success and validation responses, CSP/security headers, the deployment alias, and the GitHub homepage readback. Do not enable request logging that records raw query strings or add telemetry that contains phone numbers, IP addresses, origin regions, results, or lookup histories.
 
 ## Deployment proof and ownership boundary
 
-An anonymous Vercel preview was built and exercised end to end on 27 August 2026. Bundle readback found 11 files from the canonical `src/callersignal` package. The public homepage and JavaScript asset returned `200`; the live lookup returned schema `1.0.0`, two public evidence records for the reserved US fixture, `numbering_context_only`, the shared spoofing warning, and `Cache-Control: no-store`. National-format input without an origin returned `400` with `origin_region_required`. A real-browser lookup on the preview rendered the same two records with zero console errors and zero horizontal overflow.
+CallerSignal is persistently hosted at [`https://callersignal.vercel.app/`](https://callersignal.vercel.app/) in the authenticated `viggos-projects-eac4720a/callersignal` Vercel project. Production deployment `dpl_GZVMmev5cHVMWV2Jogjpy8CmMEyT` was read back as `Ready` on 27 August 2026 with separate Python functions for lookup and health.
 
-Anonymous previews expire and cannot be a canonical production URL. A maintainer must authenticate the Vercel CLI, deploy with `--prod`, and read back the owned project and stable alias before describing CallerSignal as persistently hosted. Ephemeral preview and claim URLs are deliberately not committed.
+The stable homepage, `/healthz`, lookup success, and national-input validation paths returned `200`, `200`, `200`, and `400` respectively. The lookup returned schema `1.0.0`, two public evidence records for the reserved US fixture, `numbering_context_only`, the shared spoofing warning, and `Cache-Control: no-store`. The homepage exposed CSP, HSTS, referrer, permissions, MIME-sniffing, and frame-denial headers. A real-browser production lookup rendered two records, focused `result-title`, had zero horizontal overflow, and produced no console warnings or errors.
+
+Deployment is currently manual: the Vercel project owns the stable production alias, but its GitHub repository integration is not connected. A pushed revision is not live until a maintainer runs the documented production deploy and repeats the alias checks. Local `.vercel` linkage remains ignored generated state.

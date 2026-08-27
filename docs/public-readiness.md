@@ -2,17 +2,17 @@
 
 ## Current `main` revalidation — 2026-08-27
 
-The public/professional profile was revalidated after the read-only CLI, MCP, HTTP, and web surfaces were added. The current gate includes 105 Python tests, three web unit tests, schema and `.go` validation, documentation and asset checks, and privacy protections. A least-privilege GitHub workflow is configured to invoke the same `make check` command with immutable action revisions; it does not create a second validation path.
+The public/professional profile was revalidated after the read-only CLI, MCP, HTTP, and web surfaces were added. The current gate includes 106 Python tests, three web unit tests, schema and `.go` validation, documentation and asset checks, and privacy protections. A least-privilege GitHub workflow is configured to invoke the same `make check` command with immutable action revisions; it does not create a second validation path.
 
 The current web-profile command is:
 
 ```console
 python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py \
   --public --mode validate --path . --kind web-app \
-  --remote-policy required --release-policy required --url-policy optional --json-schema
+  --remote-policy required --release-policy required --url-policy required --json-schema
 ```
 
-The command returned `JA`, exit code `0`, and zero hard blockers. The only two missing checks were soft deploy-URL consistency and liveness checks, because GitHub intentionally has no homepage until an authenticated stable Vercel alias exists. That alias remains a separate publication action and must not be inferred from the anonymous preview proof.
+After authenticated production deployment, the command returned `JA`, exit code `0`, and zero hard blockers with deploy-URL checks required. GitHub homepage metadata and the README both point to the live `https://callersignal.vercel.app/` alias; homepage, lookup, health, security-header, and real-browser readbacks all passed.
 
 Post-push readback registered `.github/workflows/ci.yml` as an active workflow. GitHub nevertheless rejected a manual run with HTTP `422` because Actions is disabled for the repository owner's account. The repository does not change that account-level setting autonomously. Until the owner enables Actions, the repeatedly green local `make check` execution is the authoritative equivalent gate; remote execution remains explicitly unproven.
 

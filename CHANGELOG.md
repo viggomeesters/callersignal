@@ -10,10 +10,11 @@ All notable changes to CallerSignal are documented here. The format follows [Kee
 - Country-aware normalization, immutable evidence records, and fail-closed NL, GB, and US numbering adapters backed by public-safe fixtures.
 - One read-only lookup service shared by CLI, MCP, HTTP, and responsive web interfaces.
 - A thin Vercel WSGI/static deployment adapter with same-origin routing and response-security headers.
+- An owned production deployment at `https://callersignal.vercel.app/` with a privacy-safe health endpoint.
 
 ### Not included
 
-- Public report ingestion, reputation aggregation, production operations, and a stable owned Vercel deployment remain gated work.
+- Public report ingestion, reputation aggregation, and broader production operations remain gated work.
 
 ## [0.1.0] - 2026-08-26
 
