@@ -1,0 +1,86 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-gb-adapter",
+  "project": "callersignal",
+  "status": "done",
+  "order": 310,
+  "summary": "Implement the United Kingdom official-numbering adapter",
+  "description": "Ingest and query permitted Ofcom numbering evidence with explicit allocation semantics.",
+  "depends_on": [
+    "product-normalization-core",
+    "product-country-adapter-contract"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/adapters/base.py"
+    ],
+    "modify": [
+      "src/callersignal/adapters/gb.py",
+      "tests/adapters/test_gb.py",
+      "fixtures/gb/**"
+    ]
+  },
+  "acceptance": [
+    "R-1: The adapter resolves covered Ofcom ranges from a pinned public-safe fixture with provenance and freshness.",
+    "R-2: Unknown, stale, or non-covered data remains explicitly unknown."
+  ],
+  "verification": [
+    "uv run pytest tests/adapters/test_gb.py -q"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-27T09:03:40+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-27T09:07:18+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "R-1 approved: six focused tests prove the Ofcom long-term protected mobile drama range resolves from a public-safe pinned fixture with complete source provenance and schema-valid freshness. R-2 approved: non-covered, unsupported, and stale paths are explicit and fail closed; output contains only reserved_status and never provider, subscriber, caller, assessment, or safety claims. All 71 repository tests and public-safety gates pass."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-27T09:07:17+02:00",
+      "task_id": "product-gb-adapter",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/adapters/gb.py,tests/adapters/test_gb.py,fixtures/gb/ofcom_protected_numbers.json; verification=uv run pytest tests/adapters/test_gb.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 pinned Ofcom protected-range CSV provenance includes official URLs, reuse terms, retrieval timestamp, file digest, record digest, range bounds, and schema-valid freshness. R-2 only the explicit drama range matches as reserved_status; other +44 inputs return no_authoritative_data, foreign inputs are unsupported, stale evidence remains marked stale, and no provider, identity, assessment, or safety claim is emitted",
+      "changed_files": [
+        "src/callersignal/adapters/gb.py",
+        "tests/adapters/test_gb.py",
+        "fixtures/gb/ofcom_protected_numbers.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/adapters/test_gb.py -q && make check && git diff --check && ./go validate . rc=0",
+        "result": "uv run pytest tests/adapters/test_gb.py -q && make check && git diff --check && ./go validate . rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved R-1 pinned Ofcom protected-range CSV provenance includes official URLs, reuse terms, retrieval timestamp, file digest, record digest, range bounds, and schema-valid freshness. R-2 only the explicit drama range matches as reserved_status",
+        "skip_reason": null
+      }
+    }
+  ]
+}

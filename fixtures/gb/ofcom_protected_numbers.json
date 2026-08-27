@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "pinned_country_fixture",
+  "source": {
+    "source_id": "ofcom_protected_numbers",
+    "name": "Ofcom long-term protected number ranges",
+    "authority_type": "official_regulator",
+    "jurisdiction": "GB",
+    "registry_url": "https://www.ofcom.org.uk/phones-and-broadband/phone-numbers/numbering",
+    "download_url": "https://www.ofcom.org.uk/siteassets/resources/documents/phones-telecoms-and-internet/information-for-industry/numbering/other/protected-numbers.csv?v=191980",
+    "reuse_terms_url": "https://www.ofcom.org.uk/about-ofcom/our-website/copyright",
+    "license": "Ofcom copyright and information re-use terms",
+    "retrieved_at": "2026-08-27T07:45:00Z",
+    "download_sha256": "3f76d82c5b5f1e1558634be7e198543904b988528c4900c1b68aae4a250bfa52"
+  },
+  "records": [
+    {
+      "source_record_id": "protected-mobile-drama",
+      "national_prefix": "7700",
+      "subscriber_from": "900000",
+      "subscriber_to": "900999",
+      "designation": "protected_for_drama",
+      "source_row_sha256": "ee5244e03884a65e93189a730acc00f1c7f3ca62efb2f5c20ff7432b0dfbedc4"
+    }
+  ]
+}
