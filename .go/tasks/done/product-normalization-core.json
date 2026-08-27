@@ -1,0 +1,88 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-normalization-core",
+  "project": "callersignal",
+  "status": "done",
+  "order": 200,
+  "summary": "Implement international phone-number normalization",
+  "description": "Parse national or international input using an explicit origin region and emit canonical E.164 plus display formats.",
+  "depends_on": [
+    "product-domain-contracts"
+  ],
+  "scope": {
+    "read": [
+      "schemas/phone-number.schema.json"
+    ],
+    "modify": [
+      "src/callersignal/numbering.py",
+      "tests/unit/test_numbering.py",
+      "pyproject.toml",
+      "uv.lock"
+    ]
+  },
+  "acceptance": [
+    "R-1: National input requires an origin region while + prefixed input is independently resolvable.",
+    "R-2: Tests cover NL, GB, US, invalid, ambiguous, non-geographic, and short-number cases."
+  ],
+  "verification": [
+    "uv run pytest tests/unit/test_numbering.py -q",
+    "uv run ruff check src tests"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-27T08:38:40+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-27T08:44:41+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "R-1 approved: national input without region raises a typed ambiguity error, while plus-prefixed input resolves independently and ignores locale. R-2 approved: fourteen focused tests cover NL, GB, US, malformed, ambiguous, non-geographic, possible, and short-number behavior; all forty-two repository tests pass."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-27T08:44:41+02:00",
+      "task_id": "product-normalization-core",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/numbering.py,tests/unit/test_numbering.py,pyproject.toml,uv.lock; verification=uv run pytest tests/unit/test_numbering.py -q && uv run ruff check src tests && make check && ./go validate . && git diff --check rc=0; critic=passed TDD covered explicit-region NL and GB input, independent international US input, malformed and ambiguous input, possible-but-unvalidated numbering, non-geographic service numbers, short codes, and JSON-schema conformance without inferring identity or reachability",
+      "changed_files": [
+        "src/callersignal/numbering.py",
+        "tests/unit/test_numbering.py",
+        "pyproject.toml",
+        "uv.lock"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/unit/test_numbering.py -q && uv run ruff check src tests && make check && ./go validate . && git diff --check rc=0",
+        "result": "uv run pytest tests/unit/test_numbering.py -q && uv run ruff check src tests && make check && ./go validate . && git diff --check rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "passed TDD covered explicit-region NL and GB input, independent international US input, malformed and ambiguous input, possible-but-unvalidated numbering, non-geographic service numbers, short codes, and JSON-schema conformance without inferring identity or reachability",
+        "skip_reason": null
+      }
+    }
+  ]
+}
