@@ -20,7 +20,8 @@
           "title": "Public repository readiness",
           "tasks": [
             "foundation-public-hygiene",
-            "foundation-public-readiness"
+            "foundation-public-readiness",
+            "docs-sync-current-maturity"
           ]
         },
         {

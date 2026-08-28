@@ -74,8 +74,8 @@ def load_tasks() -> dict[str, dict]:
 
 def check_task_graph() -> None:
     tasks = load_tasks()
-    if len(tasks) != 25:
-        fail(f"expected 25 repository tasks, found {len(tasks)}")
+    if len(tasks) != 26:
+        fail(f"expected 26 repository tasks, found {len(tasks)}")
     product = {task_id for task_id in tasks if task_id.startswith("product-")}
     foundation = {task_id for task_id in tasks if task_id.startswith("foundation-")}
     if len(product) != 20 or len(foundation) != 5:

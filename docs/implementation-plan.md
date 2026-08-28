@@ -2,7 +2,7 @@
 
 ## Planning contract
 
-The repository foundation shipped at v0.1.0. On the unreleased `main` branch, twelve of the twenty product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, and web. Eight remain open or active: the hybrid reputation direction, risk assessment contract, risk-result UX, source-rights registry, report ingestion, reputation aggregation, operational safety, and the first functional release. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
+The repository foundation shipped at v0.1.0. On the unreleased `main` branch, sixteen of the twenty product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, web, hybrid reputation direction, calibrated risk assessment, risk-result UX, and source-rights intake. Four remain open: report ingestion, reputation aggregation, operational safety, and the first functional release. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
 
 Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
