@@ -4,7 +4,7 @@
   "execution_mode": "agent",
   "id": "product-risk-result-ux",
   "project": "callersignal",
-  "status": "open",
+  "status": "active",
   "depends_on": [
     "product-risk-assessment-contract"
   ],
@@ -21,10 +21,10 @@
       "web/assets/app.js",
       "web/assets/styles.css",
       "web/tests/app.test.js",
-          "tests/e2e/test_web.py",
-          "docs/web.md",
-          "README.md",
-          "web/proof/**"
+      "tests/e2e/test_web.py",
+      "docs/web.md",
+      "README.md",
+      "web/proof/**"
     ]
   },
   "intent_source": {
@@ -89,9 +89,12 @@
     "make check"
   ],
   "claim": {
-    "agent": null,
-    "claimed_at": null
+    "agent": "codex",
+    "claimed_at": "2026-08-28T11:25:43+02:00"
   },
   "evidence": [],
-  "order": 560
+  "order": 560,
+  "work_status": "in_progress",
+  "review_status": "none",
+  "review_history": []
 }

@@ -69,12 +69,23 @@ def test_page_has_semantic_lookup_form_status_and_metadata() -> None:
 
     assert {"number", "origin-region"} <= facts.labels
     assert {"lookup-form", "lookup-status", "result"} <= facts.ids
+    assert {
+        "risk-banner",
+        "risk-state",
+        "risk-headline",
+        "risk-summary",
+        "risk-basis",
+        "risk-action",
+    } <= facts.ids
     assert {"description", "viewport", "theme-color"} <= facts.meta_names
     assert facts.headings[0] == "A number is a signal. Not an identity."
-    assert "What the evidence can say" in facts.headings
+    assert "Why this result" in facts.headings
     assert 'aria-live="polite"' in html
     assert 'type="tel"' in html
     assert 'autocomplete="tel"' in html
+    assert html.count('class="risk-icon ') == 4
+    assert "confidence-bar" not in html
+    assert "confidence-track" not in html
 
 
 def test_styles_prove_focus_responsive_reduced_motion_and_overflow_boundaries() -> None:
@@ -86,6 +97,16 @@ def test_styles_prove_focus_responsive_reduced_motion_and_overflow_boundaries() 
     assert "overflow-wrap: anywhere" in css
     assert "min-height: 44px" in css
     assert "transition: all" not in css
+    state_icons = {
+        "official_warning": "risk-icon-official",
+        "elevated_signals": "risk-icon-elevated",
+        "no_risk_evidence": "risk-icon-cautious",
+        "insufficient_evidence": "risk-icon-unknown",
+    }
+    for state, icon_class in state_icons.items():
+        assert (
+            f'.risk-banner[data-risk-state="{state}"] .{icon_class}' in css
+        )
 
 
 def test_browser_code_uses_the_shared_api_without_a_local_verdict_path() -> None:
@@ -93,9 +114,11 @@ def test_browser_code_uses_the_shared_api_without_a_local_verdict_path() -> None
 
     assert 'fetch(buildLookupURL(' in script
     assert "`/v1/lookup?${query.toString()}`" in script
-    assert "assessment.state" in script
+    assert "assessment.risk" in script
     assert "assessment.confidence" in script
     assert "assessment.residual_risk" in script
+    assert "confidenceScore" not in script
+    assert "confidence-bar" not in script
     assert ".innerHTML" not in script
     assert "Math.random" not in script
     assert "localStorage" not in script

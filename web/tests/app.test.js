@@ -24,6 +24,7 @@ const RESULT = {
     {
       source_id: "nanpa_public_numbering",
       status: "matched",
+      risk_capable: false,
       checked_at: "2026-08-27T09:00:00Z",
     },
   ],
@@ -49,6 +50,20 @@ const RESULT = {
     conclusions: [],
     residual_risk:
       "Caller ID spoofing remains possible; numbering evidence does not prove caller identity.",
+    risk: {
+      state: "insufficient_evidence",
+      headline: "Not enough risk evidence",
+      summary:
+        "Numbering context does not show whether calls displaying this number are harmful.",
+      reason_codes: ["no_risk_capable_source_checked"],
+      evidence_ids: [],
+      source_ids: [],
+      recommended_action: {
+        code: "treat_as_unknown",
+        message:
+          "Treat this result as unknown and verify unexpected requests through a trusted channel.",
+      },
+    },
   },
 };
 
@@ -76,8 +91,16 @@ test("view model only organizes canonical HTTP result fields", () => {
   assert.deepEqual(view.assessment, {
     state: "numbering context only",
     confidence: "high",
-    confidenceScore: 0.99,
     residualRisk: RESULT.assessment.residual_risk,
+  });
+  assert.deepEqual(view.risk, {
+    state: "insufficient_evidence",
+    stateLabel: "Insufficient evidence",
+    headline: "Not enough risk evidence",
+    summary: RESULT.assessment.risk.summary,
+    reasonCodes: ["no_risk_capable_source_checked"],
+    actionCode: "treat_as_unknown",
+    actionMessage: RESULT.assessment.risk.recommended_action.message,
   });
   assert.equal(view.evidence, RESULT.evidence);
   assert.equal(view.gaps, RESULT.gaps);
@@ -107,4 +130,31 @@ test("view model preserves unknown and no-evidence states", () => {
   assert.equal(view.gaps[0].code, "no_authoritative_data");
   assert.equal(view.assessment.state, "unknown");
   assert.equal(view.assessment.confidence, "none");
+});
+
+test("all four canonical risk states preserve distinct state labels", () => {
+  const states = {
+    official_warning: "Official warning",
+    elevated_signals: "Elevated signals",
+    no_risk_evidence: "No risk evidence",
+    insufficient_evidence: "Insufficient evidence",
+  };
+
+  for (const [state, label] of Object.entries(states)) {
+    const fixture = structuredClone(RESULT);
+    fixture.assessment.risk.state = state;
+    const view = toViewModel(fixture);
+
+    assert.equal(view.risk.stateLabel, label);
+  }
+});
+
+test("an unexpected risk state fails closed to insufficient evidence styling", () => {
+  const fixture = structuredClone(RESULT);
+  fixture.assessment.risk.state = "unexpected_state";
+
+  const view = toViewModel(fixture);
+
+  assert.equal(view.risk.state, "insufficient_evidence");
+  assert.equal(view.risk.stateLabel, "Insufficient evidence");
 });

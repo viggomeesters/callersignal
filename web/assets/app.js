@@ -4,6 +4,13 @@ const COUNTRY_NAMES = {
   US: "United States",
 };
 
+const RISK_LABELS = {
+  official_warning: "Official warning",
+  elevated_signals: "Elevated signals",
+  no_risk_evidence: "No risk evidence",
+  insufficient_evidence: "Insufficient evidence",
+};
+
 export function buildLookupURL(number, originRegion) {
   const query = new URLSearchParams({ number });
   if (originRegion) {
@@ -16,6 +23,10 @@ export function toViewModel(result) {
   const canonical = result.phone_number.canonical;
   const presentation = result.phone_number.presentation;
   const assessment = result.assessment;
+  const risk = assessment.risk;
+  const riskState = Object.hasOwn(RISK_LABELS, risk.state)
+    ? risk.state
+    : "insufficient_evidence";
   return {
     number: {
       country: canonical.region ?? "Unsupported jurisdiction",
@@ -27,8 +38,16 @@ export function toViewModel(result) {
     assessment: {
       state: humanize(assessment.state),
       confidence: humanize(assessment.confidence.level),
-      confidenceScore: assessment.confidence.score,
       residualRisk: assessment.residual_risk,
+    },
+    risk: {
+      state: riskState,
+      stateLabel: RISK_LABELS[riskState],
+      headline: risk.headline,
+      summary: risk.summary,
+      reasonCodes: risk.reason_codes,
+      actionCode: risk.recommended_action.code,
+      actionMessage: risk.recommended_action.message,
     },
     evidence: result.evidence,
     gaps: result.gaps,
@@ -146,7 +165,15 @@ function renderGaps(gaps, container) {
 function renderSources(sources, container) {
   const items = sources.map((source) => {
     const item = document.createElement("li");
-    item.append(textElement("span", source.source_id));
+    const sourceCopy = document.createElement("span");
+    sourceCopy.append(
+      textElement("strong", source.source_id),
+      textElement(
+        "small",
+        source.risk_capable ? "Eligible risk source" : "Numbering context only",
+      ),
+    );
+    item.append(sourceCopy);
     const status = textElement("span", humanize(source.status), "source-status");
     status.dataset.status = source.status;
     item.append(status);
@@ -166,10 +193,14 @@ function renderResult(result, elements) {
   elements.resultInternational.textContent = view.number.international;
   elements.resultType.textContent = view.number.type;
   elements.resultReference.textContent = `${view.lookupId} · schema ${result.schema_version}`;
-  elements.assessmentState.textContent = view.assessment.state;
-  const confidencePercent = Math.round(view.assessment.confidenceScore * 100);
-  elements.confidenceValue.textContent = `${view.assessment.confidence} · ${confidencePercent}%`;
-  elements.confidenceBar.style.width = `${confidencePercent}%`;
+  elements.riskBanner.dataset.riskState = view.risk.state;
+  elements.riskState.textContent = view.risk.stateLabel;
+  elements.riskHeadline.textContent = view.risk.headline;
+  elements.riskSummary.textContent = view.risk.summary;
+  elements.riskBasis.textContent = view.risk.reasonCodes.map(humanize).join(", ");
+  elements.riskAction.textContent = view.risk.actionMessage;
+  elements.assessmentState.textContent = `Evidence coverage: ${view.assessment.state}`;
+  elements.confidenceValue.textContent = view.assessment.confidence;
   elements.residualRisk.textContent = view.assessment.residualRisk;
   elements.evidenceCount.textContent = `${view.evidence.length} ${view.evidence.length === 1 ? "record" : "records"}`;
   elements.gapCount.textContent = `${view.gaps.length} ${view.gaps.length === 1 ? "gap" : "gaps"}`;
@@ -196,9 +227,14 @@ function init() {
     resultInternational: document.querySelector("#result-international"),
     resultType: document.querySelector("#result-type"),
     resultReference: document.querySelector("#result-reference"),
+    riskBanner: document.querySelector("#risk-banner"),
+    riskState: document.querySelector("#risk-state"),
+    riskHeadline: document.querySelector("#risk-headline"),
+    riskSummary: document.querySelector("#risk-summary"),
+    riskBasis: document.querySelector("#risk-basis"),
+    riskAction: document.querySelector("#risk-action"),
     assessmentState: document.querySelector("#assessment-state"),
     confidenceValue: document.querySelector("#confidence-value"),
-    confidenceBar: document.querySelector("#confidence-bar"),
     residualRisk: document.querySelector("#residual-risk"),
     evidenceCount: document.querySelector("#evidence-count"),
     evidenceList: document.querySelector("#evidence-list"),

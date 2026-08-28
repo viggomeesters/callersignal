@@ -119,6 +119,42 @@
           <p id="result-reference" class="result-reference"></p>
         </header>
 
+        <section
+          id="risk-banner"
+          class="risk-banner"
+          data-risk-state="insufficient_evidence"
+          aria-labelledby="risk-headline"
+        >
+          <div class="risk-icon-frame" aria-hidden="true">
+            <svg class="risk-icon risk-icon-official" viewBox="0 0 48 48">
+              <path d="M24 4 8 10v12c0 10 6.4 17.1 16 21 9.6-3.9 16-11 16-21V10L24 4Z"></path>
+              <path d="M24 14v12M24 33h.01"></path>
+            </svg>
+            <svg class="risk-icon risk-icon-elevated" viewBox="0 0 48 48">
+              <path d="M24 5 44 41H4L24 5Z"></path>
+              <path d="M24 17v11M24 34h.01"></path>
+            </svg>
+            <svg class="risk-icon risk-icon-cautious" viewBox="0 0 48 48">
+              <circle cx="21" cy="21" r="14"></circle>
+              <path d="M14 21h14M31 31l9 9"></path>
+            </svg>
+            <svg class="risk-icon risk-icon-unknown" viewBox="0 0 48 48">
+              <circle cx="24" cy="24" r="19"></circle>
+              <path d="M18.5 18a6 6 0 0 1 11.2 3c0 4-5.7 4.5-5.7 8M24 35h.01"></path>
+            </svg>
+          </div>
+          <div class="risk-copy">
+            <p id="risk-state" class="risk-state"></p>
+            <h3 id="risk-headline"></h3>
+            <p id="risk-summary" class="risk-summary"></p>
+            <p class="risk-basis"><span>Basis</span><strong id="risk-basis"></strong></p>
+            <div class="risk-action">
+              <span>Recommended next step</span>
+              <p id="risk-action"></p>
+            </div>
+          </div>
+        </section>
+
         <div class="number-transcript" aria-label="Normalized number context">
           <div>
             <span>Country context</span>
@@ -140,17 +176,13 @@
 
         <div class="result-grid">
           <section class="assessment-panel" aria-labelledby="assessment-title">
-            <p class="section-kicker">Assessment</p>
-            <h3 id="assessment-title">What the evidence can say</h3>
+            <p class="section-kicker">Evidence details</p>
+            <h3 id="assessment-title">Why this result</h3>
             <p id="assessment-state" class="assessment-state"></p>
-            <div class="confidence" aria-labelledby="confidence-label">
-              <div class="confidence-copy">
-                <span id="confidence-label">Source confidence, not safety</span>
-                <strong id="confidence-value"></strong>
-              </div>
-              <div class="confidence-track" aria-hidden="true">
-                <span id="confidence-bar"></span>
-              </div>
+            <div class="evidence-confidence" aria-labelledby="confidence-label">
+              <span id="confidence-label">Evidence confidence</span>
+              <strong id="confidence-value"></strong>
+              <small>This rates source observations, not safety.</small>
             </div>
             <p id="residual-risk" class="residual-risk"></p>
           </section>

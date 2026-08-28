@@ -8,7 +8,7 @@ CallerSignal is an agent-first open-source project for answering “what can we 
 
 > **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge across CLI, MCP, HTTP, and web surfaces, persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It uses pinned public-safe numbering fixtures and does not identify a caller, query live subscriber data, or accept public reports. The `v0.1.0` tag remains the earlier repository-foundation release.
 
-The durable direction is a hybrid reputation model: official evidence first, then explicitly licensed or first-party moderated observations only after source-rights, privacy, and abuse gates pass. The shared contract will lead with one calibrated risk state—`official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`—while preserving the evidence and uncertainty underneath. `no_risk_evidence` requires a current eligible risk-capable source and never means that a number is safe; numbering context alone remains `insufficient_evidence`.
+The durable direction is a hybrid reputation model: official evidence first, then explicitly licensed or first-party moderated observations only after source-rights, privacy, and abuse gates pass. Every shared result now contains one calibrated risk state: `official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`. The website leads with that state, its basis, and a concrete next action while preserving the evidence and uncertainty underneath. `no_risk_evidence` requires a current eligible risk-capable source and never means that a number is safe; numbering context alone remains `insufficient_evidence`.
 
 ## Usage: read-only lookup
 

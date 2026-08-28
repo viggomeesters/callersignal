@@ -4,9 +4,9 @@ The CallerSignal website is a read-only renderer over the canonical HTTP result.
 
 ## Product and design read
 
-The page is a public evidence desk for people and agents responding to an unfamiliar displayed number. Its visual language is calm, source-led, and regulator-like; the primary job is to make country interpretation, evidence, unknowns, confidence, and spoofing risk understandable in one scan.
+The page is a public incident desk for people and agents responding to an unfamiliar displayed number. Its visual language is calm, source-led, and regulator-like; the primary job is to make the calibrated risk state, next action, country interpretation, evidence, unknowns, and spoofing risk understandable in one scan.
 
-The interface uses one light theme, one rust-red accent, dark neutral ink, compact squared geometry, a readable Segoe UI/Verdana-family type stack, and a subtle ledger grid. The signature element is the number transcript: country context, national display, international display, and number type remain visibly linked before any assessment appears. Design variance is moderate, motion is limited to result-state continuity, and information density increases only after a lookup.
+The interface uses one light theme, one rust-red accent, dark neutral ink, compact squared geometry, a readable Segoe UI/Verdana-family type stack, and a subtle ledger grid. Its signature is a large state panel that combines an icon, explicit state label, headline, evidence basis, and recommended action. Four colour treatments reinforce but never replace those semantic differences. The number transcript then keeps country context, national display, international display, and number type visibly linked. Design variance is moderate, motion is limited to result-state continuity, and information density increases only after a lookup.
 
 ## Run and verify
 
@@ -26,28 +26,28 @@ npm --prefix web test
 make check
 ```
 
-The Node suite checks URL construction and view-model parity for evidence and unknown states. The Python end-to-end suite checks document semantics, metadata, form labels, focus and responsive CSS, reduced-motion handling, safe DOM constraints, and the Vercel WSGI entrypoint against the canonical lookup schema.
+The Node suite checks URL construction, view-model parity, and distinct text/icon/tone mappings for all four canonical risk states. The Python end-to-end suite checks document semantics, metadata, risk landmarks, form labels, focus and responsive CSS, reduced-motion handling, safe DOM constraints, and the Vercel WSGI entrypoint against the canonical lookup schema.
 
 ## Browser proof
 
-The real same-origin page and API were exercised in a browser on 27 August 2026 using only reserved, fictional, or protected fixtures.
+The real same-origin page and API were exercised in a browser on 28 August 2026 using only reserved, fictional, or protected fixtures.
 
 | Viewport | Result | Horizontal overflow | Console warnings/errors |
 | --- | --- | ---: | ---: |
-| 375 × 812 | Hero, validation, success, and result inspected | 0 px | 0 |
-| 390 × 844 | Validation and no-evidence state inspected | 0 px | 0 |
-| 768 × 900 | Success result inspected | 0 px | 0 |
-| 1024 × 900 | Success result inspected | 0 px | 0 |
-| 1440 × 1000 | Hero and success result inspected | 0 px | 0 |
+| 375 × 812 | Risk result rendered and visually inspected | 0 px | 0 |
+| 390 × 844 | Risk result responsive probe | 0 px | 0 |
+| 768 × 900 | Risk result responsive probe | 0 px | 0 |
+| 1024 × 900 | Risk result responsive probe | 0 px | 0 |
+| 1440 × 1000 | Risk result rendered and visually inspected | 0 px | 0 |
 
-At 1440 px the hero heading occupies two lines and the primary action is visible in the initial viewport. At 375 px the primary button is 51 px high and remains visible at the bottom of the initial viewport. Successful US fixture lookup rendered two source records, focused the result heading, and retained the HTTP residual-risk wording. National input without a region focused the origin selector with corrective guidance. The no-match NL fixture rendered `unknown`, zero evidence records, and one explicit evidence gap.
+The reserved US fixture correctly rendered `insufficient_evidence` because its numbering source is not risk-capable. The panel showed exactly one question icon, the canonical headline and action, no overlap, no placeholder text, and 8.68:1 or better foreground/background contrast across all four state palettes. The result heading received focus, the primary button remained 51 px high, and the shared spoofing warning remained visible. Source confidence appeared only as a small text row with the explicit note that it rates observations rather than safety; no percentage bar remained.
 
 Visual evidence:
 
 - [desktop hero](../web/proof/desktop-hero-1440.jpg)
-- [desktop result](../web/proof/desktop-result-1440.jpg)
+- [desktop risk result](../web/proof/desktop-risk-result-1440.jpg)
 - [mobile hero](../web/proof/mobile-hero-375.jpg)
-- [mobile result](../web/proof/mobile-result-375.jpg)
+- [mobile risk result](../web/proof/mobile-risk-result-375.jpg)
 
 ## Accessibility and state behavior
 
@@ -55,7 +55,7 @@ Visual evidence:
 - Every interactive target has a visible focus treatment; the primary mobile target exceeds 44 px.
 - Loading copy and the action label stay synchronized. Input, transport, rate-limit, and network errors give a next step.
 - Evidence-free and gap-free states use explicit text rather than color or an implied safety verdict.
-- Motion is restricted to transform, opacity, and confidence-bar width, and is effectively disabled under `prefers-reduced-motion`.
+- Motion is restricted to result transform and opacity, and is effectively disabled under `prefers-reduced-motion`.
 - Dynamic source content is inserted with DOM nodes and `textContent`; untrusted values are never assigned through `innerHTML`.
 - The page uses no analytics, cookies, local storage, third-party fonts, or lookup-history persistence.
 
