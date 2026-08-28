@@ -40,7 +40,7 @@ The real same-origin page and API were exercised in a browser on 28 August 2026 
 | 1024 × 900 | Risk result responsive probe | 0 px | 0 |
 | 1440 × 1000 | Risk result rendered and visually inspected | 0 px | 0 |
 
-The reserved US fixture correctly rendered `insufficient_evidence` because its numbering source is not risk-capable. The panel showed exactly one question icon, the canonical headline and action, no overlap, no placeholder text, and 8.68:1 or better foreground/background contrast across all four state palettes. The result heading received focus, the primary button remained 51 px high, and the shared spoofing warning remained visible. Source confidence appeared only as a small text row with the explicit note that it rates observations rather than safety; no percentage bar remained.
+The reserved US fixture correctly rendered `insufficient_evidence` because its numbering source is not risk-capable. The panel showed exactly one question icon, the canonical headline and action, no overlap, no unfinished copy, and 8.68:1 or better foreground/background contrast across all four state palettes. The result heading received focus, the primary button remained 51 px high, and the shared spoofing warning remained visible. Source confidence appeared only as a small text row with the explicit note that it rates observations rather than safety; no percentage bar remained.
 
 Visual evidence:
 

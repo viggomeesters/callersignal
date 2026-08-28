@@ -47,7 +47,7 @@ A source may become `enabled` only when:
 7. its adapter and fixture pass the shared conformance suite; and
 8. `uv run pytest tests/contracts/test_source_registry.py -q` and `make check` pass.
 
-The JSON Schema additionally prevents a `permission_required` candidate from being enabled while its adapter is absent, fields are empty, or legal, privacy, takedown, and provenance gates remain open.
+The JSON Schema additionally prevents a `permission_required` source from being enabled while its adapter is absent, fields are empty, or legal, privacy, takedown, and provenance gates remain open.
 
 ## Safe growth routes
 
