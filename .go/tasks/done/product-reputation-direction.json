@@ -1,0 +1,182 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-reputation-direction",
+  "project": "callersignal",
+  "status": "done",
+  "summary": "Adopt the hybrid reputation vision and safety gates",
+  "description": "Execution brief work unit 1/4. Destination: CallerSignal presents an immediately understandable, uncertainty-honest risk state and has a lawful source-intake foundation without scraping or republishing unlicensed caller databases.",
+  "scope": {
+    "read": [
+      "AGENTS.md",
+      ".go/**",
+      "docs/vision.json",
+      "docs/data-safety.md",
+      "schemas/repo-vision-contract.schema.json"
+    ],
+    "modify": [
+      ".go/vision.json",
+      ".go/hierarchy.json",
+      ".go/tasks/open/product-risk-assessment-contract.json",
+      ".go/tasks/open/product-risk-result-ux.json",
+      ".go/tasks/open/product-source-rights-registry.json",
+      ".go/tasks/open/product-report-ingestion.json",
+      ".go/tasks/open/product-first-release.json",
+      "docs/vision.json",
+      "docs/agent-spec.md",
+      "docs/implementation-plan.md",
+      "docs/public-readiness.md",
+      "README.md",
+      "scripts/validate_repository.py",
+      "tests/test_repository_contract.py",
+      "tests/test_repository_structure.py"
+    ]
+  },
+  "intent_source": {
+    "text": "The current web result makes source confidence visually dominant and the product has no durable source-rights registry, which risks users reading numbering confidence as safety and maintainers treating public caller-report sites as freely reusable data.",
+    "sha256": "f6d8c17456b8a6e91648b6e90fca28799a77aeb1e898901413313901fdb2647a",
+    "source_ref": "codex:thread:callersignal-risk-ux-and-sources"
+  },
+  "execution_brief": {
+    "schema": "go-workflow.execution-brief.v1",
+    "destination": "CallerSignal presents an immediately understandable, uncertainty-honest risk state and has a lawful source-intake foundation without scraping or republishing unlicensed caller databases.",
+    "problem": "The current web result makes source confidence visually dominant and the product has no durable source-rights registry, which risks users reading numbering confidence as safety and maintainers treating public caller-report sites as freely reusable data.",
+    "chosen_approach": "Adopt a hybrid reputation model: present four calibrated risk states across shared contracts and the web; use only official, licensed, or first-party moderated evidence; record source rights before ingestion; never treat missing reports, lookup volume, or a displayed number as proof of safety, guilt, or identity.",
+    "non_goals": [
+      "Scrape, copy, or republish third-party caller-report databases without explicit documented permission.",
+      "Ingest real phone numbers, call histories, free-text accusations, or requester identities into the public repository.",
+      "Describe no matching reports as proof that answering or returning a call is safe.",
+      "Implement public community report ingestion before legal, privacy, moderation, retention, correction, deletion, and abuse controls are approved."
+    ],
+    "source": {
+      "recommendation": "Adopt a hybrid reputation model: present four calibrated risk states across shared contracts and the web; use only official, licensed, or first-party moderated evidence; record source rights before ingestion; never treat missing reports, lookup volume, or a displayed number as proof of safety, guilt, or identity.",
+      "sha256": "64d3066a403e0a342c20d44b292bc71cc2a33a1f47e4559ca1c8fce9dba0c750",
+      "source_ref": "codex:thread:callersignal-risk-ux-and-sources"
+    }
+  },
+  "work_unit": {
+    "id": "product-reputation-direction",
+    "position": 1,
+    "total": 4
+  },
+  "outcome_tracking_version": 1,
+  "requested_outcomes": [
+    {
+      "id": "R1",
+      "text": "The repo-local and public vision contracts define the four calibrated risk states and the official/licensed/first-party evidence boundary without introducing a safe-number promise.",
+      "source": "execution_brief_acceptance",
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:12:21+02:00",
+          "agent": "codex",
+          "summary": "docs/vision.json and .go/vision.json define all four states, require eligible evidence, and forbid safe-number claims; 108 Python tests and schema gates pass."
+        }
+      ]
+    },
+    {
+      "id": "R2",
+      "text": "The agent spec defines shared CLI, MCP, HTTP, and web behavior, representative evaluations, fail-closed behavior, and metadata-only production observability.",
+      "source": "execution_brief_acceptance",
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:12:21+02:00",
+          "agent": "codex",
+          "summary": "docs/agent-spec.md defines the shared CLI/MCP/HTTP/web behavior graph, deterministic evaluations, fail-closed paths, Vercel boundary, and metadata-only observability."
+        }
+      ]
+    },
+    {
+      "id": "R3",
+      "text": "The source-rights registry becomes a dependency of report ingestion, and the new work is placed in dependency order under the product hierarchy.",
+      "source": "execution_brief_acceptance",
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:12:21+02:00",
+          "agent": "codex",
+          "summary": ".go/hierarchy.json and task dependencies order risk assessment, UX, source rights, report ingestion, and release; ./go validate . and make check both pass."
+        }
+      ]
+    }
+  ],
+  "acceptance": [
+    "The repo-local and public vision contracts define the four calibrated risk states and the official/licensed/first-party evidence boundary without introducing a safe-number promise.",
+    "The agent spec defines shared CLI, MCP, HTTP, and web behavior, representative evaluations, fail-closed behavior, and metadata-only production observability.",
+    "The source-rights registry becomes a dependency of report ingestion, and the new work is placed in dependency order under the product hierarchy."
+  ],
+  "verification": [
+    "uv run pytest tests/test_repository_contract.py -q",
+    "./go validate ."
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-28T09:30:22+02:00"
+  },
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-28T11:12:33+02:00",
+      "task_id": "product-reputation-direction",
+      "agent": "codex",
+      "summary": "changed_files=.go/vision.json,.go/hierarchy.json,.go/tasks/open/product-risk-assessment-contract.json,.go/tasks/open/product-risk-result-ux.json,.go/tasks/open/product-source-rights-registry.json,.go/tasks/open/product-report-ingestion.json,.go/tasks/open/product-first-release.json,docs/vision.json,docs/agent-spec.md,docs/implementation-plan.md,docs/public-readiness.md,README.md,scripts/validate_repository.py,tests/test_repository_contract.py,tests/test_repository_structure.py,.go/tasks/active/product-reputation-direction.json; verification=uv run pytest tests/test_repository_contract.py tests/test_repository_structure.py -q (15 passed) rc=0 | ./go validate . rc=0 | make check (108 Python and 3 web tests, docs, assets, public safety) rc=0 | git diff --check rc=0; critic=Verdict A after fixing the numbering-only false reassurance path: no blockers remain, no_risk_evidence now requires a current eligible risk-capable source and numbering-only is insufficient_evidence",
+      "changed_files": [
+        ".go/vision.json",
+        ".go/hierarchy.json",
+        ".go/tasks/open/product-risk-assessment-contract.json",
+        ".go/tasks/open/product-risk-result-ux.json",
+        ".go/tasks/open/product-source-rights-registry.json",
+        ".go/tasks/open/product-report-ingestion.json",
+        ".go/tasks/open/product-first-release.json",
+        "docs/vision.json",
+        "docs/agent-spec.md",
+        "docs/implementation-plan.md",
+        "docs/public-readiness.md",
+        "README.md",
+        "scripts/validate_repository.py",
+        "tests/test_repository_contract.py",
+        "tests/test_repository_structure.py",
+        ".go/tasks/active/product-reputation-direction.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/test_repository_contract.py tests/test_repository_structure.py -q (15 passed) rc=0 | ./go validate . rc=0 | make check (108 Python and 3 web tests, docs, assets, public safety) rc=0 | git diff --check rc=0",
+        "result": "uv run pytest tests/test_repository_contract.py tests/test_repository_structure.py -q (15 passed) rc=0 | ./go validate . rc=0 | make check (108 Python and 3 web tests, docs, assets, public safety) rc=0 | git diff --check rc=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "Verdict A after fixing the numbering-only false reassurance path: no blockers remain, no_risk_evidence now requires a current eligible risk-capable source and numbering-only is insufficient_evidence",
+        "skip_reason": null
+      }
+    }
+  ],
+  "order": 1,
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-28T11:12:38+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "Approved after adversarial review and repair: vision and agent contracts are schema-valid, all R1-R3 outcomes are verified, numbering-only evidence fails closed, dependency gates are explicit, make check is green, and the diff contains no real phone numbers or secret-looking material."
+    }
+  ]
+}

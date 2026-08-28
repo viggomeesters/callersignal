@@ -10,7 +10,8 @@
   "description": "Accept explicit reports as unverified observations with correction, abuse, and spoofing safeguards.",
   "depends_on": [
     "product-evidence-ledger",
-    "product-lookup-orchestrator"
+    "product-lookup-orchestrator",
+    "product-source-rights-registry"
   ],
   "scope": {
     "read": [

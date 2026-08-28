@@ -8,6 +8,8 @@ CallerSignal is an agent-first open-source project for answering “what can we 
 
 > **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge across CLI, MCP, HTTP, and web surfaces, persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It uses pinned public-safe numbering fixtures and does not identify a caller, query live subscriber data, or accept public reports. The `v0.1.0` tag remains the earlier repository-foundation release.
 
+The durable direction is a hybrid reputation model: official evidence first, then explicitly licensed or first-party moderated observations only after source-rights, privacy, and abuse gates pass. The shared contract will lead with one calibrated risk state—`official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`—while preserving the evidence and uncertainty underneath. `no_risk_evidence` requires a current eligible risk-capable source and never means that a number is safe; numbering context alone remains `insufficient_evidence`.
+
 ## Usage: read-only lookup
 
 A national-format input is never interpreted without an origin region. International input is normalized directly. Every interface renders the same versioned lookup result.
@@ -66,6 +68,7 @@ The initial product wedge covers read-only official numbering evidence for the N
 | [`docs/implementation-plan.md`](docs/implementation-plan.md) | Dependency-ordered product backlog with acceptance and verification |
 | [`docs/onboarding.md`](docs/onboarding.md) | Fresh-clone setup for developers and agents |
 | [`docs/data-safety.md`](docs/data-safety.md) | Privacy, evidence, moderation, and publication boundaries |
+| [`docs/agent-spec.md`](docs/agent-spec.md) | Shared agent behavior, four-state evaluations, deployment, and observability contract |
 | [`schemas/`](schemas/) | Committed repository and versioned product contracts |
 | [`scripts/check.sh`](scripts/check.sh) | One-command local repository gate |
 

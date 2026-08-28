@@ -54,6 +54,9 @@
             "product-nl-adapter",
             "product-gb-adapter",
             "product-us-adapter",
+            "product-reputation-direction",
+            "product-risk-assessment-contract",
+            "product-source-rights-registry",
             "product-report-ingestion",
             "product-reputation-aggregation"
           ]
@@ -67,6 +70,7 @@
             "product-mcp-lookup",
             "product-http-read-api",
             "product-public-web-lookup",
+            "product-risk-result-ux",
             "product-operational-safety",
             "product-first-release"
           ]

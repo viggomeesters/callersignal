@@ -2,7 +2,7 @@
 
 ## Planning contract
 
-The repository foundation shipped at v0.1.0. On the unreleased `main` branch, twelve of the sixteen product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, and web. Four remain open: report ingestion, reputation aggregation, operational safety, and the first functional release. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
+The repository foundation shipped at v0.1.0. On the unreleased `main` branch, twelve of the twenty product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, and web. Eight remain open or active: the hybrid reputation direction, risk assessment contract, risk-result UX, source-rights registry, report ingestion, reputation aggregation, operational safety, and the first functional release. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
 
 Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
@@ -114,11 +114,45 @@ Acceptance: context, evidence, unknowns, confidence, and spoofing-safe wording l
 
 Verify: `uv run pytest tests/e2e -q` and `npm --prefix web test`.
 
-## Phase 5 — Moderated evidence and operations
+## Phase 5 — Calibrated risk and source eligibility
+
+### `product-reputation-direction`
+
+Adopt the hybrid reputation vision and safety gates before changing the shared product contract or accepting reputation inputs.
+
+Acceptance: the four risk states and eligible-source boundary are durable in repo-local and public vision contracts; the agent spec defines cross-surface behavior, evaluations, fail-closed handling, deployment, and metadata-only observability; downstream work is dependency ordered.
+
+Verify: `uv run pytest tests/test_repository_contract.py -q` and `./go validate .`.
+
+### `product-risk-assessment-contract`
+
+Depends on `product-reputation-direction`. Define `official_warning`, `elevated_signals`, `no_risk_evidence`, and `insufficient_evidence` in the canonical result and derive them through one explainable policy.
+
+Acceptance: every lookup exposes one state, stable reasons, and an action; numbering evidence alone remains `insufficient_evidence`; `no_risk_evidence` requires a current eligible risk-capable source; failed, stale, contradictory, unsupported, or rights-restricted risk evidence fails closed; lookup popularity and one unverified report are invariant negatives.
+
+Verify: `uv run pytest tests/unit/test_assessment.py tests/integration/test_lookup.py tests/integration/test_cli.py tests/integration/test_mcp.py tests/integration/test_http_api.py -q`.
+
+### `product-risk-result-ux`
+
+Depends on `product-risk-assessment-contract`. Render the shared state as a dominant text-and-icon result banner inspired by the clarity of Have I Been Pwned without adopting a binary safe-number promise.
+
+Acceptance: all four states remain distinguishable without color alone; source confidence is subordinate and cannot read as a safety percentage; desktop and mobile visual proof plus the live Vercel alias pass.
+
+Verify: `npm --prefix web test`, `uv run pytest tests/e2e/test_web.py -q`, and `make check`.
+
+### `product-source-rights-registry`
+
+Depends on `product-reputation-direction`. Add a machine-validated registry that records authority, reuse basis, permitted fields, freshness, outage behavior, privacy status, and takedown ownership before a source can be enabled.
+
+Acceptance: enabled official sources have complete rights metadata; unlicensed caller-report sites are disabled permission-required candidates with zero permitted fields; robots behavior, reuse permission, database/copyright review, privacy review, and provenance remain separate gates.
+
+Verify: `uv run pytest tests/contracts/test_source_registry.py -q` and `make check`.
+
+## Phase 6 — Moderated evidence and operations
 
 ### `product-report-ingestion`
 
-Depends on `product-evidence-ledger` and `product-lookup-orchestrator`. Accept explicit reports as unverified observations only after privacy and moderation controls exist.
+Depends on `product-evidence-ledger`, `product-lookup-orchestrator`, and `product-source-rights-registry`. Accept explicit reports as unverified observations only after legal, privacy, moderation, and source-eligibility controls exist.
 
 Acceptance: reports describe calls displaying a number; retention, correction, deletion, rate limiting, deduplication, and brigading controls are enforced.
 
@@ -140,11 +174,11 @@ Acceptance: health metrics avoid raw-number and personal request trails; inciden
 
 Verify: `uv run pytest tests/operations -q`.
 
-## Phase 6 — First functional release
+## Phase 7 — First functional release
 
 ### `product-first-release`
 
-Depends on `product-cli-lookup`, `product-mcp-lookup`, `product-public-web-lookup`, and `product-operational-safety`. Publish only after the complete read-only wedge and operational boundaries are proven.
+Depends on `product-cli-lookup`, `product-mcp-lookup`, `product-public-web-lookup`, `product-risk-result-ux`, and `product-operational-safety`. Publish only after the complete read-only wedge, calibrated risk presentation, and operational boundaries are proven.
 
 Acceptance: NL, GB, and US pass contracts, integration, privacy, adapter, and cross-surface parity gates; release notes state support, unsupported claims, known gaps, and upgrades.
 
@@ -173,14 +207,20 @@ flowchart TD
     O --> MCP[product-mcp-lookup]
     O --> HTTP[product-http-read-api]
     HTTP --> WEB[product-public-web-lookup]
+    WEB --> DIR[product-reputation-direction]
+    DIR --> RISK[product-risk-assessment-contract]
+    RISK --> RUX[product-risk-result-ux]
+    DIR --> SR[product-source-rights-registry]
     E --> R[product-report-ingestion]
     O --> R
+    SR --> R
     R --> A[product-reputation-aggregation]
     HTTP --> OPS[product-operational-safety]
     A --> OPS
     CLI --> REL[product-first-release]
     MCP --> REL
     WEB --> REL
+    RUX --> REL
     OPS --> REL
 ```
 

@@ -1,0 +1,94 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-source-rights-registry",
+  "project": "callersignal",
+  "status": "open",
+  "depends_on": [
+    "product-reputation-direction"
+  ],
+  "summary": "Create a machine-validated source-rights registry and intake gate",
+  "description": "Execution brief work unit 4/4. Destination: CallerSignal presents an immediately understandable, uncertainty-honest risk state and has a lawful source-intake foundation without scraping or republishing unlicensed caller databases.",
+  "scope": {
+    "read": [
+      "src/callersignal/adapters/**",
+      "fixtures/**",
+      "docs/data-safety.md"
+    ],
+    "modify": [
+      "schemas/source-registry.schema.json",
+      "sources/registry.json",
+      "tests/contracts/test_source_registry.py",
+      "docs/source-rights.md",
+      "docs/data-safety.md",
+      "docs/country-adapters.md"
+    ]
+  },
+  "intent_source": {
+    "text": "The current web result makes source confidence visually dominant and the product has no durable source-rights registry, which risks users reading numbering confidence as safety and maintainers treating public caller-report sites as freely reusable data.",
+    "sha256": "f6d8c17456b8a6e91648b6e90fca28799a77aeb1e898901413313901fdb2647a",
+    "source_ref": "codex:thread:callersignal-risk-ux-and-sources"
+  },
+  "execution_brief": {
+    "schema": "go-workflow.execution-brief.v1",
+    "destination": "CallerSignal presents an immediately understandable, uncertainty-honest risk state and has a lawful source-intake foundation without scraping or republishing unlicensed caller databases.",
+    "problem": "The current web result makes source confidence visually dominant and the product has no durable source-rights registry, which risks users reading numbering confidence as safety and maintainers treating public caller-report sites as freely reusable data.",
+    "chosen_approach": "Adopt a hybrid reputation model: present four calibrated risk states across shared contracts and the web; use only official, licensed, or first-party moderated evidence; record source rights before ingestion; never treat missing reports, lookup volume, or a displayed number as proof of safety, guilt, or identity.",
+    "non_goals": [
+      "Scrape, copy, or republish third-party caller-report databases without explicit documented permission.",
+      "Ingest real phone numbers, call histories, free-text accusations, or requester identities into the public repository.",
+      "Describe no matching reports as proof that answering or returning a call is safe.",
+      "Implement public community report ingestion before legal, privacy, moderation, retention, correction, deletion, and abuse controls are approved."
+    ],
+    "source": {
+      "recommendation": "Adopt a hybrid reputation model: present four calibrated risk states across shared contracts and the web; use only official, licensed, or first-party moderated evidence; record source rights before ingestion; never treat missing reports, lookup volume, or a displayed number as proof of safety, guilt, or identity.",
+      "sha256": "64d3066a403e0a342c20d44b292bc71cc2a33a1f47e4559ca1c8fce9dba0c750",
+      "source_ref": "codex:thread:callersignal-risk-ux-and-sources"
+    }
+  },
+  "work_unit": {
+    "id": "product-source-rights-registry",
+    "position": 4,
+    "total": 4
+  },
+  "outcome_tracking_version": 1,
+  "requested_outcomes": [
+    {
+      "id": "R1",
+      "text": "Every enabled source records authority, stable URL, evidence class, reuse basis, permitted fields, freshness, outage behavior, and whether personal or free-text data is allowed.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "R2",
+      "text": "Third-party caller-report sites without explicit permission are recorded as disabled permission-required candidates with zero permitted ingestion fields and no copied records.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "R3",
+      "text": "The registry and documentation make robots permission, copyright/database rights, privacy review, takedown, and provenance separate gates before any adapter can be enabled.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    }
+  ],
+  "acceptance": [
+    "Every enabled source records authority, stable URL, evidence class, reuse basis, permitted fields, freshness, outage behavior, and whether personal or free-text data is allowed.",
+    "Third-party caller-report sites without explicit permission are recorded as disabled permission-required candidates with zero permitted ingestion fields and no copied records.",
+    "The registry and documentation make robots permission, copyright/database rights, privacy review, takedown, and provenance separate gates before any adapter can be enabled."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts/test_source_registry.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "evidence": [],
+  "order": 570
+}

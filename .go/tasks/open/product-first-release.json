@@ -12,6 +12,7 @@
     "product-cli-lookup",
     "product-mcp-lookup",
     "product-public-web-lookup",
+    "product-risk-result-ux",
     "product-operational-safety"
   ],
   "scope": {

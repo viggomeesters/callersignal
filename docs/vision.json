@@ -13,10 +13,10 @@
     "canonical_repository": "https://github.com/viggomeesters/callersignal"
   },
   "vision": {
-    "one_line": "Evidence-backed international phone-number intelligence that agents can inspect and explain.",
-    "north_star": "Any agent can turn an unfamiliar phone number into a country-aware, source-backed, uncertainty-honest answer in one lookup.",
-    "promise": "Normalize once, check country-aware evidence, and explain exactly what is known, unknown, and source-supported.",
-    "wedge": "A read-only lookup contract shared by CLI, MCP, HTTP, and the web, starting with official numbering evidence for the Netherlands, United Kingdom, and United States.",
+    "one_line": "Evidence-backed international phone-number risk signals that agents can inspect and explain.",
+    "north_star": "Any agent can turn an unfamiliar displayed phone number into a country-aware, source-backed, uncertainty-honest risk answer in one lookup.",
+    "promise": "Normalize once, check eligible country-aware evidence, and explain the calibrated risk state, evidence, gaps, and next action without guessing identity or safety.",
+    "wedge": "One read-only contract across CLI, MCP, HTTP, and the web, starting with official NL, GB, and US numbering evidence and admitting licensed or first-party moderated reputation evidence only after source-rights and privacy gates pass.",
     "target_users": [
       "Agents deciding how to handle an unfamiliar phone number",
       "Developers integrating caller context into safety-conscious products",
@@ -155,6 +155,30 @@
       "bad": [
         "Verbose prose hides missing provenance or contradictory observations"
       ]
+    },
+    {
+      "id": "calibrated-risk-states",
+      "category": "design",
+      "title": "Four calibrated risk states",
+      "rule": "Every surface leads with exactly one of official_warning, elevated_signals, no_risk_evidence, or insufficient_evidence and pairs it with an explicit next action.",
+      "good": [
+        "No risk evidence requires a current eligible risk-capable source and explicitly states that it does not mean safe"
+      ],
+      "bad": [
+        "A source-confidence percentage is styled like a probability that answering is safe"
+      ]
+    },
+    {
+      "id": "rights-before-ingestion",
+      "category": "safety",
+      "title": "Rights before ingestion",
+      "rule": "Only official, explicitly licensed, or first-party moderated evidence may enter reputation processing after a machine-readable source and privacy gate passes.",
+      "good": [
+        "A disabled source record carries zero permitted fields until written permission is documented"
+      ],
+      "bad": [
+        "Robots permission or public visibility is treated as a licence to republish reports"
+      ]
     }
   ],
   "non_goals": [
@@ -162,6 +186,7 @@
     "Track the physical location of a caller or claim that numbering geography is live location.",
     "Treat number validity, range allocation, or an original carrier as proof of current assignment.",
     "Let lookup volume, virality, or a single report create a fraud verdict.",
+    "Describe no matching risk evidence as proof that answering or returning a call is safe.",
     "Republish proprietary third-party reputation data without a permitted integration.",
     "Build outbound calling, call recording, contact enrichment, or surveillance features."
   ],
@@ -169,7 +194,8 @@
     "Official numbering-allocation evidence is lawfully reusable for the initial three-country wedge.",
     "Users can supply an origin region when a number lacks an international country code.",
     "Agents and developers prefer calibrated uncertainty over an unsupported identity guess.",
-    "A read-only lookup product can establish trust before community reporting is accepted.",
+    "A prominent four-state result can improve decision clarity without collapsing uncertainty into a binary safe or dangerous label.",
+    "Third-party caller-report data remains unavailable unless explicit permission or a compatible licence is recorded.",
     "Source-specific adapters can remain independent while sharing one evidence contract.",
     "Phone-number portability and spoofing will remain material limitations."
   ],
@@ -185,13 +211,14 @@
     "required_boundaries": [
       "State that caller ID can be spoofed and describes a displayed number",
       "Distinguish allocation holder from current provider and subscriber",
-      "Treat no reports as unknown rather than safe",
+      "Return no risk evidence only after a current eligible risk-capable source is checked, and never treat it as proof of safety",
       "Keep lookup activity separate from reputation inputs",
+      "Allow only official, explicitly licensed, or first-party moderated evidence to influence risk states",
       "Attach source, retrieval time, confidence, and reason codes to assessments",
       "Support correction, objection, deletion, moderation, and source takedown",
       "Aggregate public search activity only above an anti-enumeration threshold"
     ],
-    "privacy_posture": "Minimize collection, avoid raw personal lookup histories, document purpose and retention, and require a legal review before accepting public reports.",
+    "privacy_posture": "Minimize collection, avoid raw personal lookup histories, keep real runtime data out of Git, document purpose and retention, and require an approved legal and privacy basis before accepting public reports or imported reputation data.",
     "moderation_posture": "Community reports remain unverified observations until independent evidence, abuse controls, and correction processes support a stronger state."
   },
   "acceptance_scorecard": [
@@ -239,6 +266,16 @@
       "id": "coverage-honest",
       "question": "Does adding a country preserve evidence quality?",
       "pass_condition": "Each adapter passes the same provenance, rights, freshness, and failure conformance suite."
+    },
+    {
+      "id": "risk-state-calibrated",
+      "question": "Is the prominent risk state useful without implying unsupported safety or guilt?",
+      "pass_condition": "Every surface renders one shared four-state result, an explicit next action, and residual spoofing uncertainty without presenting source confidence as safety probability."
+    },
+    {
+      "id": "source-intake-authorized",
+      "question": "Can every reputation input prove that it is eligible for ingestion?",
+      "pass_condition": "Every enabled source has machine-validated authority, reuse basis, permitted fields, privacy status, freshness, outage behavior, and takedown ownership."
     }
   ],
   "review_checklist": [
@@ -251,6 +288,8 @@
     "Confirm logs and metrics avoid raw phone numbers, requester identities, and lookup trails.",
     "Confirm schemas, fixtures, tests, documentation, and interfaces stay version-aligned.",
     "Confirm public copy remains calm, accessible, specific, and non-accusatory.",
+    "Confirm official_warning, elevated_signals, no_risk_evidence, and insufficient_evidence remain textually and visually distinct.",
+    "Confirm source confidence is subordinate to the risk state and is never presented as a safety percentage.",
     "Confirm a fresh clone passes the documented local gate without private dependencies."
   ],
   "maturity_model": [
@@ -263,14 +302,14 @@
     {
       "level": "L1",
       "state": "read_only_wedge",
-      "meaning": "NL, GB, and US official evidence can be queried through one shared read-only result contract.",
-      "exit_evidence": "CLI, MCP, HTTP, and web parity plus country-adapter conformance tests pass."
+      "meaning": "NL, GB, and US official evidence can be queried through one shared read-only result contract with a calibrated four-state risk presentation.",
+      "exit_evidence": "CLI, MCP, HTTP, and web risk-state parity plus country-adapter conformance and visual proof pass."
     },
     {
       "level": "L2",
       "state": "moderated_reports",
-      "meaning": "Explicit community observations can be collected under privacy, abuse, and correction controls.",
-      "exit_evidence": "Moderation, retention, deletion, objection, and anti-brigading gates pass."
+      "meaning": "Eligible licensed evidence and explicit first-party community observations can be processed under source-rights, privacy, abuse, and correction controls.",
+      "exit_evidence": "Source-rights, moderation, retention, deletion, objection, appeal, and anti-brigading gates pass."
     },
     {
       "level": "L3",

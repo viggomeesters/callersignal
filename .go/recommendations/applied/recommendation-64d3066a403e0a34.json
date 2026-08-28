@@ -1,0 +1,171 @@
+{
+  "schema": "go-workflow.recommendation.v1",
+  "kind": "recommendation",
+  "id": "recommendation-64d3066a403e0a34",
+  "project": "callersignal",
+  "status": "applied",
+  "created_at": "2026-08-28T09:29:46+02:00",
+  "authority": {
+    "mode": "advice",
+    "source": "question",
+    "implementation_authorized": false,
+    "planning_state_authorized": true
+  },
+  "brief": {
+    "schema": "go-workflow.execution-brief.v1",
+    "destination": "CallerSignal presents an immediately understandable, uncertainty-honest risk state and has a lawful source-intake foundation without scraping or republishing unlicensed caller databases.",
+    "problem": "The current web result makes source confidence visually dominant and the product has no durable source-rights registry, which risks users reading numbering confidence as safety and maintainers treating public caller-report sites as freely reusable data.",
+    "chosen_approach": "Adopt a hybrid reputation model: present four calibrated risk states across shared contracts and the web; use only official, licensed, or first-party moderated evidence; record source rights before ingestion; never treat missing reports, lookup volume, or a displayed number as proof of safety, guilt, or identity.",
+    "non_goals": [
+      "Scrape, copy, or republish third-party caller-report databases without explicit documented permission.",
+      "Ingest real phone numbers, call histories, free-text accusations, or requester identities into the public repository.",
+      "Describe no matching reports as proof that answering or returning a call is safe.",
+      "Implement public community report ingestion before legal, privacy, moderation, retention, correction, deletion, and abuse controls are approved."
+    ],
+    "source": {
+      "recommendation": "Adopt a hybrid reputation model: present four calibrated risk states across shared contracts and the web; use only official, licensed, or first-party moderated evidence; record source rights before ingestion; never treat missing reports, lookup volume, or a displayed number as proof of safety, guilt, or identity.",
+      "sha256": "64d3066a403e0a342c20d44b292bc71cc2a33a1f47e4559ca1c8fce9dba0c750",
+      "source_ref": "codex:thread:callersignal-risk-ux-and-sources"
+    },
+    "work_units": [
+      {
+        "id": "product-reputation-direction",
+        "summary": "Adopt the hybrid reputation vision and safety gates",
+        "scope": {
+          "read": [
+            "AGENTS.md",
+            ".go/**",
+            "docs/vision.json",
+            "docs/data-safety.md",
+            "schemas/repo-vision-contract.schema.json"
+          ],
+          "modify": [
+            ".go/vision.json",
+            ".go/hierarchy.json",
+            ".go/tasks/open/product-risk-assessment-contract.json",
+            ".go/tasks/open/product-risk-result-ux.json",
+            ".go/tasks/open/product-source-rights-registry.json",
+            ".go/tasks/open/product-report-ingestion.json",
+            "docs/vision.json",
+            "docs/agent-spec.md",
+            "README.md",
+            "tests/test_repository_contract.py"
+          ]
+        },
+        "execution_mode": "agent",
+        "acceptance": [
+          "The repo-local and public vision contracts define the four calibrated risk states and the official/licensed/first-party evidence boundary without introducing a safe-number promise.",
+          "The agent spec defines shared CLI, MCP, HTTP, and web behavior, representative evaluations, fail-closed behavior, and metadata-only production observability.",
+          "The source-rights registry becomes a dependency of report ingestion, and the new work is placed in dependency order under the product hierarchy."
+        ],
+        "verification": [
+          "uv run pytest tests/test_repository_contract.py -q",
+          "./go validate ."
+        ]
+      },
+      {
+        "id": "product-risk-assessment-contract",
+        "summary": "Define four calibrated risk states in the shared result contract",
+        "scope": {
+          "read": [
+            "schemas/source-evidence.schema.json",
+            "src/callersignal/adapters/**",
+            "src/callersignal/lookup.py",
+            "tests/integration/**"
+          ],
+          "modify": [
+            "schemas/lookup-result.schema.json",
+            "src/callersignal/assessment.py",
+            "src/callersignal/lookup.py",
+            "tests/unit/test_assessment.py",
+            "tests/integration/test_lookup.py",
+            "docs/methodology.md",
+            "docs/http-api.md",
+            "docs/mcp.md",
+            "docs/cli.md"
+          ]
+        },
+        "execution_mode": "agent",
+        "acceptance": [
+          "Every canonical lookup exposes exactly one risk state: official_warning, elevated_signals, no_risk_evidence, or insufficient_evidence, with stable reason codes and an explicit action message.",
+          "Current numbering evidence alone produces no_risk_evidence only in the narrow sense that no risk evidence was found, while stale, failed, contradictory, or unsupported coverage produces insufficient_evidence.",
+          "No risk state can be raised by lookup popularity or one unverified report, and all existing CLI, MCP, HTTP, and web consumers remain schema-valid."
+        ],
+        "verification": [
+          "uv run pytest tests/unit/test_assessment.py tests/integration/test_lookup.py tests/integration/test_cli.py tests/integration/test_mcp.py tests/integration/test_http_api.py -q"
+        ]
+      },
+      {
+        "id": "product-risk-result-ux",
+        "summary": "Render an HIBP-inspired risk result without false safety claims",
+        "scope": {
+          "read": [
+            "web/**",
+            "docs/vision.json",
+            "docs/methodology.md"
+          ],
+          "modify": [
+            "web/index.html",
+            "web/assets/app.js",
+            "web/assets/styles.css",
+            "web/tests/app.test.js",
+            "tests/e2e/test_web.py",
+            "docs/web.md",
+            "web/proof/**"
+          ]
+        },
+        "execution_mode": "agent",
+        "acceptance": [
+          "The result leads with a large text-and-icon risk banner whose wording and visual treatment distinguish all four states without relying on color alone.",
+          "Source confidence is visually subordinate to the risk state and cannot be mistaken for a safety percentage.",
+          "Desktop and mobile proof confirms no clipping, overlap, overflow, unreadable contrast, placeholder text, or console errors, and the live Vercel alias serves the verified result."
+        ],
+        "verification": [
+          "npm --prefix web test",
+          "uv run pytest tests/e2e/test_web.py -q",
+          "make check"
+        ]
+      },
+      {
+        "id": "product-source-rights-registry",
+        "summary": "Create a machine-validated source-rights registry and intake gate",
+        "scope": {
+          "read": [
+            "src/callersignal/adapters/**",
+            "fixtures/**",
+            "docs/data-safety.md"
+          ],
+          "modify": [
+            "schemas/source-registry.schema.json",
+            "sources/registry.json",
+            "tests/contracts/test_source_registry.py",
+            "docs/source-rights.md",
+            "docs/data-safety.md",
+            "docs/country-adapters.md"
+          ]
+        },
+        "execution_mode": "agent",
+        "acceptance": [
+          "Every enabled source records authority, stable URL, evidence class, reuse basis, permitted fields, freshness, outage behavior, and whether personal or free-text data is allowed.",
+          "Third-party caller-report sites without explicit permission are recorded as disabled permission-required candidates with zero permitted ingestion fields and no copied records.",
+          "The registry and documentation make robots permission, copyright/database rights, privacy review, takedown, and provenance separate gates before any adapter can be enabled."
+        ],
+        "verification": [
+          "uv run pytest tests/contracts/test_source_registry.py -q",
+          "make check"
+        ]
+      }
+    ]
+  },
+  "resolved_at": "2026-08-28T09:29:49+02:00",
+  "applied_tasks": [
+    "product-reputation-direction",
+    "product-risk-assessment-contract",
+    "product-risk-result-ux",
+    "product-source-rights-registry"
+  ],
+  "promotion": {
+    "authority": "execute",
+    "authority_source": "go"
+  }
+}
