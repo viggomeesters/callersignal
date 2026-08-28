@@ -1,0 +1,291 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "source_registry",
+  "reviewed_at": "2026-08-28",
+  "sources": [
+    {
+      "source_id": "acm_number_register",
+      "name": "ACM public telephone number register",
+      "source_type": "official_regulatory",
+      "status": "enabled",
+      "adapter_id": "nl_acm_number_register",
+      "adapter_enabled": true,
+      "jurisdictions": ["NL"],
+      "authority": {
+        "type": "official_regulator",
+        "name": "Autoriteit Consument & Markt"
+      },
+      "stable_url": "https://www.acm.nl/nl/telefoonnummers-zoeken",
+      "evidence_classes": ["range_allocation", "regulatory_notice"],
+      "risk_capable": false,
+      "reuse": {
+        "basis": "The Dutch government data catalogue publishes the ACM register as public CC0 data.",
+        "license": "CC0 1.0",
+        "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+        "permission_reference": "https://data.overheid.nl/dataset/register-van-toegekende-telefoonnummers"
+      },
+      "intake": {
+        "permitted_fields": ["range_holder", "regulatory_status"],
+        "personal_data_allowed": false,
+        "free_text_allowed": false,
+        "freshness_max_age_seconds": 2592000,
+        "outage_behavior": "typed_gap"
+      },
+      "gates": {
+        "robots_access": {
+          "status": "not_applicable",
+          "evidence": "The fixture comes from the declared dataset download, not page crawling.",
+          "reference": "fixtures/nl/acm_number_register.json"
+        },
+        "reuse_permission": {
+          "status": "passed",
+          "evidence": "The government dataset catalogue declares the register as CC0 public data.",
+          "reference": "https://data.overheid.nl/dataset/register-van-toegekende-telefoonnummers"
+        },
+        "copyright": {
+          "status": "passed",
+          "evidence": "The declared CC0 dedication permits reuse of the bounded dataset extract.",
+          "reference": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        "database_rights": {
+          "status": "passed",
+          "evidence": "The declared CC0 dedication covers the bounded database extract in the fixture.",
+          "reference": "https://creativecommons.org/publicdomain/zero/1.0/"
+        },
+        "privacy": {
+          "status": "passed",
+          "evidence": "Only public range allocation and regulatory status fields are admitted; subscriber data is forbidden.",
+          "reference": "docs/data-safety.md"
+        },
+        "takedown": {
+          "status": "passed",
+          "evidence": "The private security and exposed-data route owns removal requests for public fixtures.",
+          "reference": "SECURITY.md"
+        },
+        "provenance": {
+          "status": "passed",
+          "evidence": "Fixture and emitted evidence retain retrieval time, download digest, source row identifier, and row digest.",
+          "reference": "fixtures/nl/acm_number_register.json"
+        }
+      },
+      "review": {
+        "reviewed_at": "2026-08-28",
+        "owner": "CallerSignal maintainers",
+        "decision": "Enabled for bounded public numbering evidence only; identity and risk conclusions remain prohibited."
+      }
+    },
+    {
+      "source_id": "ofcom_protected_numbers",
+      "name": "Ofcom long-term protected number ranges",
+      "source_type": "official_numbering",
+      "status": "enabled",
+      "adapter_id": "gb_ofcom_protected_numbers",
+      "adapter_enabled": true,
+      "jurisdictions": ["GB"],
+      "authority": {
+        "type": "official_regulator",
+        "name": "Office of Communications"
+      },
+      "stable_url": "https://www.ofcom.org.uk/phones-and-broadband/phone-numbers/numbering",
+      "evidence_classes": ["number_plan_fact"],
+      "risk_capable": false,
+      "reuse": {
+        "basis": "Ofcom permits accurate reproduction with Ofcom copyright and publication attribution.",
+        "license": "Ofcom copyright and information re-use terms",
+        "license_url": "https://www.ofcom.org.uk/about-ofcom/our-website/copyright",
+        "permission_reference": "https://www.ofcom.org.uk/about-ofcom/our-website/copyright"
+      },
+      "intake": {
+        "permitted_fields": ["reserved_status"],
+        "personal_data_allowed": false,
+        "free_text_allowed": false,
+        "freshness_max_age_seconds": 2592000,
+        "outage_behavior": "typed_gap"
+      },
+      "gates": {
+        "robots_access": {
+          "status": "not_applicable",
+          "evidence": "The fixture uses a declared published CSV, not automated page crawling.",
+          "reference": "fixtures/gb/ofcom_protected_numbers.json"
+        },
+        "reuse_permission": {
+          "status": "passed",
+          "evidence": "Ofcom information reuse terms permit accurate attributed reproduction.",
+          "reference": "https://www.ofcom.org.uk/about-ofcom/our-website/copyright"
+        },
+        "copyright": {
+          "status": "passed",
+          "evidence": "The bounded factual extract is attributed under Ofcom information reuse terms.",
+          "reference": "https://www.ofcom.org.uk/about-ofcom/our-website/copyright"
+        },
+        "database_rights": {
+          "status": "passed",
+          "evidence": "The enabled extract is limited to the published protected-range dataset under the declared reuse terms.",
+          "reference": "https://www.ofcom.org.uk/about-ofcom/our-website/copyright"
+        },
+        "privacy": {
+          "status": "passed",
+          "evidence": "Only protected-range designation fields are admitted; subscriber and caller data are forbidden.",
+          "reference": "docs/data-safety.md"
+        },
+        "takedown": {
+          "status": "passed",
+          "evidence": "The private security and exposed-data route owns removal requests for public fixtures.",
+          "reference": "SECURITY.md"
+        },
+        "provenance": {
+          "status": "passed",
+          "evidence": "Fixture and emitted evidence retain retrieval time, download digest, source row identifier, and row digest.",
+          "reference": "fixtures/gb/ofcom_protected_numbers.json"
+        }
+      },
+      "review": {
+        "reviewed_at": "2026-08-28",
+        "owner": "CallerSignal maintainers",
+        "decision": "Enabled only for attributed protected-range facts; identity and risk conclusions remain prohibited."
+      }
+    },
+    {
+      "source_id": "nanpa_public_numbering",
+      "name": "NANPA public numbering references",
+      "source_type": "official_numbering",
+      "status": "enabled",
+      "adapter_id": "us_nanpa_public_numbering",
+      "adapter_enabled": true,
+      "jurisdictions": ["US"],
+      "authority": {
+        "type": "numbering_administrator",
+        "name": "North American Numbering Plan Administrator"
+      },
+      "stable_url": "https://nanpa.com/numbering/555-line-numbers",
+      "evidence_classes": ["number_plan_fact"],
+      "risk_capable": false,
+      "reuse": {
+        "basis": "This fixture reproduces only public numbering status facts with attribution; the FCC identifies NANPA's public report as an official numbering source.",
+        "license": "Public factual extract with source attribution",
+        "license_url": null,
+        "permission_reference": "https://reports.nanpa.com/public/npa_report.csv"
+      },
+      "intake": {
+        "permitted_fields": ["regulatory_status", "reserved_status"],
+        "personal_data_allowed": false,
+        "free_text_allowed": false,
+        "freshness_max_age_seconds": 2592000,
+        "outage_behavior": "typed_gap"
+      },
+      "gates": {
+        "robots_access": {
+          "status": "not_applicable",
+          "evidence": "The fixture uses declared public references and a public report, not automated page crawling.",
+          "reference": "fixtures/us/nanpa_public_numbering.json"
+        },
+        "reuse_permission": {
+          "status": "passed",
+          "evidence": "The bounded fixture contains attributed public numbering facts from official NANPA references.",
+          "reference": "https://reports.nanpa.com/public/npa_report.csv"
+        },
+        "copyright": {
+          "status": "passed",
+          "evidence": "Only a bounded attributed factual extract is retained; source prose, presentation, and branding are excluded.",
+          "reference": "fixtures/us/nanpa_public_numbering.json"
+        },
+        "database_rights": {
+          "status": "not_applicable",
+          "evidence": "The EU-specific database-right gate is not applicable to this US official source; expansion still requires a fresh rights review.",
+          "reference": "docs/source-rights.md"
+        },
+        "privacy": {
+          "status": "passed",
+          "evidence": "Only area-code and reserved fictional-line facts are admitted; subscriber and caller data are forbidden.",
+          "reference": "docs/data-safety.md"
+        },
+        "takedown": {
+          "status": "passed",
+          "evidence": "The private security and exposed-data route owns removal requests for public fixtures.",
+          "reference": "SECURITY.md"
+        },
+        "provenance": {
+          "status": "passed",
+          "evidence": "Fixture and emitted evidence retain retrieval time, document digests, source record identifiers, and fact digests.",
+          "reference": "fixtures/us/nanpa_public_numbering.json"
+        }
+      },
+      "review": {
+        "reviewed_at": "2026-08-28",
+        "owner": "CallerSignal maintainers",
+        "decision": "Enabled only for bounded public numbering facts; identity and risk conclusions remain prohibited."
+      }
+    },
+    {
+      "source_id": "wieheeftmijgebeld_nl",
+      "name": "Wieheeftmijgebeld.nl caller reports",
+      "source_type": "third_party_caller_reports",
+      "status": "permission_required",
+      "adapter_id": null,
+      "adapter_enabled": false,
+      "jurisdictions": ["NL"],
+      "authority": {
+        "type": "third_party_publisher",
+        "name": "Wieheeftmijgebeld.nl"
+      },
+      "stable_url": "https://wieheeftmijgebeld.nl/",
+      "evidence_classes": [],
+      "risk_capable": false,
+      "reuse": {
+        "basis": "No reuse basis is documented for CallerSignal; the publisher requires explicit written permission for reproduction or republication.",
+        "license": "No license or written permission documented",
+        "license_url": null,
+        "permission_reference": null
+      },
+      "intake": {
+        "permitted_fields": [],
+        "personal_data_allowed": false,
+        "free_text_allowed": false,
+        "freshness_max_age_seconds": null,
+        "outage_behavior": "disabled"
+      },
+      "gates": {
+        "robots_access": {
+          "status": "passed",
+          "evidence": "The current robots file does not disallow public content, but this is only a crawl-control observation and grants no reuse right.",
+          "reference": "https://wieheeftmijgebeld.nl/robots.txt"
+        },
+        "reuse_permission": {
+          "status": "required",
+          "evidence": "CallerSignal has no written permission or source agreement authorizing ingestion or republication.",
+          "reference": "https://wieheeftmijgebeld.nl/copyright/"
+        },
+        "copyright": {
+          "status": "required",
+          "evidence": "The publisher's copyright notice prohibits reproduction and publication without explicit written permission.",
+          "reference": "https://wieheeftmijgebeld.nl/copyright/"
+        },
+        "database_rights": {
+          "status": "required",
+          "evidence": "Extraction or reuse at database scale requires a distinct EU database-rights assessment and documented authorization.",
+          "reference": "https://europa.eu/youreurope/business/growing/protecting-intellectual-property/database-protection/index_en.htm"
+        },
+        "privacy": {
+          "status": "required",
+          "evidence": "Phone-number records, ratings, and user narratives require purpose, lawful-basis, minimization, retention, and data-subject review.",
+          "reference": "https://commission.europa.eu/law/law-topic/data-protection/information-business-and-organisations/principles-gdpr_en"
+        },
+        "takedown": {
+          "status": "required",
+          "evidence": "No approved correction, objection, deletion, appeal, or publisher takedown workflow exists for copied reports.",
+          "reference": "docs/data-safety.md"
+        },
+        "provenance": {
+          "status": "required",
+          "evidence": "No permitted field set, source-record contract, or authorized content digest can exist before permission is documented.",
+          "reference": "docs/source-rights.md"
+        }
+      },
+      "review": {
+        "reviewed_at": "2026-08-28",
+        "owner": "CallerSignal maintainers",
+        "decision": "Disabled with zero permitted ingestion fields; seek written permission or use a licensed provider before reconsideration."
+      }
+    }
+  ]
+}

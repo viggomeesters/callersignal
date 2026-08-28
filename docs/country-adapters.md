@@ -38,7 +38,9 @@ A source-attributed statement about a communications provider. Number portabilit
 
 ## Implementation boundary
 
-An adapter implements the structural `CountryAdapter` protocol in `src/callersignal/adapters/base.py`. It accepts an already normalized phone-number record and a timezone-aware check time, then returns one `AdapterResult`:
+Before implementation begins, the source must pass the intake process in [`docs/source-rights.md`](source-rights.md) and have an `enabled` record in [`sources/registry.json`](../sources/registry.json). The registry is authoritative for enablement; an adapter declaration alone cannot authorize ingestion. Permission-required and disabled sources have no enabled adapter and return no evidence.
+
+An enabled adapter implements the structural `CountryAdapter` protocol in `src/callersignal/adapters/base.py`. It accepts an already normalized phone-number record and a timezone-aware check time, then returns one `AdapterResult`:
 
 - `matched` contains one or more explicitly public observations from the declared source;
 - `no_match`, `unavailable`, `unsupported`, and `error` contain no observations and include the corresponding typed gap;
@@ -48,6 +50,6 @@ Subscriber identity claims and restricted observations are rejected at this boun
 
 ## Conformance
 
-Every country implementation must run the shared contract suite alongside its own source-specific tests. Conformance demonstrates complete source metadata, public-only observations, explicit freshness, immutable results, and fail-closed gaps. It does not certify source availability or authorize data reuse; those remain properties of the declared source and its documented rights basis.
+Every country implementation must run the shared contract suite alongside its own source-specific tests. Conformance demonstrates complete source metadata, registry parity, public-only observations, explicit freshness, immutable results, and fail-closed gaps. It does not certify source availability or authorize data reuse; those remain properties of the registry decision and its documented rights basis.
 
-The normative record shapes remain [`source-evidence.schema.json`](../schemas/source-evidence.schema.json) and [`lookup-result.schema.json`](../schemas/lookup-result.schema.json). The protocol deliberately mirrors their status and gap vocabulary so CLI, MCP, HTTP, and web surfaces can consume one result model.
+The normative record shapes are [`source-registry.schema.json`](../schemas/source-registry.schema.json), [`source-evidence.schema.json`](../schemas/source-evidence.schema.json), and [`lookup-result.schema.json`](../schemas/lookup-result.schema.json). The protocol deliberately mirrors their status and gap vocabulary so CLI, MCP, HTTP, and web surfaces can consume one result model.

@@ -44,9 +44,11 @@ Before accepting reports, implement and test notice, consent or other applicable
 
 ## Source intake checklist
 
-A country adapter cannot ship until its source record identifies the authority and stable source location; documents reuse terms and permitted fields; captures retrieval time and content identity; defines freshness and outage behavior; states portability and allocation limitations; includes a public-safe deterministic fixture; and passes the shared fail-closed conformance suite.
+A country adapter cannot ship until it has an `enabled` entry in the machine-validated [`source registry`](../sources/registry.json). That record must identify the authority and stable source location; document reuse terms and permitted fields; capture retrieval time and content identity; define freshness and outage behavior; state personal-data and free-text policy; include takedown ownership; and keep robots access, reuse permission, copyright, database rights, privacy, takedown, and provenance as separate gates. The adapter must also state portability and allocation limitations, include a public-safe deterministic fixture, and pass the shared fail-closed conformance suite.
 
-Scraping or republishing third-party caller databases without explicit permission is outside scope. If reuse rights or personal-data status are unclear, do not ingest or publish the data.
+Scraping or republishing third-party caller databases without explicit permission is outside scope. A permissive `robots.txt` only describes crawl access; it is not a license or privacy approval. Search snippets, ratings, report counts, phone-number lists, user narratives, and derived aggregates remain prohibited when reuse rights or personal-data status are unclear. Such a source must be `permission_required`, with no adapter, no evidence classes, zero permitted fields, and no copied records. See [`docs/source-rights.md`](source-rights.md) for the enablement procedure and current decisions.
+
+Official and licensed feeds are not blanket-approved either. Only the fields and evidence classes named in the registry may enter fixtures or public results. Expanding a source's fields, quantity, cadence, use case, or jurisdiction requires a new review before ingestion.
 
 ## Logging and diagnostics
 
@@ -58,4 +60,4 @@ Report suspected vulnerabilities or exposed personal data through the private ro
 
 ## Review gate
 
-Every change involving a new source, data field, report flow, retention rule, log, metric, screenshot, fixture, or public claim must be checked against [`docs/vision.json`](vision.json), the repository safety test, and this document. A legal or privacy uncertainty is a stop condition, not an invitation for an agent to guess.
+Every change involving a new source, data field, report flow, retention rule, log, metric, screenshot, fixture, or public claim must be checked against [`docs/vision.json`](vision.json), the [source registry](../sources/registry.json), the repository safety test, and this document. A legal or privacy uncertainty is a stop condition, not an invitation for an agent to guess.

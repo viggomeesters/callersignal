@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://callersignal.dev/schemas/source-registry.schema.json",
+  "title": "CallerSignal source registry",
+  "description": "Machine-enforced source rights and intake decisions made before an adapter can be enabled.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "reviewed_at", "sources"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "source_registry" },
+    "reviewed_at": { "type": "string", "format": "date" },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/source" }
+    }
+  },
+  "$defs": {
+    "token": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[_-][a-z0-9]+)*$"
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "evidence", "reference"],
+      "properties": {
+        "status": {
+          "enum": ["passed", "required", "not_applicable"]
+        },
+        "evidence": {
+          "type": "string",
+          "minLength": 12
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 3
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "name",
+        "source_type",
+        "status",
+        "adapter_id",
+        "adapter_enabled",
+        "jurisdictions",
+        "authority",
+        "stable_url",
+        "evidence_classes",
+        "risk_capable",
+        "reuse",
+        "intake",
+        "gates",
+        "review"
+      ],
+      "properties": {
+        "source_id": { "$ref": "#/$defs/token" },
+        "name": { "type": "string", "minLength": 3 },
+        "source_type": {
+          "enum": [
+            "official_numbering",
+            "official_regulatory",
+            "licensed_reputation",
+            "third_party_caller_reports",
+            "first_party_moderated_reports"
+          ]
+        },
+        "status": {
+          "enum": ["enabled", "permission_required", "disabled"]
+        },
+        "adapter_id": {
+          "oneOf": [
+            { "$ref": "#/$defs/token" },
+            { "type": "null" }
+          ]
+        },
+        "adapter_enabled": { "type": "boolean" },
+        "jurisdictions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          }
+        },
+        "authority": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "name"],
+          "properties": {
+            "type": { "$ref": "#/$defs/token" },
+            "name": { "type": "string", "minLength": 3 }
+          }
+        },
+        "stable_url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "evidence_classes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/token" }
+        },
+        "risk_capable": { "type": "boolean" },
+        "reuse": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["basis", "license", "license_url", "permission_reference"],
+          "properties": {
+            "basis": { "type": "string", "minLength": 20 },
+            "license": { "type": "string", "minLength": 3 },
+            "license_url": {
+              "oneOf": [
+                { "type": "string", "format": "uri", "pattern": "^https://" },
+                { "type": "null" }
+              ]
+            },
+            "permission_reference": {
+              "oneOf": [
+                { "type": "string", "format": "uri", "pattern": "^https://" },
+                { "type": "null" }
+              ]
+            }
+          }
+        },
+        "intake": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "permitted_fields",
+            "personal_data_allowed",
+            "free_text_allowed",
+            "freshness_max_age_seconds",
+            "outage_behavior"
+          ],
+          "properties": {
+            "permitted_fields": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/token" }
+            },
+            "personal_data_allowed": { "type": "boolean" },
+            "free_text_allowed": { "type": "boolean" },
+            "freshness_max_age_seconds": {
+              "oneOf": [
+                { "type": "integer", "minimum": 1 },
+                { "type": "null" }
+              ]
+            },
+            "outage_behavior": {
+              "enum": ["typed_gap", "disabled"]
+            }
+          }
+        },
+        "gates": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "robots_access",
+            "reuse_permission",
+            "copyright",
+            "database_rights",
+            "privacy",
+            "takedown",
+            "provenance"
+          ],
+          "properties": {
+            "robots_access": { "$ref": "#/$defs/gate" },
+            "reuse_permission": { "$ref": "#/$defs/gate" },
+            "copyright": { "$ref": "#/$defs/gate" },
+            "database_rights": { "$ref": "#/$defs/gate" },
+            "privacy": { "$ref": "#/$defs/gate" },
+            "takedown": { "$ref": "#/$defs/gate" },
+            "provenance": { "$ref": "#/$defs/gate" }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reviewed_at", "owner", "decision"],
+          "properties": {
+            "reviewed_at": { "type": "string", "format": "date" },
+            "owner": { "type": "string", "minLength": 3 },
+            "decision": { "type": "string", "minLength": 20 }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "enabled" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "adapter_id": { "$ref": "#/$defs/token" },
+              "adapter_enabled": { "const": true },
+              "evidence_classes": { "minItems": 1 },
+              "intake": {
+                "properties": {
+                  "permitted_fields": { "minItems": 1 },
+                  "freshness_max_age_seconds": { "type": "integer", "minimum": 1 },
+                  "outage_behavior": { "const": "typed_gap" }
+                }
+              },
+              "gates": {
+                "properties": {
+                  "robots_access": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "reuse_permission": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "copyright": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "database_rights": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "privacy": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "takedown": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "provenance": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "const": "permission_required" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "adapter_id": { "type": "null" },
+              "adapter_enabled": { "const": false },
+              "evidence_classes": { "maxItems": 0 },
+              "risk_capable": { "const": false },
+              "intake": {
+                "properties": {
+                  "permitted_fields": { "maxItems": 0 },
+                  "personal_data_allowed": { "const": false },
+                  "free_text_allowed": { "const": false },
+                  "freshness_max_age_seconds": { "type": "null" },
+                  "outage_behavior": { "const": "disabled" }
+                }
+              },
+              "gates": {
+                "properties": {
+                  "reuse_permission": {
+                    "properties": { "status": { "const": "required" } }
+                  },
+                  "copyright": {
+                    "properties": { "status": { "const": "required" } }
+                  },
+                  "database_rights": {
+                    "properties": { "status": { "const": "required" } }
+                  },
+                  "privacy": {
+                    "properties": { "status": { "const": "required" } }
+                  },
+                  "takedown": {
+                    "properties": { "status": { "const": "required" } }
+                  },
+                  "provenance": {
+                    "properties": { "status": { "const": "required" } }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "status": { "const": "disabled" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "adapter_enabled": { "const": false },
+              "risk_capable": { "const": false },
+              "intake": {
+                "properties": {
+                  "outage_behavior": { "const": "disabled" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source_type": {
+                "enum": ["official_numbering", "official_regulatory"]
+              }
+            },
+            "required": ["source_type"]
+          },
+          "then": {
+            "properties": {
+              "risk_capable": { "const": false }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

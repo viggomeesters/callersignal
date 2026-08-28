@@ -4,7 +4,7 @@
   "execution_mode": "agent",
   "id": "product-source-rights-registry",
   "project": "callersignal",
-  "status": "open",
+  "status": "done",
   "depends_on": [
     "product-reputation-direction"
   ],
@@ -58,22 +58,40 @@
       "id": "R1",
       "text": "Every enabled source records authority, stable URL, evidence class, reuse basis, permitted fields, freshness, outage behavior, and whether personal or free-text data is allowed.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:53:06+02:00",
+          "agent": "codex",
+          "summary": "Verified for all three enabled adapters: authority, HTTPS source URL, evidence classes, exact runtime reuse basis and license, permitted fields, 30-day freshness, typed-gap outage behavior, and explicit personal-data/free-text denial are schema-valid and parity-tested."
+        }
+      ]
     },
     {
       "id": "R2",
       "text": "Third-party caller-report sites without explicit permission are recorded as disabled permission-required candidates with zero permitted ingestion fields and no copied records.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:53:06+02:00",
+          "agent": "codex",
+          "summary": "Verified wieheeftmijgebeld_nl is permission_required with adapter_id null, adapter_enabled false, no evidence classes, zero permitted fields, no personal/free-text allowance, disabled outage behavior, and no copied report or number records."
+        }
+      ]
     },
     {
       "id": "R3",
       "text": "The registry and documentation make robots permission, copyright/database rights, privacy review, takedown, and provenance separate gates before any adapter can be enabled.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:53:06+02:00",
+          "agent": "codex",
+          "summary": "Verified the schema requires seven separate robots, reuse-permission, copyright, database-rights, privacy, takedown, and provenance gates; mutation tests prove permissive robots cannot enable the candidate, disabled sources cannot execute, and official numbering sources cannot become risk-capable."
+        }
+      ]
     }
   ],
   "acceptance": [
@@ -86,9 +104,62 @@
     "make check"
   ],
   "claim": {
-    "agent": null,
-    "claimed_at": null
+    "agent": "codex",
+    "claimed_at": "2026-08-28T11:46:13+02:00"
   },
-  "evidence": [],
-  "order": 570
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-28T11:53:30+02:00",
+      "task_id": "product-source-rights-registry",
+      "agent": "codex",
+      "summary": "changed_files=schemas/source-registry.schema.json,sources/registry.json,tests/contracts/test_source_registry.py,docs/source-rights.md,docs/data-safety.md,docs/country-adapters.md,.go/tasks/active/product-source-rights-registry.json; verification=uv run pytest tests/contracts/test_source_registry.py -q (10 passed) && make check (130 Python and 5 web tests; docs/assets/public-safety green) && git diff --check && ./go validate . && exact-number history scan rc=0; critic=approved after closing executable-disabled and official-numbering-risk-capable schema bypasses, proving robots access cannot substitute for rights, and confirming no copied reports, phone records, placeholders, private input numbers, or secrets; self-reflect=no durable agent/process improvement needed, no skill/memory/config change",
+      "changed_files": [
+        "schemas/source-registry.schema.json",
+        "sources/registry.json",
+        "tests/contracts/test_source_registry.py",
+        "docs/source-rights.md",
+        "docs/data-safety.md",
+        "docs/country-adapters.md",
+        ".go/tasks/active/product-source-rights-registry.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/contracts/test_source_registry.py -q (10 passed) && make check (130 Python and 5 web tests",
+        "result": "uv run pytest tests/contracts/test_source_registry.py -q (10 passed) && make check (130 Python and 5 web tests"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after closing executable-disabled and official-numbering-risk-capable schema bypasses, proving robots access cannot substitute for rights, and confirming no copied reports, phone records, placeholders, private input numbers, or secrets",
+        "skip_reason": null
+      }
+    }
+  ],
+  "order": 570,
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-28T11:54:00+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "Approved after adversarial review: R1-R3 are verified, registry and runtime declarations match, the permission-required candidate has zero ingestible content, all seven rights and safety gates remain independent, unsafe state mutations fail schema validation, and the full repository gate is green."
+    }
+  ]
 }
