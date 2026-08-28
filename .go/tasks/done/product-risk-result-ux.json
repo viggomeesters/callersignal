@@ -4,7 +4,7 @@
   "execution_mode": "agent",
   "id": "product-risk-result-ux",
   "project": "callersignal",
-  "status": "active",
+  "status": "done",
   "depends_on": [
     "product-risk-assessment-contract"
   ],
@@ -60,22 +60,40 @@
       "id": "R1",
       "text": "The result leads with a large text-and-icon risk banner whose wording and visual treatment distinguish all four states without relying on color alone.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:44:25+02:00",
+          "agent": "codex",
+          "summary": "Verified by four canonical state labels, four dedicated SVG/icon selectors, distinct palettes, fail-closed fallback tests, and rendered production insufficient-evidence proof."
+        }
+      ]
     },
     {
       "id": "R2",
       "text": "Source confidence is visually subordinate to the risk state and cannot be mistaken for a safety percentage.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:44:25+02:00",
+          "agent": "codex",
+          "summary": "Verified by removal of the confidence bar and percentage from the assessment panel; evidence confidence is a subordinate text row explicitly labelled as not safety."
+        }
+      ]
     },
     {
       "id": "R3",
       "text": "Desktop and mobile proof confirms no clipping, overlap, overflow, unreadable contrast, placeholder text, or console errors, and the live Vercel alias serves the verified result.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-28T11:44:25+02:00",
+          "agent": "codex",
+          "summary": "Verified at 375, 390, 768, 1024, and 1440 px with zero overflow, no overlap/placeholders, one visible icon, WCAG contrast >=8.68:1, zero console warnings/errors, and live Vercel deployment dpl_C2AynN94S1GLXHVgny7DLdVkfVcG Ready on callersignal.vercel.app."
+        }
+      ]
     }
   ],
   "acceptance": [
@@ -92,9 +110,62 @@
     "agent": "codex",
     "claimed_at": "2026-08-28T11:25:43+02:00"
   },
-  "evidence": [],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-28T11:44:34+02:00",
+      "task_id": "product-risk-result-ux",
+      "agent": "codex",
+      "summary": "changed_files=web/index.html,web/assets/app.js,web/assets/styles.css,web/tests/app.test.js,tests/e2e/test_web.py,docs/web.md,README.md,web/proof/desktop-risk-result-1440.jpg,web/proof/mobile-risk-result-375.jpg,.go/tasks/active/product-risk-result-ux.json; verification=npm --prefix web test (5 passed) && uv run pytest tests/e2e/test_web.py -q (6 passed) && make check (120 Python and 5 web tests; docs/assets/public-safety green) && ./go validate . && git diff --check rc=0; live_verification=Vercel deployment dpl_C2AynN94S1GLXHVgny7DLdVkfVcG status Ready aliases callersignal.vercel.app, curl homepage/API 200 with assessment.risk.state=insufficient_evidence and Cache-Control no-store, browser 375/390/768/1024/1440 overflow=0 console warnings/errors=0; critic=approved after replacing the no-risk checkmark with a search-minus icon to avoid implying safety, removing the dominant confidence percentage/bar, confirming four text-and-icon states, WCAG contrast >=8.68:1, no clipping/overlap/placeholders, and production visual readback",
+      "changed_files": [
+        "web/index.html",
+        "web/assets/app.js",
+        "web/assets/styles.css",
+        "web/tests/app.test.js",
+        "tests/e2e/test_web.py",
+        "docs/web.md",
+        "README.md",
+        "web/proof/desktop-risk-result-1440.jpg",
+        "web/proof/mobile-risk-result-375.jpg",
+        ".go/tasks/active/product-risk-result-ux.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "npm --prefix web test (5 passed) && uv run pytest tests/e2e/test_web.py -q (6 passed) && make check (120 Python and 5 web tests",
+        "result": "npm --prefix web test (5 passed) && uv run pytest tests/e2e/test_web.py -q (6 passed) && make check (120 Python and 5 web tests"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after replacing the no-risk checkmark with a search-minus icon to avoid implying safety, removing the dominant confidence percentage/bar, confirming four text-and-icon states, WCAG contrast >=8.68:1, no clipping/overlap/placeholders, and production visual readback",
+        "skip_reason": null
+      }
+    }
+  ],
   "order": 560,
-  "work_status": "in_progress",
-  "review_status": "none",
-  "review_history": []
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-28T11:44:39+02:00",
+      "agent": "codex-reviewer",
+      "status": "approved",
+      "evidence": "Approved after local and production adversarial review: all R1-R3 outcomes are verified, the banner uses explicit icon and text semantics, no-risk avoids a safety checkmark, evidence confidence is subordinate, responsive and contrast probes pass, and the stable Vercel alias renders the canonical result with no browser errors."
+    }
+  ]
 }
