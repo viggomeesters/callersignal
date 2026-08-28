@@ -7,7 +7,12 @@ from pathlib import Path
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 
-from callersignal.adapters.base import SourceDeclaration
+from callersignal.adapters.base import (
+    AdapterResult,
+    AdapterStatus,
+    EvidenceGap,
+    SourceDeclaration,
+)
 from callersignal.evidence.ledger import EvidenceLedger
 from callersignal.lookup import LookupService
 
@@ -80,6 +85,7 @@ def test_us_lookup_preserves_plan_scope_and_reserved_line_scope() -> None:
     result = service().lookup("202-555-0147", origin_region="US")
 
     assert result["sources_checked"][0]["source_id"] == "nanpa_public_numbering"
+    assert result["sources_checked"][0]["risk_capable"] is False
     assert len(result["evidence"]) == 2
     assert {item["subject"]["kind"] for item in result["evidence"]} == {
         "numbering_plan",
@@ -89,6 +95,13 @@ def test_us_lookup_preserves_plan_scope_and_reserved_line_scope() -> None:
         "npa_assignable, npa_assigned, npa_in_service",
         "fictional_use",
     }
+    assert result["assessment"]["risk"]["state"] == "insufficient_evidence"
+    assert result["assessment"]["risk"]["reason_codes"] == [
+        "no_risk_capable_source_checked"
+    ]
+    assert result["assessment"]["risk"]["recommended_action"]["code"] == (
+        "treat_as_unknown"
+    )
     lookup_validator().validate(result)
 
 
@@ -102,6 +115,53 @@ def test_no_match_is_unknown_with_a_source_specific_gap() -> None:
     assert result["assessment"]["state"] == "unknown"
     assert result["assessment"]["confidence"] == {"level": "none", "score": 0}
     assert result["assessment"]["conclusions"] == []
+    lookup_validator().validate(result)
+
+
+def test_eligible_risk_source_no_match_is_explicitly_not_a_safety_claim() -> None:
+    class NoMatchRiskAdapter:
+        declaration = SourceDeclaration(
+            adapter_id="licensed_risk_example",
+            country_codes=("NL",),
+            source_id="licensed_risk_example",
+            source_name="Licensed risk example",
+            authority_type="licensed_data_provider",
+            source_url="https://example.invalid/licensed-risk",
+            reuse_basis="Licensed aggregate observations for contract conformance testing.",
+            license="Contract fixture",
+            permitted_claim_types=("reported_activity_summary",),
+            freshness_max_age_seconds=3600,
+            failure_behavior="typed_gap",
+            portability_limitations=(
+                "A displayed number does not prove the caller identity.",
+            ),
+        )
+
+        def lookup(self, phone_number: dict, *, checked_at: datetime) -> AdapterResult:
+            del phone_number
+            return AdapterResult(
+                declaration=self.declaration,
+                jurisdiction="NL",
+                status=AdapterStatus.NO_MATCH,
+                checked_at=checked_at,
+                gaps=(
+                    EvidenceGap(
+                        gap_id="gap_risk-no-match",
+                        source_id=self.declaration.source_id,
+                        code="no_authoritative_data",
+                        message="The eligible risk source returned no matching observation.",
+                        retryable=False,
+                    ),
+                ),
+            )
+
+    result = service(adapters=(NoMatchRiskAdapter(),)).lookup(
+        "0906-8844", origin_region="NL"
+    )
+
+    assert result["sources_checked"][0]["risk_capable"] is True
+    assert result["assessment"]["risk"]["state"] == "no_risk_evidence"
+    assert "not proof" in result["assessment"]["risk"]["summary"].lower()
     lookup_validator().validate(result)
 
 

@@ -30,6 +30,8 @@ International-format input carries its own country context and needs no `origin_
 
 A successful response is the unchanged versioned object defined by [`lookup-result.schema.json`](../schemas/lookup-result.schema.json), identical in meaning and fields to CLI JSON and MCP `structuredContent`. Domain-level invalid, possible, unsupported, no-match, unavailable, and evidence-gap states remain successful lookup results so clients can render their provenance and uncertainty.
 
+The canonical phone-risk result is `assessment.risk`, with one of `official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`. It includes supporting IDs and a stable recommended action. `assessment.confidence` describes the confidence of source evidence, not caller safety. Each source check exposes `risk_capable`; numbering-plan sources are intentionally false. See the [risk assessment methodology](methodology.md) for exact thresholds and negative invariants.
+
 Malformed transport input uses a small versioned `http_error` object. The adapter returns `400` for invalid query semantics, `404` for unknown routes, `405` for non-GET methods, `429` when an injected request gate denies admission, `503` when that gate fails, and a generic `500` when an unexpected lookup failure escapes. Error messages never echo the submitted number.
 
 `GET /healthz` reports only process readiness. Every response is JSON, sets `Cache-Control: no-store`, and prevents MIME sniffing. Cross-origin access is intentionally not enabled; the public site consumes the API on the same origin.

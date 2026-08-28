@@ -12,6 +12,7 @@ from callersignal.adapters.base import CountryAdapter, EvidenceGap
 from callersignal.adapters.gb import UnitedKingdomProtectedNumbersAdapter
 from callersignal.adapters.nl import NetherlandsNumberRegisterAdapter
 from callersignal.adapters.us import UnitedStatesNumberingAdapter
+from callersignal.assessment import assess_risk
 from callersignal.evidence.ledger import EvidenceLedger
 from callersignal.numbering import normalize_phone_number
 
@@ -107,6 +108,7 @@ class LookupService:
                         "source_id": adapter.declaration.source_id,
                         "jurisdiction": country,
                         "status": "error",
+                        "risk_capable": _risk_capable(adapter.declaration),
                         "checked_at": _format_utc(checked_at),
                         "evidence_ids": [],
                         "gap_ids": [source_gap.gap_id],
@@ -123,6 +125,7 @@ class LookupService:
                     "source_id": adapter_result.declaration.source_id,
                     "jurisdiction": adapter_result.jurisdiction,
                     "status": adapter_result.status.value,
+                    "risk_capable": _risk_capable(adapter_result.declaration),
                     "checked_at": _format_utc(adapter_result.checked_at),
                     "evidence_ids": [item["evidence_id"] for item in returned_evidence],
                     "gap_ids": [item.gap_id for item in returned_gaps],
@@ -152,7 +155,12 @@ class LookupService:
             "sources_checked": sources_checked,
             "evidence": evidence,
             "gaps": public_gaps,
-            "assessment": _assessment(evidence, public_gaps, checked_at),
+            "assessment": _assessment(
+                evidence,
+                public_gaps,
+                sources_checked,
+                checked_at,
+            ),
         }
 
 
@@ -162,6 +170,18 @@ def _resolved_country(phone_number: Mapping[str, Any]) -> str | None:
     if region is not None:
         return str(region)
     return _CALLING_CODE_COUNTRY.get(str(canonical.get("country_calling_code")))
+
+
+def _risk_capable(declaration: Any) -> bool:
+    return (
+        "reported_activity_summary" in declaration.permitted_claim_types
+        and declaration.authority_type
+        in {
+            "official_regulator",
+            "licensed_data_provider",
+            "moderated_community_aggregate",
+        }
+    )
 
 
 def _gap(*, source_id: str | None, code: str, message: str, retryable: bool) -> EvidenceGap:
@@ -190,6 +210,7 @@ def _public_gap(gap: EvidenceGap) -> dict[str, Any]:
 def _assessment(
     evidence: list[dict[str, Any]],
     gaps: list[dict[str, Any]],
+    sources_checked: list[dict[str, Any]],
     checked_at: datetime,
 ) -> dict[str, Any]:
     current_evidence = [
@@ -254,6 +275,12 @@ def _assessment(
             if item["observation"]["claim_type"] in _CONCLUSION_TYPE
         ],
         "residual_risk": _RESIDUAL_RISK,
+        "risk": assess_risk(
+            evidence=evidence,
+            gaps=gaps,
+            sources_checked=sources_checked,
+            checked_at=checked_at,
+        ),
     }
 
 

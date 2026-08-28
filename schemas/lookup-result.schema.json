@@ -72,7 +72,7 @@
     "source_check": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_id", "jurisdiction", "status", "checked_at", "evidence_ids", "gap_ids"],
+      "required": ["source_id", "jurisdiction", "status", "risk_capable", "checked_at", "evidence_ids", "gap_ids"],
       "properties": {
         "source_id": { "$ref": "#/$defs/token" },
         "jurisdiction": {
@@ -84,6 +84,7 @@
         "status": {
           "enum": ["matched", "no_match", "unavailable", "unsupported", "stale", "error"]
         },
+        "risk_capable": { "type": "boolean" },
         "checked_at": { "type": "string", "format": "date-time" },
         "evidence_ids": {
           "type": "array",
@@ -136,7 +137,8 @@
         "provenance",
         "freshness",
         "conclusions",
-        "residual_risk"
+        "residual_risk",
+        "risk"
       ],
       "properties": {
         "state": {
@@ -235,6 +237,64 @@
           "minLength": 40,
           "maxLength": 800,
           "pattern": "[Ss]poof"
+        },
+        "risk": { "$ref": "#/$defs/risk_assessment" }
+      }
+    },
+    "risk_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "headline",
+        "summary",
+        "reason_codes",
+        "evidence_ids",
+        "source_ids",
+        "recommended_action"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "official_warning",
+            "elevated_signals",
+            "no_risk_evidence",
+            "insufficient_evidence"
+          ]
+        },
+        "headline": { "type": "string", "minLength": 8, "maxLength": 120 },
+        "summary": { "type": "string", "minLength": 20, "maxLength": 500 },
+        "reason_codes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/token" }
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/evidence_id" }
+        },
+        "source_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/token" }
+        },
+        "recommended_action": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["code", "message"],
+          "properties": {
+            "code": {
+              "enum": [
+                "avoid_and_verify",
+                "avoid_sensitive_actions",
+                "stay_cautious",
+                "treat_as_unknown"
+              ]
+            },
+            "message": { "type": "string", "minLength": 20, "maxLength": 300 }
+          }
         }
       }
     }

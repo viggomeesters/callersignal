@@ -134,6 +134,7 @@ def lookup_result() -> dict:
                 "source_id": "nanpa",
                 "jurisdiction": "US",
                 "status": "matched",
+                "risk_capable": False,
                 "checked_at": "2026-08-26T12:00:00Z",
                 "evidence_ids": [evidence_id()],
                 "gap_ids": [],
@@ -168,6 +169,23 @@ def lookup_result() -> dict:
             "residual_risk": (
                 "Caller ID can be spoofed; numbering context does not prove who placed a call."
             ),
+            "risk": {
+                "state": "insufficient_evidence",
+                "headline": "Not enough risk evidence",
+                "summary": (
+                    "Numbering context alone cannot show whether calls displaying "
+                    "this number are harmful."
+                ),
+                "reason_codes": ["no_risk_capable_source_checked"],
+                "evidence_ids": [],
+                "source_ids": [],
+                "recommended_action": {
+                    "code": "treat_as_unknown",
+                    "message": (
+                        "Treat this result as unknown and verify unexpected requests independently."
+                    ),
+                },
+            },
         },
     }
 
