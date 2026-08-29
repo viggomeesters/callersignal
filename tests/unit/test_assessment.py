@@ -73,6 +73,41 @@ def risk_evidence(
     }
 
 
+def status_evidence(
+    *,
+    evidence_id: str,
+    source_id: str,
+    category: str,
+    verification_status: str = "verified",
+    freshness_status: str = "current",
+) -> dict:
+    evidence = risk_evidence(
+        evidence_id=evidence_id,
+        source_id=source_id,
+        evidence_class="licensed_reputation_observation",
+        authority_type="licensed_data_provider",
+        verification_status=verification_status,
+        freshness_status=freshness_status,
+        reason_codes=[f"aggregate_status_{category}"],
+    )
+    evidence["observation"].update(
+        {
+            "claim_type": "reputation_status",
+            "value": category,
+            "reputation": {
+                "category": category,
+                "source_native_value": f"provider-{category}",
+                "sample_basis": (
+                    "source_no_match"
+                    if category == "no_current_risk_match"
+                    else "licensed_provider_aggregate"
+                ),
+            },
+        }
+    )
+    return evidence
+
+
 def test_numbering_context_alone_is_insufficient_risk_evidence() -> None:
     risk = assess_risk(
         evidence=[numbering_evidence()],
@@ -219,6 +254,35 @@ def test_two_independent_verified_sources_produce_elevated_signals() -> None:
     assert_explainable(risk)
 
 
+def test_two_independent_matching_statuses_produce_elevated_signals() -> None:
+    evidence = [
+        status_evidence(
+            evidence_id=f"ev_status-phishing-{suffix}",
+            source_id=source_id,
+            category="phishing",
+        )
+        for suffix, source_id in (
+            ("one", "licensed_reputation_one"),
+            ("two", "licensed_reputation_two"),
+        )
+    ]
+
+    risk = assess_risk(
+        evidence=evidence,
+        gaps=[],
+        sources_checked=[
+            {"source_id": source_id, "status": "matched", "risk_capable": True}
+            for source_id in ("licensed_reputation_one", "licensed_reputation_two")
+        ],
+        checked_at=NOW,
+    )
+
+    assert risk["state"] == "elevated_signals"
+    assert risk["reason_codes"] == ["aggregate_status_phishing"]
+    assert risk["evidence_diversity"]["source_count"] == 2
+    assert_explainable(risk)
+
+
 def test_current_risk_source_no_match_produces_no_risk_evidence_not_safe() -> None:
     risk = assess_risk(
         evidence=[],
@@ -246,6 +310,63 @@ def test_current_risk_source_no_match_produces_no_risk_evidence_not_safe() -> No
     assert risk["source_ids"] == ["licensed_reputation"]
     assert "not proof" in risk["summary"].lower()
     assert risk["recommended_action"]["code"] == "stay_cautious"
+    assert_explainable(risk)
+
+
+def test_current_neutral_no_match_status_produces_no_risk_evidence_not_safe() -> None:
+    no_match = status_evidence(
+        evidence_id="ev_licensed-no-current-match",
+        source_id="licensed_reputation",
+        category="no_current_risk_match",
+    )
+
+    risk = assess_risk(
+        evidence=[no_match],
+        gaps=[],
+        sources_checked=[
+            {
+                "source_id": "licensed_reputation",
+                "status": "matched",
+                "risk_capable": True,
+            }
+        ],
+        checked_at=NOW,
+    )
+
+    assert risk["state"] == "no_risk_evidence"
+    assert risk["reason_codes"] == ["eligible_risk_sources_no_match"]
+    assert risk["evidence_ids"] == ["ev_licensed-no-current-match"]
+    assert "not proof" in risk["summary"].lower()
+    assert_explainable(risk)
+
+
+def test_harmful_and_no_match_statuses_fail_closed_as_conflicting() -> None:
+    evidence = [
+        status_evidence(
+            evidence_id="ev_status-scam",
+            source_id="licensed_reputation_one",
+            category="scam",
+        ),
+        status_evidence(
+            evidence_id="ev_status-no-match",
+            source_id="licensed_reputation_two",
+            category="no_current_risk_match",
+        ),
+    ]
+
+    risk = assess_risk(
+        evidence=evidence,
+        gaps=[],
+        sources_checked=[
+            {"source_id": source_id, "status": "matched", "risk_capable": True}
+            for source_id in ("licensed_reputation_one", "licensed_reputation_two")
+        ],
+        checked_at=NOW,
+    )
+
+    assert risk["state"] == "insufficient_evidence"
+    assert risk["reason_codes"] == ["conflicting_evidence"]
+    assert risk["confidence"] == {"level": "none", "score": 0}
     assert_explainable(risk)
 
 

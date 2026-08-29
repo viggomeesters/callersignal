@@ -26,6 +26,7 @@ _CONCLUSION_TYPE = {
     "regulatory_status": "regulatory_status",
     "reserved_status": "regulatory_status",
     "reported_activity_summary": "reported_activity",
+    "reputation_status": "reputation_status",
 }
 _RESIDUAL_RISK = (
     "Caller ID spoofing remains possible; numbering evidence cannot prove who placed a call, "
@@ -174,7 +175,11 @@ def _resolved_country(phone_number: Mapping[str, Any]) -> str | None:
 
 def _risk_capable(declaration: Any) -> bool:
     return (
-        "reported_activity_summary" in declaration.permitted_claim_types
+        bool(
+            {"reported_activity_summary", "reputation_status"}.intersection(
+                declaration.permitted_claim_types
+            )
+        )
         and declaration.authority_type
         in {
             "official_regulator",
@@ -217,7 +222,14 @@ def _assessment(
         item for item in evidence if item.get("freshness", {}).get("status") == "current"
     ]
     if current_evidence:
-        state = "numbering_context_only"
+        state = (
+            "reported_activity"
+            if any(
+                item.get("observation", {}).get("claim_type") == "reputation_status"
+                for item in current_evidence
+            )
+            else "numbering_context_only"
+        )
         score = min(float(item["observation"]["confidence"]) for item in current_evidence)
         confidence = {
             "level": "high" if score >= 0.8 else "medium" if score >= 0.5 else "low",
@@ -307,6 +319,17 @@ def _conclusion(evidence: Mapping[str, Any]) -> dict[str, Any]:
         "country": f"The source associates this numbering context with {value}.",
         "number_type": f"The source classifies this numbering context as {value}.",
         "reported_activity": f"The source records this reported activity summary: {value}.",
+        "reputation_status": (
+            (
+                "The source returned no current risk match at check time; this does not prove "
+                "that a call is safe."
+            )
+            if value == "no_current_risk_match"
+            else (
+                "The source classifies aggregate activity associated with this displayed number "
+                f"as {value}; this does not identify the caller or subscriber."
+            )
+        ),
     }[conclusion_type]
     return {
         "type": conclusion_type,

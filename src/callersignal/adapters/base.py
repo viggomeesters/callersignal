@@ -30,6 +30,22 @@ _CLAIM_TYPES = {
     "reachability_claim",
     "regulatory_status",
     "reported_activity_summary",
+    "reputation_status",
+}
+_REPUTATION_REASONS = {
+    "spam": "aggregate_status_spam",
+    "phishing": "aggregate_status_phishing",
+    "scam": "aggregate_status_scam",
+    "telemarketing": "aggregate_status_telemarketing",
+    "robocall": "aggregate_status_robocall",
+    "nuisance": "aggregate_status_nuisance",
+    "no_current_risk_match": "aggregate_status_no_current_risk_match",
+}
+_REPUTATION_SAMPLE_BASES = {
+    "official_regulatory_observation",
+    "licensed_provider_aggregate",
+    "moderated_community_aggregate",
+    "source_no_match",
 }
 _GAP_CODES = {
     "invalid_input",
@@ -200,6 +216,8 @@ class AdapterResult:
                 raise AdapterContractError("Adapter evidence must be explicitly public.")
             if observation.get("claim_type") not in self.declaration.permitted_claim_types:
                 raise AdapterContractError("Evidence claim type is outside the source declaration.")
+            if observation.get("claim_type") == "reputation_status":
+                self._validate_reputation_status(observation)
         for item in self.gaps:
             if item.source_id not in {None, self.declaration.source_id}:
                 raise AdapterContractError("Gap source differs from the declared source.")
@@ -221,6 +239,28 @@ class AdapterResult:
             raise AdapterContractError(
                 f"A {self.status.value} result cannot include source evidence."
             )
+
+    def _validate_reputation_status(self, observation: Mapping[str, Any]) -> None:
+        reputation = observation.get("reputation")
+        if not isinstance(reputation, Mapping):
+            raise AdapterContractError("Reputation evidence requires bounded status metadata.")
+        category = reputation.get("category")
+        if category not in _REPUTATION_REASONS or observation.get("value") != category:
+            raise AdapterContractError("Reputation category is unsupported or inconsistent.")
+        native_value = reputation.get("source_native_value")
+        if (
+            not isinstance(native_value, str)
+            or not native_value.strip()
+            or native_value.strip().casefold() == "safe"
+        ):
+            raise AdapterContractError("A source-native safe verdict cannot enter evidence.")
+        sample_basis = reputation.get("sample_basis")
+        if sample_basis not in _REPUTATION_SAMPLE_BASES:
+            raise AdapterContractError("Reputation sample basis is not supported.")
+        if (category == "no_current_risk_match") != (sample_basis == "source_no_match"):
+            raise AdapterContractError("No-match status requires the dedicated sample basis.")
+        if _REPUTATION_REASONS[category] not in observation.get("reason_codes", []):
+            raise AdapterContractError("Reputation status requires its stable reason code.")
 
 
 @runtime_checkable

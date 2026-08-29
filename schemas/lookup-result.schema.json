@@ -217,7 +217,8 @@
                   "provider_claim",
                   "identity_claim",
                   "regulatory_status",
-                  "reported_activity"
+                  "reported_activity",
+                  "reputation_status"
                 ]
               },
               "value": { "type": "string", "minLength": 1, "maxLength": 500 },

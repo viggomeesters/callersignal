@@ -108,7 +108,8 @@
             "subscriber_identity_claim",
             "reachability_claim",
             "regulatory_status",
-            "reported_activity_summary"
+            "reported_activity_summary",
+            "reputation_status"
           ]
         },
         "value": {
@@ -146,6 +147,58 @@
           "minItems": 1,
           "uniqueItems": true,
           "items": { "type": "string", "minLength": 12, "maxLength": 500 }
+        },
+        "reputation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["category", "source_native_value", "sample_basis"],
+          "properties": {
+            "category": {
+              "enum": [
+                "spam",
+                "phishing",
+                "scam",
+                "telemarketing",
+                "robocall",
+                "nuisance",
+                "no_current_risk_match"
+              ]
+            },
+            "source_native_value": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "pattern": "^(?![Ss][Aa][Ff][Ee]$).+$"
+            },
+            "sample_basis": {
+              "enum": [
+                "official_regulatory_observation",
+                "licensed_provider_aggregate",
+                "moderated_community_aggregate",
+                "source_no_match"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "category": { "const": "no_current_risk_match" }
+                },
+                "required": ["category"]
+              },
+              "then": {
+                "properties": {
+                  "sample_basis": { "const": "source_no_match" }
+                }
+              },
+              "else": {
+                "properties": {
+                  "sample_basis": { "not": { "const": "source_no_match" } }
+                }
+              }
+            }
+          ]
         }
       },
       "allOf": [
@@ -166,6 +219,38 @@
           },
           "then": {
             "properties": { "publication_status": { "const": "restricted" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "claim_type": { "const": "reputation_status" } },
+            "required": ["claim_type"]
+          },
+          "then": {
+            "required": ["reputation"],
+            "properties": {
+              "evidence_class": {
+                "enum": [
+                  "regulatory_notice",
+                  "licensed_reputation_observation",
+                  "community_report_aggregate"
+                ]
+              },
+              "value": {
+                "enum": [
+                  "spam",
+                  "phishing",
+                  "scam",
+                  "telemarketing",
+                  "robocall",
+                  "nuisance",
+                  "no_current_risk_match"
+                ]
+              }
+            }
+          },
+          "else": {
+            "not": { "required": ["reputation"] }
           }
         }
       ]
@@ -229,6 +314,26 @@
       }
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "observation": {
+            "properties": { "claim_type": { "const": "reputation_status" } },
+            "required": ["claim_type"]
+          }
+        },
+        "required": ["observation"]
+      },
+      "then": {
+        "properties": {
+          "subject": {
+            "properties": { "kind": { "const": "phone_number" } }
+          }
+        }
+      }
+    }
+  ],
   "$defs": {
     "evidence_id": {
       "type": "string",

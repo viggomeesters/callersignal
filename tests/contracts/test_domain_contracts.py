@@ -122,6 +122,43 @@ def source_evidence() -> dict:
     }
 
 
+def reputation_evidence() -> dict:
+    instance = source_evidence()
+    instance["evidence_id"] = "ev_licensed-reputation-example"
+    instance["source"].update(
+        {
+            "source_id": "licensed_reputation",
+            "name": "Licensed reputation fixture",
+            "authority_type": "licensed_data_provider",
+            "jurisdiction": "global",
+            "locator": "https://example.invalid/reputation",
+            "reuse_basis": "Licensed aggregate status fields for public contract conformance.",
+            "license": "Contract fixture",
+        }
+    )
+    instance["subject"]["range_prefix"] = None
+    instance["observation"].update(
+        {
+            "evidence_class": "licensed_reputation_observation",
+            "claim_type": "reputation_status",
+            "value": "phishing",
+            "verification_status": "verified",
+            "confidence": 0.9,
+            "reason_codes": ["aggregate_status_phishing"],
+            "reputation": {
+                "category": "phishing",
+                "source_native_value": "provider-phishing",
+                "sample_basis": "licensed_provider_aggregate",
+            },
+            "limitations": [
+                "The status describes aggregate evidence about a displayed number and does not "
+                "identify a caller."
+            ],
+        }
+    )
+    return instance
+
+
 def lookup_result() -> dict:
     return {
         "schema_version": "1.0.0",
@@ -301,6 +338,57 @@ def test_source_observation_requires_rights_freshness_and_limitations(
         del instance[path[0]][path[1]]
         with pytest.raises(ValidationError):
             schema_validator.validate(instance)
+
+
+def test_reputation_status_has_a_bounded_neutral_contract(
+    schemas: dict[str, dict], registry: Registry
+) -> None:
+    schema_validator = validator("source-evidence.schema.json", schemas, registry)
+    schema_validator.validate(reputation_evidence())
+
+    for mutation in ("safe", "unsupported-category", None):
+        instance = reputation_evidence()
+        if mutation == "safe":
+            instance["observation"]["reputation"]["source_native_value"] = "safe"
+        elif mutation == "unsupported-category":
+            instance["observation"]["reputation"]["category"] = "dangerous_person"
+        else:
+            del instance["observation"]["reputation"]
+        with pytest.raises(ValidationError):
+            schema_validator.validate(instance)
+
+
+@pytest.mark.parametrize(
+    "category",
+    [
+        "spam",
+        "phishing",
+        "scam",
+        "telemarketing",
+        "robocall",
+        "nuisance",
+        "no_current_risk_match",
+    ],
+)
+def test_every_supported_reputation_category_validates(
+    category: str, schemas: dict[str, dict], registry: Registry
+) -> None:
+    instance = reputation_evidence()
+    instance["observation"]["value"] = category
+    instance["observation"]["reason_codes"] = [f"aggregate_status_{category}"]
+    instance["observation"]["reputation"].update(
+        {
+            "category": category,
+            "source_native_value": f"provider-{category}",
+            "sample_basis": (
+                "source_no_match"
+                if category == "no_current_risk_match"
+                else "licensed_provider_aggregate"
+            ),
+        }
+    )
+
+    validator("source-evidence.schema.json", schemas, registry).validate(instance)
 
 
 def test_assessment_requires_provenance_freshness_confidence_reasons_and_residual_risk(

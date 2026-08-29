@@ -16,6 +16,12 @@ _ELEVATED_EVIDENCE_CLASSES = {
     "licensed_reputation_observation",
 }
 _ELEVATED_PATTERN_REASONS = {
+    "aggregate_status_nuisance",
+    "aggregate_status_phishing",
+    "aggregate_status_robocall",
+    "aggregate_status_scam",
+    "aggregate_status_spam",
+    "aggregate_status_telemarketing",
     "corroborated_harmful_activity",
     "credential_theft_pattern",
     "impersonation_pattern",
@@ -93,6 +99,29 @@ def assess_risk(
             supporting_sources=risk_checks,
             checked_at=checked_at,
         )
+    current_status_evidence = [
+        item
+        for item in risk_evidence
+        if _is_current_public_risk_evidence(item)
+        and item.get("observation", {}).get("claim_type") == "reputation_status"
+    ]
+    no_match_evidence = [
+        item
+        for item in current_status_evidence
+        if item.get("observation", {}).get("reputation", {}).get("category")
+        == "no_current_risk_match"
+    ]
+    harmful_status_evidence = [
+        item for item in current_status_evidence if item not in no_match_evidence
+    ]
+    if no_match_evidence and harmful_status_evidence:
+        return _explain(
+            _insufficient_result(["conflicting_evidence"]),
+            evidence=current_status_evidence,
+            gaps=gaps,
+            supporting_sources=risk_checks,
+            checked_at=checked_at,
+        )
     eligible_signals = [
         item
         for item in evidence
@@ -130,7 +159,16 @@ def assess_risk(
             supporting_sources=risk_checks,
             checked_at=checked_at,
         )
-    if risk_checks and all(item.get("status") == "no_match" for item in risk_checks):
+    covered_no_match_sources = {
+        str(item.get("source_id"))
+        for item in risk_checks
+        if item.get("status") == "no_match"
+    } | {
+        str(item.get("source", {}).get("source_id")) for item in no_match_evidence
+    }
+    if risk_checks and all(
+        str(item.get("source_id")) in covered_no_match_sources for item in risk_checks
+    ):
         return _explain(
             {
                 "state": "no_risk_evidence",
@@ -140,7 +178,9 @@ def assess_risk(
                     "number is safe."
                 ),
                 "reason_codes": ["eligible_risk_sources_no_match"],
-                "evidence_ids": [],
+                "evidence_ids": sorted(
+                    str(item["evidence_id"]) for item in no_match_evidence
+                ),
                 "source_ids": sorted(str(item["source_id"]) for item in risk_checks),
                 "recommended_action": {
                     "code": "stay_cautious",
@@ -149,7 +189,7 @@ def assess_risk(
                     ),
                 },
             },
-            evidence=[],
+            evidence=no_match_evidence,
             gaps=gaps,
             supporting_sources=risk_checks,
             checked_at=checked_at,

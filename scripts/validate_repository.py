@@ -25,6 +25,10 @@ ALLOWED_PUBLIC_SAFE_NUMBERS = {
 GO_UPDATE_RECORD_ID = re.compile(
     r"\b\d{8}T\d{12}Z-v\d+\.\d+\.\d+-[0-9a-f]{12}\b"
 )
+ISO_DATETIME = re.compile(
+    r"\b\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}"
+    r"(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?\b"
+)
 
 
 def fail(message: str) -> None:
@@ -68,6 +72,7 @@ def check_sensitive_content() -> None:
         phone_scan_text = text
         if relative == Path(".go/runs/events.jsonl"):
             phone_scan_text = GO_UPDATE_RECORD_ID.sub("", phone_scan_text)
+        phone_scan_text = ISO_DATETIME.sub("", phone_scan_text)
         for match in full_phone.finditer(phone_scan_text):
             problems.append(f"{relative}: international phone-like value {match.group(0)!r}")
         for match in phone_like.finditer(phone_scan_text):

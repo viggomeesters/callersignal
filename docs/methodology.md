@@ -7,8 +7,8 @@ CallerSignal separates **source evidence quality** from **phone-number risk**. T
 Risk states are evaluated in this order:
 
 1. `official_warning` — a current, public warning from an official regulator explicitly associates the displayed number with fraud, scams, or abuse. The recommended action is to stop and independently contact the claimed organisation.
-2. `elevated_signals` — at least two distinct eligible sources contain current, public, verified observations of the same supported harmful-activity pattern. Repeated records from one source do not count as independent corroboration.
-3. `no_risk_evidence` — at least one eligible risk-capable source was checked and every such source returned `no_match`. This means only that those sources had no matching observation at check time; it is never a safe-number claim.
+2. `elevated_signals` — at least two distinct eligible sources contain current, public, verified observations of the same supported harmful-activity pattern or the same bounded reputation category. Repeated records from one source do not count as independent corroboration.
+3. `no_risk_evidence` — at least one eligible risk-capable source was checked and every such source either returned `no_match` or a current `no_current_risk_match` observation. This means only that those sources had no matching risk observation at check time; it is never a safe-number claim.
 4. `insufficient_evidence` — the default whenever none of the stronger conditions is met. Numbering-plan facts, range-holder data, lookup volume, a single report, unverified observations, or missing risk-capable sources cannot determine call risk.
 
 An authoritative official warning remains visible even when another source is unavailable. Without an official warning, stale, failed, conflicting, unsupported, or reuse-restricted risk coverage forces `insufficient_evidence` rather than a confident result.
@@ -21,6 +21,16 @@ A source check is marked `risk_capable: true` only when its declaration:
 - identifies the source as an official regulator, licensed data provider, or moderated community aggregate.
 
 That flag declares capability, not truth. Evidence still has to be public, current, within the source declaration, and sufficiently verified for the state it supports. Source use also remains subject to the repository's rights and provenance controls.
+
+## Neutral reputation-status observations
+
+An authorized source may emit the non-identity claim type `reputation_status`. Its canonical `value` and `reputation.category` are limited to `spam`, `phishing`, `scam`, `telemarketing`, `robocall`, `nuisance`, or `no_current_risk_match`. The observation also retains the source-native value and one sample basis: official regulatory observation, licensed provider aggregate, moderated community aggregate, or source no-match. The normal evidence envelope supplies source and license, observation confidence, retrieval and validity times, verification status, source record, transformation version, and content digest.
+
+`safe` is forbidden as both a canonical and source-native verdict. `verified` describes how the observation was validated; it is not a reputation category, organisation declaration, subscriber match, or proof that a particular call came from that number. Phishing and scam are source-attributed aggregate activity labels about a displayed number, never identity claims.
+
+Stable reason codes mirror each bounded category: `aggregate_status_spam`, `aggregate_status_phishing`, `aggregate_status_scam`, `aggregate_status_telemarketing`, `aggregate_status_robocall`, `aggregate_status_nuisance`, and `aggregate_status_no_current_risk_match`. Matching harmful categories from two distinct eligible sources can support `elevated_signals`. One source, unverified evidence, stale evidence, unsupported values, contradictory harmful and no-match observations, or an unavailable source remains `insufficient_evidence`. A current no-match can support only `no_risk_evidence`, with explicit cautionary wording.
+
+The lookup result may expose a neutral `reputation_status` conclusion so consumers can show what an authorized source stated even when the calibrated risk state remains insufficient. That conclusion always says it does not identify the caller or subscriber. All interfaces consume this same contract; no browser or MCP-specific classifier may invent a stronger status.
 
 ## Stable actions and provenance
 

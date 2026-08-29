@@ -165,6 +165,98 @@ def test_eligible_risk_source_no_match_is_explicitly_not_a_safety_claim() -> Non
     lookup_validator().validate(result)
 
 
+def test_licensed_reputation_status_is_neutral_public_evidence() -> None:
+    class LicensedStatusAdapter:
+        declaration = SourceDeclaration(
+            adapter_id="licensed_status_example",
+            country_codes=("NL",),
+            source_id="licensed_status_example",
+            source_name="Licensed status example",
+            authority_type="licensed_data_provider",
+            source_url="https://example.invalid/licensed-status",
+            reuse_basis="Licensed aggregate status fields for contract conformance testing.",
+            license="Contract fixture",
+            permitted_claim_types=("reputation_status",),
+            freshness_max_age_seconds=3600,
+            failure_behavior="typed_gap",
+            portability_limitations=(
+                "A status about a displayed number does not identify the caller.",
+            ),
+        )
+
+        def lookup(self, phone_number: dict, *, checked_at: datetime) -> AdapterResult:
+            canonical = phone_number["canonical"]
+            return AdapterResult(
+                declaration=self.declaration,
+                jurisdiction="NL",
+                status=AdapterStatus.MATCHED,
+                checked_at=checked_at,
+                evidence=(
+                    {
+                        "schema_version": "1.0.0",
+                        "kind": "source_evidence",
+                        "evidence_id": "ev_licensed-status-phishing",
+                        "source": {
+                            "source_id": self.declaration.source_id,
+                            "name": self.declaration.source_name,
+                            "authority_type": self.declaration.authority_type,
+                            "jurisdiction": "global",
+                            "locator": self.declaration.source_url,
+                            "reuse_basis": self.declaration.reuse_basis,
+                            "license": self.declaration.license,
+                        },
+                        "subject": {
+                            "kind": "phone_number",
+                            "canonical_e164": canonical["e164"],
+                            "range_prefix": None,
+                        },
+                        "observation": {
+                            "evidence_class": "licensed_reputation_observation",
+                            "claim_type": "reputation_status",
+                            "value": "phishing",
+                            "publication_status": "public",
+                            "verification_status": "verified",
+                            "confidence": 0.9,
+                            "reason_codes": ["aggregate_status_phishing"],
+                            "limitations": [
+                                "This aggregate status does not identify the caller or subscriber."
+                            ],
+                            "reputation": {
+                                "category": "phishing",
+                                "source_native_value": "provider-phishing",
+                                "sample_basis": "licensed_provider_aggregate",
+                            },
+                        },
+                        "freshness": {
+                            "retrieved_at": "2026-08-27T08:55:00Z",
+                            "source_published_at": None,
+                            "valid_until": "2026-08-27T09:55:00Z",
+                            "status": "current",
+                            "max_age_seconds": 3600,
+                        },
+                        "provenance": {
+                            "source_document_id": "licensed-status-fixture",
+                            "source_record_id": "aggregate-fixture",
+                            "transformation_version": "1.0.0",
+                            "content_digest": "sha256:" + ("cd" * 32),
+                        },
+                    },
+                ),
+            )
+
+    result = service(adapters=(LicensedStatusAdapter(),)).lookup(
+        "0906-8844", origin_region="NL"
+    )
+
+    assert result["sources_checked"][0]["risk_capable"] is True
+    assert result["assessment"]["state"] == "reported_activity"
+    assert result["assessment"]["conclusions"][0]["type"] == "reputation_status"
+    assert result["assessment"]["conclusions"][0]["value"] == "phishing"
+    assert "does not identify" in result["assessment"]["conclusions"][0]["wording"]
+    assert result["assessment"]["risk"]["state"] == "insufficient_evidence"
+    lookup_validator().validate(result)
+
+
 def test_adapter_exception_becomes_a_gap_without_leaking_or_fabricating() -> None:
     class FailingAdapter:
         declaration = SourceDeclaration(
