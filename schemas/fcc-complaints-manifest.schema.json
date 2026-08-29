@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://callersignal.dev/schemas/fcc-complaints-manifest.schema.json",
+  "title": "CallerSignal FCC unwanted-call complaint source manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "source_id",
+    "publisher",
+    "dataset_id",
+    "reviewed_at",
+    "urls",
+    "license",
+    "metadata_snapshot",
+    "fields",
+    "query",
+    "category_map",
+    "semantics",
+    "storage",
+    "freshness",
+    "correction"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "fcc_unwanted_call_complaint_manifest" },
+    "source_id": { "const": "fcc_unwanted_call_complaints" },
+    "publisher": { "const": "Federal Communications Commission" },
+    "dataset_id": { "const": "vakf-fz8e" },
+    "reviewed_at": { "type": "string", "format": "date" },
+    "urls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset", "metadata", "api", "publisher"],
+      "properties": {
+        "dataset": { "const": "https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e" },
+        "metadata": { "const": "https://opendata.fcc.gov/api/views/vakf-fz8e" },
+        "api": { "const": "https://opendata.fcc.gov/resource/vakf-fz8e.json" },
+        "publisher": { "type": "string", "format": "uri", "pattern": "^https://" }
+      }
+    },
+    "license": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "terms_url", "attribution"],
+      "properties": {
+        "name": { "const": "Public Domain U.S. Government" },
+        "terms_url": { "const": "https://www.usa.gov/government-works" },
+        "attribution": { "const": "Federal Communications Commission: Consumer Inquiries and Complaints Division" }
+      }
+    },
+    "metadata_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rows_updated_at", "dataset_name"],
+      "properties": {
+        "rows_updated_at": { "type": "string", "format": "date-time" },
+        "dataset_name": { "const": "Consumer Complaints Data - Unwanted Calls" }
+      }
+    },
+    "fields": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["permitted", "forbidden"],
+      "properties": {
+        "permitted": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "caller_id_number" },
+            { "const": "issue_date" },
+            { "const": "type_of_call_or_messge" }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "forbidden": {
+          "type": "array",
+          "uniqueItems": true,
+          "minItems": 9,
+          "contains": { "const": "issue" },
+          "items": {
+            "enum": [
+              "id",
+              "issue_time",
+              "issue_type",
+              "method",
+              "issue",
+              "advertiser_business_phone_number",
+              "state",
+              "zip",
+              "location_1"
+            ]
+          }
+        }
+      }
+    },
+    "query": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rolling_window_years", "page_size", "select", "group_by", "order_by"],
+      "properties": {
+        "rolling_window_years": { "const": 5 },
+        "page_size": { "type": "integer", "minimum": 100, "maximum": 5000 },
+        "select": {
+          "type": "array",
+          "minItems": 5,
+          "maxItems": 5,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "caller_id_number",
+              "type_of_call_or_messge",
+              "count(*) as observation_count",
+              "min(issue_date) as first_issue_date",
+              "max(issue_date) as last_issue_date"
+            ]
+          }
+        },
+        "group_by": {
+          "const": ["caller_id_number", "type_of_call_or_messge"]
+        },
+        "order_by": {
+          "const": ["caller_id_number ASC", "type_of_call_or_messge ASC"]
+        }
+      }
+    },
+    "category_map": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "Prerecorded Voice",
+        "Autodialed Live Voice Call",
+        "Live Voice",
+        "Abandoned Calls",
+        "Text Message"
+      ],
+      "properties": {
+        "Prerecorded Voice": { "const": "robocall" },
+        "Autodialed Live Voice Call": { "const": "robocall" },
+        "Live Voice": { "const": "nuisance" },
+        "Abandoned Calls": { "const": "nuisance" },
+        "Text Message": { "const": "nuisance" }
+      }
+    },
+    "semantics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verification_status",
+        "official_warning_allowed",
+        "caller_identity_allowed",
+        "safe_verdict_allowed",
+        "single_source_elevation_allowed",
+        "spoofing_warning_required"
+      ],
+      "properties": {
+        "verification_status": { "const": "consumer_selected_unverified" },
+        "official_warning_allowed": { "const": false },
+        "caller_identity_allowed": { "const": false },
+        "safe_verdict_allowed": { "const": false },
+        "single_source_elevation_allowed": { "const": false },
+        "spoofing_warning_required": { "const": true }
+      }
+    },
+    "storage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plaintext_phone_numbers", "raw_rows", "free_text", "lookup_key", "replacement"],
+      "properties": {
+        "plaintext_phone_numbers": { "const": "forbidden" },
+        "raw_rows": { "const": "forbidden" },
+        "free_text": { "const": "forbidden" },
+        "lookup_key": { "const": "hmac_sha256_deployment_secret" },
+        "replacement": { "const": "atomic_after_complete_validation" }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metadata_max_age_seconds", "outage_behavior"],
+      "properties": {
+        "metadata_max_age_seconds": { "type": "integer", "minimum": 86400, "maximum": 2592000 },
+        "outage_behavior": { "const": "typed_gap" }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_owner", "product_owner", "route"],
+      "properties": {
+        "source_owner": { "type": "string", "minLength": 20 },
+        "product_owner": { "type": "string", "minLength": 10 },
+        "route": { "const": "SECURITY.md" }
+      }
+    }
+  }
+}

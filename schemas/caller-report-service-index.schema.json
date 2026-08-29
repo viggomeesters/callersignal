@@ -101,7 +101,8 @@
               "category_labels",
               "verified_business",
               "licensed_api",
-              "partner_feed"
+              "partner_feed",
+              "public_data_api"
             ]
           }
         },
@@ -140,6 +141,7 @@
             "reuse_status": {
               "enum": [
                 "enabled",
+                "public_domain",
                 "licensed_access_available",
                 "permission_required",
                 "prohibited",
@@ -161,10 +163,10 @@
             "permitted_fields"
           ],
           "properties": {
-            "channel": { "enum": ["licensed_api", "partner_feed", "web_page", "none"] },
+            "channel": { "enum": ["licensed_api", "partner_feed", "public_data_api", "web_page", "none"] },
             "requires_contract": { "type": "boolean" },
             "requires_credentials": { "type": "boolean" },
-            "status": { "enum": ["enabled", "disabled"] },
+            "status": { "enum": ["enabled", "authorized", "disabled"] },
             "permitted_fields": {
               "type": "array",
               "uniqueItems": true,
@@ -186,7 +188,7 @@
           "required": ["decision", "blocking_gates", "next_action"],
           "properties": {
             "decision": {
-              "enum": ["enabled", "evaluate_license", "request_permission", "do_not_integrate"]
+              "enum": ["enabled", "authorized_for_build", "evaluate_license", "request_permission", "do_not_integrate"]
             },
             "blocking_gates": {
               "type": "array",
@@ -240,12 +242,53 @@
                 }
               }
             }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "integration": {
+                "properties": { "status": { "const": "disabled" } },
+                "required": ["status"]
+              }
+            },
+            "required": ["integration"]
           },
-          "else": {
+          "then": {
             "properties": {
               "integration": {
                 "properties": {
                   "permitted_fields": { "maxItems": 0 }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rights": {
+                "properties": { "reuse_status": { "const": "public_domain" } },
+                "required": ["reuse_status"]
+              }
+            },
+            "required": ["rights"]
+          },
+          "then": {
+            "properties": {
+              "integration": {
+                "properties": {
+                  "channel": { "const": "public_data_api" },
+                  "requires_contract": { "const": false },
+                  "requires_credentials": { "const": false },
+                  "status": { "const": "authorized" },
+                  "permitted_fields": { "minItems": 1 }
+                }
+              },
+              "activation": {
+                "properties": {
+                  "decision": { "const": "authorized_for_build" },
+                  "blocking_gates": { "maxItems": 0 }
                 }
               }
             }

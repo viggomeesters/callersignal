@@ -140,13 +140,14 @@
           "enum": [
             "official_numbering",
             "official_regulatory",
+            "official_complaint_aggregate",
             "licensed_reputation",
             "third_party_caller_reports",
             "first_party_moderated_reports"
           ]
         },
         "status": {
-          "enum": ["enabled", "permission_required", "disabled"]
+          "enum": ["enabled", "authorized", "permission_required", "disabled"]
         },
         "adapter_id": {
           "oneOf": [
@@ -321,6 +322,51 @@
         },
         {
           "if": {
+            "properties": { "status": { "const": "authorized" } },
+            "required": ["status"]
+          },
+          "then": {
+            "properties": {
+              "adapter_id": { "$ref": "#/$defs/token" },
+              "adapter_enabled": { "const": false },
+              "evidence_classes": { "minItems": 1 },
+              "intake": {
+                "properties": {
+                  "permitted_fields": { "minItems": 1 },
+                  "freshness_max_age_seconds": { "type": "integer", "minimum": 1 },
+                  "outage_behavior": { "const": "typed_gap" }
+                }
+              },
+              "gates": {
+                "properties": {
+                  "robots_access": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "reuse_permission": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "copyright": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "database_rights": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "privacy": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "takedown": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  },
+                  "provenance": {
+                    "properties": { "status": { "enum": ["passed", "not_applicable"] } }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
             "properties": { "status": { "const": "permission_required" } },
             "required": ["status"]
           },
@@ -378,6 +424,45 @@
               "intake": {
                 "properties": {
                   "outage_behavior": { "const": "disabled" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source_type": { "const": "official_complaint_aggregate" },
+              "status": { "const": "authorized" }
+            },
+            "required": ["source_type", "status"]
+          },
+          "then": {
+            "properties": {
+              "authority": {
+                "properties": { "type": { "const": "official_regulator" } }
+              },
+              "evidence_classes": {
+                "contains": { "const": "unverified_consumer_complaint_aggregate" }
+              },
+              "risk_capable": { "const": true },
+              "feed": { "type": "null" },
+              "intake": {
+                "properties": {
+                  "permitted_fields": {
+                    "minItems": 3,
+                    "maxItems": 3,
+                    "items": {
+                      "enum": [
+                        "caller_id_number",
+                        "issue_date",
+                        "type_of_call_or_messge"
+                      ]
+                    }
+                  },
+                  "personal_data_allowed": { "const": true },
+                  "free_text_allowed": { "const": false },
+                  "outage_behavior": { "const": "typed_gap" }
                 }
               }
             }

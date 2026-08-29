@@ -239,7 +239,7 @@ def test_committed_transparency_asset_exposes_coverage_not_vanity_totals() -> No
     assert snapshot["coverage"]["risk_capable_source_count"] == 0
     assert snapshot["coverage"]["number_catalog"]["imported_range_count"] == 74_984
     assert snapshot["coverage"]["number_catalog"]["matchable_range_count"] == 73_409
-    assert snapshot["coverage"]["reputation_sources"]["indexed_service_count"] == 15
+    assert snapshot["coverage"]["reputation_sources"]["indexed_service_count"] == 16
     assert snapshot["coverage"]["reputation_sources"]["licensable_service_count"] == 4
     assert snapshot["coverage"]["reputation_sources"]["enabled_source_count"] == 0
     assert snapshot["corpus"]["eligible_campaigns"] == 0

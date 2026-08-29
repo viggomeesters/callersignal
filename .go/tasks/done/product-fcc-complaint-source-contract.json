@@ -1,0 +1,98 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-fcc-complaint-source-contract",
+  "project": "callersignal",
+  "status": "done",
+  "order": 780,
+  "summary": "Adopt the FCC public-domain unwanted-call source",
+  "description": "Record the FCC Socrata dataset contract, public-domain reuse basis, exact allowed fields, unverified-complaint semantics, freshness, correction, and takedown behavior.",
+  "scope": {
+    "read": [
+      "sources/registry.json",
+      "sources/caller-report-services.json",
+      "schemas/source-registry.schema.json",
+      "schemas/caller-report-service-index.schema.json"
+    ],
+    "modify": [
+      "sources/registry.json",
+      "sources/caller-report-services.json",
+      "sources/fcc-complaints-manifest.json",
+      "schemas/source-registry.schema.json",
+      "schemas/caller-report-service-index.schema.json",
+      "schemas/fcc-complaints-manifest.schema.json",
+      "tests/contracts/test_source_registry.py",
+      "tests/contracts/test_caller_report_service_index.py",
+      "tests/contracts/test_fcc_source_contract.py",
+      "tests/integration/test_reputation_ingest.py",
+      "tests/integration/test_transparency.py",
+      "tests/integration/test_cli.py",
+      "tests/e2e/test_web.py",
+      "web/assets/transparency.json",
+      "docs/source-rights.md",
+      "docs/data-safety.md",
+      "docs/implementation-plan.md"
+    ]
+  },
+  "acceptance": [
+    "The canonical source registry, FCC manifest, and caller-service index prove the FCC dataset is current, anonymously API-accessible, and licensed as Public Domain U.S. Government.",
+    "Only caller-ID number, issue date, and call/message type are permitted inputs; ticket IDs, advertiser numbers, reporter location, ZIP code, issue time, method, and narratives are forbidden.",
+    "The contract states that complaints are consumer-selected and unverified, defines correction/takedown and freshness behavior, and never equates an FCC row with an official warning, verified caller, harmfulness, or safety."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts -q && make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T15:15:30+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "review",
+  "review_history": [],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T15:25:35+02:00",
+      "task_id": "product-fcc-complaint-source-contract",
+      "agent": "codex",
+      "summary": "changed_files=source registry and schemas, FCC manifest and schema, caller-service index, contract/integration/e2e tests, source/data safety docs, transparency asset, and active Go task; verification=uv run pytest tests/contracts -q (56 passed) && make check (260 Python and 8 web tests passed) && git diff --check (passed); critic=focused self-review approved the authorized-not-active lifecycle, exact three-field allowlist, public-domain metadata, unverified complaint semantics, HMAC-only persistence contract, source correction, product takedown, zero runtime requests, and no official-warning, identity, harmfulness, or safety inference; Self-reflect: no durable agent/process improvement needed; no skill/memory/config change.",
+      "changed_files": [
+        "source registry and schemas",
+        "FCC manifest and schema",
+        "caller-service index",
+        "contract/integration/e2e tests",
+        "source/data safety docs",
+        "transparency asset",
+        "and active Go task"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/contracts -q (56 passed) && make check (260 Python and 8 web tests passed) && git diff --check (passed)",
+        "result": "uv run pytest tests/contracts -q (56 passed) && make check (260 Python and 8 web tests passed) && git diff --check (passed)"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "focused self-review approved the authorized-not-active lifecycle, exact three-field allowlist, public-domain metadata, unverified complaint semantics, HMAC-only persistence contract, source correction, product takedown, zero runtime requests, and no official-warning, identity, harmfulness, or safety inference",
+        "skip_reason": null
+      }
+    }
+  ]
+}

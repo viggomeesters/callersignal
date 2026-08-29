@@ -24,6 +24,54 @@
   },
   "services": [
     {
+      "service_id": "fcc_unwanted_call_complaints",
+      "name": "FCC Consumer Complaints Data - Unwanted Calls",
+      "service_url": "https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e",
+      "coverage_scope": "national",
+      "jurisdictions": [
+        "US"
+      ],
+      "languages": [
+        "en"
+      ],
+      "capabilities": [
+        "community_reports",
+        "aggregate_reputation",
+        "category_labels",
+        "public_data_api"
+      ],
+      "public_report_pages_present": false,
+      "automation": {
+        "robots_url": "https://opendata.fcc.gov/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "public_paths_observed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://www.usa.gov/government-works",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "public_domain",
+        "evidence": "FCC's official Socrata metadata declares the dataset Public Domain U.S. Government and offers an anonymous structured API.",
+        "permission_reference": "https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e"
+      },
+      "integration": {
+        "channel": "public_data_api",
+        "requires_contract": false,
+        "requires_credentials": false,
+        "status": "authorized",
+        "permitted_fields": [
+          "aggregate_report_count",
+          "category_label",
+          "last_reported_at"
+        ]
+      },
+      "activation": {
+        "decision": "authorized_for_build",
+        "blocking_gates": [],
+        "next_action": "Build only the manifest-bounded HMAC aggregate and retain the FCC's unverified-complaint limitation on every surface."
+      }
+    },
+    {
       "service_id": "wieheeftmijgebeld_nl",
       "name": "Wieheeftmijgebeld.nl",
       "service_url": "https://wieheeftmijgebeld.nl/",

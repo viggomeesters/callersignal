@@ -50,6 +50,12 @@ Scraping or republishing third-party caller databases without explicit permissio
 
 Official and licensed feeds are not blanket-approved either. Only the fields and evidence classes named in the registry may enter fixtures or public results. Expanding a source's fields, quantity, cadence, use case, or jurisdiction requires a new review before ingestion.
 
+### Public complaint aggregates
+
+The FCC unwanted-call dataset is public-domain government data, but its rows are consumer-selected and unverified and its caller-ID field can contain personal data or spoofed values. CallerSignal therefore processes only the three manifest-permitted fields, within a five-year rolling window, and persists only an HMAC-keyed per-number aggregate. The secret is deployment-only. Plaintext numbers, raw complaint rows, ticket identifiers, advertiser numbers, reporter geography, ZIP codes, narratives, and source responses may not enter the catalogue, repository, logs, test fixtures, or `.go` evidence.
+
+FCC volume may support a neutral `nuisance` or `robocall` observation with count and date basis. It cannot independently produce an elevated or official-warning assessment, identify a caller, prove harm, or compensate for source diversity. A missing match is not a safe verdict. Correction of a source complaint belongs with the FCC; projection removal or objection requests use CallerSignal's private route in [`SECURITY.md`](../SECURITY.md).
+
 ## Logging and diagnostics
 
 Default logs should contain request identifiers, duration, adapter health, typed result status, and coarse country coverage only. They should not contain raw or normalized phone numbers, request bodies, requester identities, contact names, report narratives, tokens, cookies, or full external payloads. Debugging with sensitive values must use an approved temporary environment, restricted access, explicit expiry, and documented deletion; it must never enter this repository or `.go` evidence.

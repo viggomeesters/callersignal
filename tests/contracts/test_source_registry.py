@@ -57,6 +57,8 @@ def test_enabled_sources_match_runtime_adapter_declarations(registry: dict) -> N
         source["source_id"]: source
         for source in registry["sources"]
         if source["status"] == "enabled"
+        and source["source_type"]
+        in {"official_numbering", "official_regulatory"}
     }
 
     assert set(enabled) == {declaration.source_id for declaration in declarations}
@@ -103,7 +105,10 @@ def test_every_enabled_source_has_complete_machine_readable_intake_controls(
         assert source["intake"]["permitted_fields"]
         assert source["intake"]["freshness_max_age_seconds"] > 0
         assert source["intake"]["outage_behavior"] == "typed_gap"
-        assert source["intake"]["personal_data_allowed"] is False
+        if source["source_type"] == "official_complaint_aggregate":
+            assert source["intake"]["personal_data_allowed"] is True
+        else:
+            assert source["intake"]["personal_data_allowed"] is False
         assert source["intake"]["free_text_allowed"] is False
         assert set(source["gates"]) == required_gates
         assert all(
@@ -203,7 +208,7 @@ def test_registry_contains_no_copied_reports_or_phone_records(registry: dict) ->
     walk(registry)
 
 
-def test_current_registry_has_no_enabled_reputation_feed(registry: dict) -> None:
+def test_current_registry_has_no_enabled_commercial_reputation_feed(registry: dict) -> None:
     reputation_sources = [
         source
         for source in registry["sources"]
@@ -214,6 +219,31 @@ def test_current_registry_has_no_enabled_reputation_feed(registry: dict) -> None
     assert reputation_sources
     assert all(source["adapter_enabled"] is False for source in reputation_sources)
     assert all(source["feed"] is None for source in reputation_sources)
+
+
+def test_fcc_source_is_authorized_only_as_unverified_official_complaint_aggregate(
+    registry: dict,
+) -> None:
+    source = _sources_by_id(registry)["fcc_unwanted_call_complaints"]
+
+    assert source["source_type"] == "official_complaint_aggregate"
+    assert source["status"] == "authorized"
+    assert source["adapter_enabled"] is False
+    assert source["risk_capable"] is True
+    assert source["feed"] is None
+    assert source["evidence_classes"] == [
+        "unverified_consumer_complaint_aggregate"
+    ]
+    assert source["intake"]["permitted_fields"] == [
+        "caller_id_number",
+        "issue_date",
+        "type_of_call_or_messge",
+    ]
+    assert source["intake"]["free_text_allowed"] is False
+    assert all(
+        gate["status"] in {"passed", "not_applicable"}
+        for gate in source["gates"].values()
+    )
 
 
 def test_schema_rejects_feed_configuration_on_permission_required_source(

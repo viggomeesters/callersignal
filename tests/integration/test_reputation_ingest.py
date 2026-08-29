@@ -207,7 +207,7 @@ def test_current_index_is_inert_and_performs_zero_requests() -> None:
     scheduler = ReputationRefreshScheduler(activation.adapters)
     results = scheduler.run_due((PHONE,), checked_at=NOW)
 
-    assert activation.indexed_count == 15
+    assert activation.indexed_count == 16
     assert activation.licensable_count == 4
     assert activation.enabled_count == 0
     assert activation.adapters == ()

@@ -6,15 +6,18 @@ This is an engineering control, not legal advice. Legal or privacy uncertainty k
 
 ## Current decision
 
-The bounded ACM, Ofcom, and NANPA numbering fixtures are enabled for their declared factual fields. They are not risk-capable and cannot establish caller identity, subscriber identity, live location, or call safety.
+The bounded ACM, Ofcom, and NANPA numbering sources are enabled for their declared factual fields. They are not risk-capable and cannot establish caller identity, subscriber identity, live location, or call safety.
+
+The FCC Consumer Complaints Data — Unwanted Calls source contract is authorized for a different and deliberately narrow purpose, but its runtime adapter remains disabled until the importer and read model pass their own tasks. Its official metadata declares the dataset `Public Domain U.S. Government` and exposes it through an anonymous Socrata API. CallerSignal may process only caller ID, issue date, and call/message type into a keyed aggregate. The FCC states that the data is selected by consumers and that it does not verify the alleged facts. An aggregate from this source is therefore an unverified consumer-complaint observation, not an FCC warning, verified caller identity, proof of harm, or safety verdict. [`sources/fcc-complaints-manifest.json`](../sources/fcc-complaints-manifest.json) fixes this source, query, field, storage, freshness, and semantic boundary.
 
 `wieheeftmijgebeld_nl` is recorded as `permission_required`. It has no adapter, no evidence classes, no permitted ingestion fields, and no copied records. Its public pages contain phone-number records, ratings, activity counts, and user-authored narratives. Its copyright notice requires explicit written permission for reproduction or publication. CallerSignal therefore does not crawl, copy, transform, aggregate, cache, embed, or republish that content.
 
-No caller-reputation feed is currently enabled. The source index contains fifteen services and four advertised licensing routes, but an advertised product is not a CallerSignal licence. With the checked-in registry and no approved partner credential, the activation engine creates zero reputation adapters and performs zero report-page or API requests.
+No caller-reputation runtime is currently enabled. The source index contains sixteen services: the one public-domain FCC data API authorized for build, eleven permission or product-fit candidates, and four advertised commercial licensing routes. An advertised product is not a CallerSignal licence. With the checked-in registry and no approved partner credential, the commercial activation engine creates zero reputation adapters and performs zero report-page or partner-API requests. The FCC contract authorizes only its separate manifest-bounded aggregate importer; making that projection operational is a reviewed downstream task.
 
 The review used the following primary sources on 2026-08-28:
 
 - the publisher's [copyright notice](https://wieheeftmijgebeld.nl/copyright/), [contribution terms](https://wieheeftmijgebeld.nl/voorwaarden/), and [robots file](https://wieheeftmijgebeld.nl/robots.txt);
+- the FCC's [Consumer Complaints Data — Unwanted Calls dataset](https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e) and its linked [United States government-work terms](https://www.usa.gov/government-works);
 - the European Union's explanation of [copyright and sui generis database protection](https://europa.eu/youreurope/business/growing/protecting-intellectual-property/database-protection/index_en.htm);
 - the European Commission's [GDPR principles](https://commission.europa.eu/law/law-topic/data-protection/information-business-and-organisations/principles-gdpr_en).
 
@@ -22,7 +25,7 @@ The site can be reconsidered only after written permission or a suitable license
 
 ## International caller-report discovery index
 
-[`sources/caller-report-services.json`](../sources/caller-report-services.json) records the dated discovery surface separately from the enabled source registry. The 2026-08-29 review found fifteen Dutch, national, and international services through four documented search themes. Each entry records service and robots URLs, report and status capabilities, a terms or no-terms finding, reuse posture, integration route, blocking gates, and the next activation action. The matching [JSON Schema](../schemas/caller-report-service-index.schema.json) prevents a disabled source from carrying permitted fields and prevents enablement without documented rights.
+[`sources/caller-report-services.json`](../sources/caller-report-services.json) records the dated discovery surface separately from the enabled source registry. The 2026-08-29 review found sixteen Dutch, national, and international services through four documented search themes plus the official FCC public-data route. Each entry records service and robots URLs, report and status capabilities, a terms or no-terms finding, reuse posture, integration route, blocking gates, and the next activation action. The matching [JSON Schema](../schemas/caller-report-service-index.schema.json) prevents a disabled source from carrying permitted fields and prevents enablement without documented rights.
 
 Four operators currently advertise a plausible licensed route that warrants commercial evaluation: [tellows API partnerships](https://www.tellows.com/s/about-en/tellows-api-partnership-program), [Nomorobo business APIs](https://www.nomorobo.com/business/terms/), [Whoscall enterprise services](https://web.whoscall.com/en), and [Hiya partner APIs](https://developer.hiya.com/docs/getting-started/introduction). “Licensed access available” means only that an operator advertises a route. CallerSignal has no agreement, credentials, approved fields, or publication rights for these services, so every integration remains disabled.
 
@@ -68,6 +71,12 @@ The admitted response is fixed to an opaque source record identifier, a reviewed
 The HTTP client requires HTTPS, blocks downgrade redirects, sends lookups in a JSON body, applies a short timeout and response-size limit, and never owns logging. The adapter has a fail-fast per-source rate limiter. The scheduler retains only the last attempt time per source; it does not retain numbers or requester history. Transport failure becomes `source_unavailable`, contract drift becomes `source_error`, and expired observations remain explicitly stale. None of those states becomes a safety claim.
 
 Activating a real provider requires a schema-valid registry and service-index change containing the executed agreement reference, exact fields, jurisdictions, native-category map, rate and schedule terms, credential environment key, privacy decision, takedown owner, and provenance policy. Add provider conformance tests with synthetic protected numbers; never commit the credential or a copied production payload.
+
+## FCC public complaint aggregate contract
+
+The FCC source does not use the licensed-feed point-lookup path. Its [manifest](../sources/fcc-complaints-manifest.json) permits a five-year rolling, server-side grouped query over three source fields. Only the reviewed `Prerecorded Voice` and `Autodialed Live Voice Call` values map to `robocall`; `Live Voice`, `Abandoned Calls`, and `Text Message` map to the neutral `nuisance` category. Empty, unknown, email, and drifted values are excluded rather than guessed.
+
+The importer may hold a caller-ID value only long enough to validate US structure and derive an HMAC-SHA256 lookup key from a deployment secret. Plaintext number inventories, raw rows, ticket IDs, advertiser numbers, reporter location, ZIP codes, free text, and source responses are forbidden from persistence and Git. The projection retains only keyed category counts, bounded first/last dates, dataset provenance, content digest, build time, rolling window, and coverage totals. A missing key, stale metadata, schema drift, incomplete pagination, or failed replacement becomes a typed gap and leaves the prior valid catalogue untouched.
 
 ## Safe growth routes
 

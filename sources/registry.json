@@ -220,6 +220,78 @@
       }
     },
     {
+      "source_id": "fcc_unwanted_call_complaints",
+      "name": "FCC Consumer Complaints Data - Unwanted Calls",
+      "source_type": "official_complaint_aggregate",
+      "status": "authorized",
+      "adapter_id": "us_fcc_unwanted_call_aggregate",
+      "adapter_enabled": false,
+      "jurisdictions": ["US"],
+      "authority": {
+        "type": "official_regulator",
+        "name": "Federal Communications Commission"
+      },
+      "stable_url": "https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e",
+      "evidence_classes": ["unverified_consumer_complaint_aggregate"],
+      "risk_capable": true,
+      "feed": null,
+      "reuse": {
+        "basis": "The FCC dataset metadata declares this United States government dataset public domain and provides anonymous Socrata API access.",
+        "license": "Public Domain U.S. Government",
+        "license_url": "https://www.usa.gov/government-works",
+        "permission_reference": "https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e"
+      },
+      "intake": {
+        "permitted_fields": ["caller_id_number", "issue_date", "type_of_call_or_messge"],
+        "personal_data_allowed": true,
+        "free_text_allowed": false,
+        "freshness_max_age_seconds": 2592000,
+        "outage_behavior": "typed_gap"
+      },
+      "gates": {
+        "robots_access": {
+          "status": "not_applicable",
+          "evidence": "The importer uses the documented Socrata data API and metadata endpoint rather than crawling complaint pages.",
+          "reference": "sources/fcc-complaints-manifest.json"
+        },
+        "reuse_permission": {
+          "status": "passed",
+          "evidence": "The FCC dataset metadata identifies the material as Public Domain U.S. Government.",
+          "reference": "https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e"
+        },
+        "copyright": {
+          "status": "passed",
+          "evidence": "The declared United States government-work terms allow attributed reuse of the minimized factual aggregate.",
+          "reference": "https://www.usa.gov/government-works"
+        },
+        "database_rights": {
+          "status": "not_applicable",
+          "evidence": "The EU-specific database-right gate is not applicable to this United States government dataset; the public-domain terms and field boundary still govern reuse.",
+          "reference": "docs/source-rights.md"
+        },
+        "privacy": {
+          "status": "passed",
+          "evidence": "Only caller ID, issue date, and call type may be processed transiently into keyed aggregates; plaintext numbers, raw rows, reporter attributes, narratives, and source responses are forbidden from persistence.",
+          "reference": "docs/data-safety.md"
+        },
+        "takedown": {
+          "status": "passed",
+          "evidence": "FCC owns source-record correction and CallerSignal's private security route owns projection removal and objection requests.",
+          "reference": "SECURITY.md"
+        },
+        "provenance": {
+          "status": "passed",
+          "evidence": "The manifest pins dataset identity, metadata endpoint, allowed query, licence, source update, freshness, category map, and transformation boundary.",
+          "reference": "sources/fcc-complaints-manifest.json"
+        }
+      },
+      "review": {
+        "reviewed_at": "2026-08-29",
+        "owner": "CallerSignal maintainers",
+        "decision": "Enabled only for privacy-minimized, source-attributed aggregates of unverified consumer complaints; official-warning, identity, harmfulness, and safety conclusions remain prohibited."
+      }
+    },
+    {
       "source_id": "wieheeftmijgebeld_nl",
       "name": "Wieheeftmijgebeld.nl caller reports",
       "source_type": "third_party_caller_reports",

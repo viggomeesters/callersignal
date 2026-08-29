@@ -59,6 +59,7 @@ def test_discovery_index_contains_known_nl_and_international_services(index: dic
         "suscall",
         "whocall_me",
         "hiya",
+        "fcc_unwanted_call_complaints",
     } <= service_ids
     assert len(service_ids) == len(index["services"])
     assert len({service["service_url"] for service in index["services"]}) == len(
@@ -71,18 +72,41 @@ def test_public_visibility_and_robots_never_enable_ingestion(index: dict) -> Non
         service["automation"]["grant_effect"] == "none"
         for service in index["services"]
     )
+    commercial_services = [
+        service
+        for service in index["services"]
+        if service["service_id"] != "fcc_unwanted_call_complaints"
+    ]
     assert all(
         service["integration"]["status"] == "disabled"
-        for service in index["services"]
+        for service in commercial_services
     )
     assert all(
         service["integration"]["permitted_fields"] == []
-        for service in index["services"]
+        for service in commercial_services
     )
     assert all(
         service["rights"]["reuse_status"] != "enabled"
-        for service in index["services"]
+        for service in commercial_services
     )
+
+
+def test_public_domain_fcc_api_is_the_only_authorized_index_route(index: dict) -> None:
+    authorized = [
+        service
+        for service in index["services"]
+        if service["integration"]["status"] == "authorized"
+    ]
+
+    assert [service["service_id"] for service in authorized] == [
+        "fcc_unwanted_call_complaints"
+    ]
+    source = authorized[0]
+    assert source["rights"]["reuse_status"] == "public_domain"
+    assert source["integration"]["channel"] == "public_data_api"
+    assert source["integration"]["requires_contract"] is False
+    assert source["integration"]["requires_credentials"] is False
+    assert source["activation"]["blocking_gates"] == []
 
 
 def test_index_distinguishes_available_licensed_routes_from_permission(index: dict) -> None:
@@ -104,7 +128,11 @@ def test_schema_rejects_enabling_a_source_without_documented_rights(
     index: dict, validator: Draft202012Validator
 ) -> None:
     unsafe_index = copy.deepcopy(index)
-    service = unsafe_index["services"][0]
+    service = next(
+        item
+        for item in unsafe_index["services"]
+        if item["integration"]["status"] == "disabled"
+    )
     service["integration"]["status"] = "enabled"
     service["integration"]["permitted_fields"] = ["category_label"]
 

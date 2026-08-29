@@ -113,7 +113,7 @@ def test_coverage_human_output_separates_available_context_from_missing_reputati
     assert "Official NL number catalogue: available" in output
     assert "74,984 imported ranges" in output
     assert "73,409 lookup-compatible ranges" in output
-    assert "15 caller-report services indexed" in output
+    assert "16 caller-report services indexed" in output
     assert "4 advertised licensing routes" in output
     assert "0 reputation feeds enabled" in output
     assert "Coverage counts are not trust or safety scores." in output

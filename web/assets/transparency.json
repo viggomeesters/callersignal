@@ -88,6 +88,14 @@
     ],
     "unavailable_sources": [
       {
+        "source_id": "fcc_unwanted_call_complaints",
+        "jurisdictions": [
+          "US"
+        ],
+        "status": "authorized",
+        "gap": "source_disabled"
+      },
+      {
         "source_id": "wieheeftmijgebeld_nl",
         "jurisdictions": [
           "NL"
@@ -131,11 +139,15 @@
     },
     "reputation_sources": {
       "index_reviewed_at": "2026-08-29",
-      "indexed_service_count": 15,
+      "indexed_service_count": 16,
       "licensable_service_count": 4,
       "enabled_source_count": 0,
-      "unavailable_service_count": 15,
+      "unavailable_service_count": 16,
       "unavailable_reasons": [
+        {
+          "reason": "activation_requirements_incomplete",
+          "service_count": 1
+        },
         {
           "reason": "commercial_agreement_and_credentials_required",
           "service_count": 4
@@ -146,6 +158,17 @@
         }
       ],
       "services": [
+        {
+          "service_id": "fcc_unwanted_call_complaints",
+          "name": "FCC Consumer Complaints Data - Unwanted Calls",
+          "jurisdictions": [
+            "US"
+          ],
+          "integration_channel": "public_data_api",
+          "status": "unavailable",
+          "reason": "activation_requirements_incomplete",
+          "blocking_gates": []
+        },
         {
           "service_id": "hiya",
           "name": "Hiya",

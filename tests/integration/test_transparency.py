@@ -246,15 +246,16 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
     assert catalog["source_sha256"].startswith("sha256:")
     assert sum(item["range_count"] for item in catalog["register_statuses"]) == 74_984
     reputation = committed["coverage"]["reputation_sources"]
-    assert reputation["indexed_service_count"] == 15
+    assert reputation["indexed_service_count"] == 16
     assert reputation["licensable_service_count"] == 4
     assert reputation["enabled_source_count"] == 0
-    assert reputation["unavailable_service_count"] == 15
+    assert reputation["unavailable_service_count"] == 16
     assert {item["reason"] for item in reputation["unavailable_reasons"]} == {
+        "activation_requirements_incomplete",
         "commercial_agreement_and_credentials_required",
         "publisher_permission_required",
     }
-    assert len(reputation["services"]) == 15
+    assert len(reputation["services"]) == 16
     assert committed["corpus"]["eligible_campaigns"] == 0
     assert committed["interpretation"]["no_matching_evidence"].startswith(
         "No matching evidence"

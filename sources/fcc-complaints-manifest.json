@@ -1,0 +1,91 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "fcc_unwanted_call_complaint_manifest",
+  "source_id": "fcc_unwanted_call_complaints",
+  "publisher": "Federal Communications Commission",
+  "dataset_id": "vakf-fz8e",
+  "reviewed_at": "2026-08-29",
+  "urls": {
+    "dataset": "https://opendata.fcc.gov/Consumer/Consumer-Complaints-Data-Unwanted-Calls/vakf-fz8e",
+    "metadata": "https://opendata.fcc.gov/api/views/vakf-fz8e",
+    "api": "https://opendata.fcc.gov/resource/vakf-fz8e.json",
+    "publisher": "https://consumercomplaints.fcc.gov/hc/en-us"
+  },
+  "license": {
+    "name": "Public Domain U.S. Government",
+    "terms_url": "https://www.usa.gov/government-works",
+    "attribution": "Federal Communications Commission: Consumer Inquiries and Complaints Division"
+  },
+  "metadata_snapshot": {
+    "rows_updated_at": "2026-08-29T05:02:20Z",
+    "dataset_name": "Consumer Complaints Data - Unwanted Calls"
+  },
+  "fields": {
+    "permitted": [
+      "caller_id_number",
+      "issue_date",
+      "type_of_call_or_messge"
+    ],
+    "forbidden": [
+      "id",
+      "issue_time",
+      "issue_type",
+      "method",
+      "issue",
+      "advertiser_business_phone_number",
+      "state",
+      "zip",
+      "location_1"
+    ]
+  },
+  "query": {
+    "rolling_window_years": 5,
+    "page_size": 5000,
+    "select": [
+      "caller_id_number",
+      "type_of_call_or_messge",
+      "count(*) as observation_count",
+      "min(issue_date) as first_issue_date",
+      "max(issue_date) as last_issue_date"
+    ],
+    "group_by": [
+      "caller_id_number",
+      "type_of_call_or_messge"
+    ],
+    "order_by": [
+      "caller_id_number ASC",
+      "type_of_call_or_messge ASC"
+    ]
+  },
+  "category_map": {
+    "Prerecorded Voice": "robocall",
+    "Autodialed Live Voice Call": "robocall",
+    "Live Voice": "nuisance",
+    "Abandoned Calls": "nuisance",
+    "Text Message": "nuisance"
+  },
+  "semantics": {
+    "verification_status": "consumer_selected_unverified",
+    "official_warning_allowed": false,
+    "caller_identity_allowed": false,
+    "safe_verdict_allowed": false,
+    "single_source_elevation_allowed": false,
+    "spoofing_warning_required": true
+  },
+  "storage": {
+    "plaintext_phone_numbers": "forbidden",
+    "raw_rows": "forbidden",
+    "free_text": "forbidden",
+    "lookup_key": "hmac_sha256_deployment_secret",
+    "replacement": "atomic_after_complete_validation"
+  },
+  "freshness": {
+    "metadata_max_age_seconds": 2592000,
+    "outage_behavior": "typed_gap"
+  },
+  "correction": {
+    "source_owner": "Federal Communications Commission Consumer Inquiries and Complaints Division",
+    "product_owner": "CallerSignal maintainers",
+    "route": "SECURITY.md"
+  }
+}
