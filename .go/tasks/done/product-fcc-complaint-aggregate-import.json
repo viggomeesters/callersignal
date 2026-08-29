@@ -1,0 +1,96 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-fcc-complaint-aggregate-import",
+  "project": "callersignal",
+  "status": "done",
+  "order": 790,
+  "depends_on": [
+    "product-fcc-complaint-source-contract"
+  ],
+  "summary": "Build a privacy-minimized FCC complaint aggregate",
+  "description": "Fetch and validate the rolling official FCC unwanted-call dataset, normalize only US caller-ID values, aggregate neutral complaint categories, and store a keyed non-reversible lookup projection with provenance and freshness.",
+  "scope": {
+    "read": [
+      "sources/fcc-complaints-manifest.json",
+      "src/callersignal/acm_catalog.py",
+      "scripts/build_acm_catalog.py"
+    ],
+    "modify": [
+      "src/callersignal/fcc_catalog.py",
+      "scripts/build_fcc_catalog.py",
+      "tests/fixtures/fcc_unwanted_calls_sample.json",
+      "tests/unit/test_fcc_catalog.py",
+      "tests/e2e/test_web.py",
+      "scripts/validate_repository.py",
+      ".gitignore",
+      "Makefile",
+      "package.json",
+      "vercel.json",
+      "scripts/stage_vercel_static.mjs",
+      "docs/data-architecture.md",
+      "docs/implementation-plan.md"
+    ]
+  },
+  "acceptance": [
+    "The importer fetches a bounded rolling window from the manifest-declared Socrata endpoint, validates metadata/license/schema/freshness/pagination, normalizes only valid US caller-ID values, and fails closed without replacing a prior catalogue.",
+    "The generated immutable SQLite projection uses a deployment-secret HMAC lookup key and persists no plaintext phone-number inventory, raw complaint row, narrative, ticket ID, advertiser number, reporter location, ZIP code, or source response.",
+    "Per-number aggregates retain only bounded category counts, total observation count, first/last issue dates, source digest, generated time, window, and exact coverage statistics; generated databases and caches remain outside Git."
+  ],
+  "verification": [
+    "uv run pytest tests/unit/test_fcc_catalog.py -q && make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T15:25:55+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "review",
+  "review_history": [],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T15:41:52+02:00",
+      "task_id": "product-fcc-complaint-aggregate-import",
+      "agent": "codex",
+      "summary": "changed_files=FCC catalogue module and CLI builder, public-safe FCC fixture, unit and Vercel contract tests, Make/npm/Vercel build wiring, public-safety validator, data architecture, and active Go task; verification=uv run pytest tests/unit/test_fcc_catalog.py -q (14 passed) && make check (274 Python and 8 web tests passed) && ./go validate . (ok) && git diff --check (passed) && real FCC build (49 pages, 241200 grouped rows, 236156 keyed numbers, 461955 supported-source observations, 258137 indexed, 203818 rejected, SQLite integrity ok, zero malformed HMAC keys, generated file ignored and mode 600); critic=approved after adding and proving a second FCC metadata readback so a source update during pagination fails closed before atomic replacement; reviewed HMAC-only schema, exact three-field query, full accounting, stale/license/schema/category/date/pagination failures, no raw storage, no secret output, and prior-catalog preservation; Self-reflect: no durable agent/process improvement needed; no skill/memory/config change.",
+      "changed_files": [
+        "FCC catalogue module and CLI builder",
+        "public-safe FCC fixture",
+        "unit and Vercel contract tests",
+        "Make/npm/Vercel build wiring",
+        "public-safety validator",
+        "data architecture",
+        "and active Go task"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/unit/test_fcc_catalog.py -q (14 passed) && make check (274 Python and 8 web tests passed) && ./go validate . (ok) && git diff --check (passed) && real FCC build (49 pages, 241200 grouped rows, 236156 keyed numbers, 461955 supported-source observations, 258137 indexed, 203818 rejected, SQLite integrity ok, zero malformed HMAC keys, generated file ignored and mode 600)",
+        "result": "uv run pytest tests/unit/test_fcc_catalog.py -q (14 passed) && make check (274 Python and 8 web tests passed) && ./go validate . (ok) && git diff --check (passed) && real FCC build (49 pages, 241200 grouped rows, 236156 keyed numbers, 461955 supported-source observations, 258137 indexed, 203818 rejected, SQLite integrity ok, zero malformed HMAC keys, generated file ignored and mode 600)"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after adding and proving a second FCC metadata readback so a source update during pagination fails closed before atomic replacement",
+        "skip_reason": null
+      }
+    }
+  ]
+}

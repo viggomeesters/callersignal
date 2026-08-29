@@ -32,6 +32,19 @@ ISO_DATETIME = re.compile(
 )
 
 
+def is_allowed_public_safe_number(value: str) -> bool:
+    if value in ALLOWED_PUBLIC_SAFE_NUMBERS:
+        return True
+    digits = re.sub(r"\D", "", value)
+    if len(digits) == 11 and digits.startswith("1"):
+        digits = digits[1:]
+    return (
+        len(digits) == 10
+        and digits.startswith("202555")
+        and 100 <= int(digits[-4:]) <= 199
+    )
+
+
 def fail(message: str) -> None:
     raise SystemExit(message)
 
@@ -75,10 +88,13 @@ def check_sensitive_content() -> None:
             phone_scan_text = GO_UPDATE_RECORD_ID.sub("", phone_scan_text)
         phone_scan_text = ISO_DATETIME.sub("", phone_scan_text)
         for match in full_phone.finditer(phone_scan_text):
-            problems.append(f"{relative}: international phone-like value {match.group(0)!r}")
+            if not is_allowed_public_safe_number(match.group(0)):
+                problems.append(
+                    f"{relative}: international phone-like value {match.group(0)!r}"
+                )
         for match in phone_like.finditer(phone_scan_text):
             value = match.group(0)
-            if value in ALLOWED_PUBLIC_SAFE_NUMBERS or date_like.fullmatch(value):
+            if is_allowed_public_safe_number(value) or date_like.fullmatch(value):
                 continue
             digits = re.sub(r"\D", "", value)
             if len(set(digits)) <= 2:

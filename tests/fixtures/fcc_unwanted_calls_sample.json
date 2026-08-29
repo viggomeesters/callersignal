@@ -1,0 +1,57 @@
+{
+  "metadata": {
+    "id": "vakf-fz8e",
+    "name": "Consumer Complaints Data - Unwanted Calls",
+    "description": "Individual informal consumer complaint data. This data represents information selected by the consumer. The FCC does not verify the facts alleged in these complaints.",
+    "attribution": "Federal Communications Commission: Consumer Inquiries and Complaints Division",
+    "license": {
+      "name": "Public Domain U.S. Government",
+      "termsLink": "https://www.usa.gov/government-works"
+    },
+    "columns": [
+      {"fieldName": "id", "dataTypeName": "number"},
+      {"fieldName": "issue_date", "dataTypeName": "calendar_date"},
+      {"fieldName": "issue_time", "dataTypeName": "text"},
+      {"fieldName": "issue_type", "dataTypeName": "text"},
+      {"fieldName": "method", "dataTypeName": "text"},
+      {"fieldName": "issue", "dataTypeName": "text"},
+      {"fieldName": "caller_id_number", "dataTypeName": "text"},
+      {"fieldName": "type_of_call_or_messge", "dataTypeName": "text"},
+      {"fieldName": "advertiser_business_phone_number", "dataTypeName": "text"},
+      {"fieldName": "state", "dataTypeName": "text"},
+      {"fieldName": "zip", "dataTypeName": "text"},
+      {"fieldName": "location_1", "dataTypeName": "point"}
+    ]
+  },
+  "source_updated_at": "2026-08-29T05:02:20Z",
+  "rows": [
+    {
+      "caller_id_number": "+1 202-555-0100",
+      "type_of_call_or_messge": "Prerecorded Voice",
+      "observation_count": "2",
+      "first_issue_date": "2026-08-01T00:00:00.000",
+      "last_issue_date": "2026-08-10T00:00:00.000"
+    },
+    {
+      "caller_id_number": "2025550100",
+      "type_of_call_or_messge": "Live Voice",
+      "observation_count": "3",
+      "first_issue_date": "2026-08-02T00:00:00.000",
+      "last_issue_date": "2026-08-12T00:00:00.000"
+    },
+    {
+      "caller_id_number": "(202) 555-0101",
+      "type_of_call_or_messge": "Text Message",
+      "observation_count": "1",
+      "first_issue_date": "2026-08-03T00:00:00.000",
+      "last_issue_date": "2026-08-03T00:00:00.000"
+    },
+    {
+      "caller_id_number": "not-a-number",
+      "type_of_call_or_messge": "Abandoned Calls",
+      "observation_count": "2",
+      "first_issue_date": "2026-08-04T00:00:00.000",
+      "last_issue_date": "2026-08-04T00:00:00.000"
+    }
+  ]
+}

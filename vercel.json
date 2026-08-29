@@ -5,7 +5,8 @@
   "outputDirectory": "public",
   "cleanUrls": true,
   "env": {
-    "CALLERSIGNAL_ACM_CATALOG_PATH": "downloads/acm-number-register.sqlite3"
+    "CALLERSIGNAL_ACM_CATALOG_PATH": "downloads/acm-number-register.sqlite3",
+    "CALLERSIGNAL_FCC_CATALOG_PATH": "downloads/fcc-unwanted-calls.sqlite3"
   },
   "rewrites": [
     {
@@ -91,7 +92,7 @@
   ],
   "functions": {
     "api/**/*.py": {
-      "includeFiles": "{src/callersignal/**,schemas/**,fixtures/**,downloads/acm-number-register.sqlite3,web/assets/transparency.json}",
+      "includeFiles": "{src/callersignal/**,schemas/**,fixtures/**,downloads/acm-number-register.sqlite3,downloads/fcc-unwanted-calls.sqlite3,web/assets/transparency.json}",
       "excludeFiles": "{tests/**,**/__pycache__/**,.go/**,docs/**,assets/**,web/proof/**}"
     }
   }

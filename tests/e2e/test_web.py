@@ -493,16 +493,23 @@ def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> No
         "/": "/index",
     }
     assert config["functions"]["api/**/*.py"]["includeFiles"] == (
-        "{src/callersignal/**,schemas/**,fixtures/**,downloads/acm-number-register.sqlite3,web/assets/transparency.json}"
+        "{src/callersignal/**,schemas/**,fixtures/**,downloads/acm-number-register.sqlite3,"
+        "downloads/fcc-unwanted-calls.sqlite3,web/assets/transparency.json}"
     )
     assert package["scripts"]["build:acm"] == (
         "python3 scripts/build_acm_catalog.py --json"
     )
+    assert package["scripts"]["build:fcc"] == (
+        "python3 scripts/build_fcc_catalog.py --json"
+    )
     assert package["scripts"]["build:vercel"] == (
-        "npm run build:acm && node scripts/stage_vercel_static.mjs"
+        "npm run build:acm && npm run build:fcc && node scripts/stage_vercel_static.mjs"
     )
     assert config["buildCommand"] == "npm run build:vercel"
     assert config["outputDirectory"] == "public"
     assert config["env"]["CALLERSIGNAL_ACM_CATALOG_PATH"] == (
         "downloads/acm-number-register.sqlite3"
+    )
+    assert config["env"]["CALLERSIGNAL_FCC_CATALOG_PATH"] == (
+        "downloads/fcc-unwanted-calls.sqlite3"
     )

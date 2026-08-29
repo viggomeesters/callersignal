@@ -26,6 +26,8 @@ The current pinned release imports 74,984 rows, of which 73,409 have a lookup-co
 
 Caller-report services are indexed separately in [`sources/caller-report-services.json`](../sources/caller-report-services.json). Discovery does not activate ingestion. A reputation source becomes usable only when the index and canonical source registry both prove compatible rights, permitted fields, credentials, privacy, correction, takedown, provenance, rate, size, schedule, and drift gates. The current activation count is zero, so permission-required sites receive no automated report-page requests.
 
+The authorized FCC public-data route uses a separate bulk boundary. `scripts/build_fcc_catalog.py` validates official dataset metadata, public-domain terms, the exact twelve-column source schema, a five-year rolling grouped query, supported categories, and complete pagination. It transiently normalizes only the permitted caller-ID, issue-date, and call-type fields, immediately replaces each valid US number with HMAC-SHA256 under `CALLERSIGNAL_REPUTATION_INDEX_KEY`, and writes a new immutable SQLite catalogue only after the whole build validates. The importer reads source metadata again before replacement and rejects the build if the FCC update identity changed during pagination. The database retains keyed nuisance/robocall counts, first/last issue dates, public-safe coverage metadata, and an HMAC-derived projection digest. It never retains plaintext number inventory, raw complaint rows, ticket or advertiser identifiers, reporter attributes, narratives, or source responses. A prior valid catalogue survives every failed build.
+
 ## Aggregate boundary
 
 The port recognizes four aggregate kinds:
