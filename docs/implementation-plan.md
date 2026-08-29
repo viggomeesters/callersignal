@@ -2,7 +2,7 @@
 
 ## Planning contract
 
-The repository foundation shipped at v0.1.0. CallerSignal v0.2.0 completes all twenty-seven dependency-ordered product tasks below: shared lookup and risk contracts, NL/GB/US adapters, CLI, stdio and hosted MCP, HTTP, web, caller campaigns, controlled report and storage foundations, private watches, verified organisation declarations, operational safety, public transparency, and release proof. Their reviewed `.go` JSON files are authoritative; this document remains the human-readable dependency and verification map for maintenance and extension work.
+The repository foundation shipped at v0.1.0. CallerSignal v0.2.0 completed twenty-seven dependency-ordered product tasks: shared lookup and risk contracts, NL/GB/US adapters, CLI, stdio and hosted MCP, HTTP, web, caller campaigns, controlled report and storage foundations, private watches, verified organisation declarations, operational safety, public transparency, and release proof. Current `main` adds one reviewed post-release product task for a public-safe Dutch example. The reviewed `.go` JSON files are authoritative; this document remains the human-readable dependency and verification map for maintenance and extension work.
 
 Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
@@ -242,6 +242,16 @@ Acceptance: NL, GB, and US lookups plus campaign intelligence, private watch, ve
 
 Verify: `make check` and strict public `repo-complete` validation.
 
+## Phase 9 — Post-release product refinements
+
+### `product-nl-public-safe-example`
+
+Depends on `product-first-release`. Add the pinned public ACM blocked-number record `0906-8844` as the Dutch website example, using origin region `NL` and the canonical lookup route.
+
+Acceptance: the native accessible example control is visible with the existing US and GB examples on desktop and 375px mobile; it makes no unsupported subscriber, caller-identity, harmfulness, or general safety claim; browser proof has no clipping, overflow, console errors, or temporary copy.
+
+Verify: `uv run pytest tests/e2e/test_web.py -q`, `npm --prefix web test`, and `make check`.
+
 ## Dependency overview
 
 ```mermaid
@@ -309,6 +319,7 @@ flowchart TD
     EXP --> REL
     TRANS --> REL
     RMCP --> REL
+    REL --> NLEX[product-nl-public-safe-example]
 ```
 
 Use `./go next .` rather than selecting from the diagram by eye; the repo-local workflow is the source of task state and eligibility.

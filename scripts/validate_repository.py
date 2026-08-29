@@ -17,7 +17,13 @@ EXCLUDED_PARTS = {
     "__pycache__",
     "node_modules",
 }
-ALLOWED_FICTIONAL_NUMBERS = {"202-555-0147"}
+ALLOWED_PUBLIC_SAFE_NUMBERS = {
+    "202-555-0147",  # NANPA fictional-use range.
+    "07700 900185",  # Ofcom protected drama range.
+}
+GO_UPDATE_RECORD_ID = re.compile(
+    r"\b\d{8}T\d{12}Z-v\d+\.\d+\.\d+-[0-9a-f]{12}\b"
+)
 
 
 def fail(message: str) -> None:
@@ -54,11 +60,14 @@ def check_sensitive_content() -> None:
         for label, pattern in secret_patterns.items():
             if pattern.search(text):
                 problems.append(f"{relative}: possible {label}")
-        for match in full_phone.finditer(text):
+        phone_scan_text = text
+        if relative == Path(".go/runs/events.jsonl"):
+            phone_scan_text = GO_UPDATE_RECORD_ID.sub("", phone_scan_text)
+        for match in full_phone.finditer(phone_scan_text):
             problems.append(f"{relative}: international phone-like value {match.group(0)!r}")
-        for match in phone_like.finditer(text):
+        for match in phone_like.finditer(phone_scan_text):
             value = match.group(0)
-            if value in ALLOWED_FICTIONAL_NUMBERS or date_like.fullmatch(value):
+            if value in ALLOWED_PUBLIC_SAFE_NUMBERS or date_like.fullmatch(value):
                 continue
             digits = re.sub(r"\D", "", value)
             if len(set(digits)) <= 2:
@@ -81,11 +90,11 @@ def load_tasks() -> dict[str, dict]:
 
 def check_task_graph() -> None:
     tasks = load_tasks()
-    if len(tasks) != 33:
-        fail(f"expected 33 repository tasks, found {len(tasks)}")
+    if len(tasks) != 34:
+        fail(f"expected 34 repository tasks, found {len(tasks)}")
     product = {task_id for task_id in tasks if task_id.startswith("product-")}
     foundation = {task_id for task_id in tasks if task_id.startswith("foundation-")}
-    if len(product) != 27 or len(foundation) != 5:
+    if len(product) != 28 or len(foundation) != 5:
         fail(f"unexpected task split: {len(foundation)} foundation, {len(product)} product")
 
     visiting: set[str] = set()

@@ -172,6 +172,20 @@ def test_page_has_semantic_lookup_form_status_and_metadata() -> None:
     assert "Public campaign index" in facts.headings
 
 
+def test_page_offers_the_acm_blocked_number_as_a_dutch_public_safe_example() -> None:
+    html = (WEB / "index.html").read_text(encoding="utf-8")
+
+    assert html.count('class="example-button"') == 3
+    assert 'data-number="0906-8844" data-region="NL"' in html
+    assert "NL ACM-blocked number" in html
+
+
+def test_page_declares_a_self_contained_icon_without_a_favicon_request() -> None:
+    html = (WEB / "index.html").read_text(encoding="utf-8")
+
+    assert '<link rel="icon" href="data:image/svg+xml,' in html
+
+
 def test_styles_prove_focus_responsive_reduced_motion_and_overflow_boundaries() -> None:
     css = (WEB / "assets" / "styles.css").read_text(encoding="utf-8")
 

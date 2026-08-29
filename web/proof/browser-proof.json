@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-08-29T06:43:10.350Z",
+  "captured_at": "2026-08-29T08:01:40.147Z",
   "fixture_as_of": "2026-08-29T06:20:00Z",
   "fixture_policy": "reserved synthetic browser proof only",
   "results": [
@@ -18,6 +18,23 @@
       "focusedElement": "BODY",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -41,6 +58,23 @@
         "0",
         "0"
       ],
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -59,6 +93,23 @@
       "focusedElement": "result-title",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -77,6 +128,23 @@
       "focusedElement": "result-title",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -95,6 +163,23 @@
       "focusedElement": "result-title",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -113,6 +198,23 @@
       "focusedElement": "campaign-detail-title",
       "detailTitle": "Reserved fixture impersonation pattern",
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -131,6 +233,23 @@
       "focusedElement": "BODY",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -154,6 +273,23 @@
         "0",
         "0"
       ],
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -172,6 +308,23 @@
       "focusedElement": "result-title",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -190,6 +343,23 @@
       "focusedElement": "result-title",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -208,6 +378,23 @@
       "focusedElement": "result-title",
       "detailTitle": null,
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -226,6 +413,23 @@
       "focusedElement": "campaign-detail-title",
       "detailTitle": "Reserved fixture impersonation pattern",
       "coverageMetrics": null,
+      "exampleButtons": [
+        {
+          "label": "NL ACM-blocked number",
+          "number": "0906-8844",
+          "region": "NL"
+        },
+        {
+          "label": "US fictional range",
+          "number": "202-555-0147",
+          "region": "US"
+        },
+        {
+          "label": "GB drama range",
+          "number": "07700 900185",
+          "region": "GB"
+        }
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     }

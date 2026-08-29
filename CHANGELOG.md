@@ -4,7 +4,13 @@ All notable changes to CallerSignal are documented here. The format follows [Kee
 
 ## [Unreleased]
 
-No changes have been recorded after v0.2.0.
+### Added
+
+- A public-safe Netherlands example button backed by the pinned ACM record for blocked number `0906-8844`, using the same country-explicit lookup route as manual input.
+
+### Fixed
+
+- A self-contained CallerSignal favicon prevents an otherwise harmless browser-console `404` during fresh page loads.
 
 ## [0.2.0] - 2026-08-29
 

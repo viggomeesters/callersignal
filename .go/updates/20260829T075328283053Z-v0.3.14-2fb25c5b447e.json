@@ -1,0 +1,43 @@
+{
+  "schema": "go-workflow.stack-update-rollback.v1",
+  "status": "rolled_back",
+  "created_at": "2026-08-29T07:53:28.283295+00:00",
+  "target": ".go/project.json",
+  "from_ref": "v0.3.9",
+  "to_ref": "v0.3.14",
+  "resolved_commit": "2fb25c5b447e5c0622dca2d24f4f731adeb9f097",
+  "before_project": {
+    "schema": "go-workflow.repo-local.project.v1",
+    "kind": "project",
+    "id": "callersignal",
+    "name": "CallerSignal",
+    "source_of_truth": "repo-local",
+    "contract_version": 2,
+    "project_mode": "project",
+    "required_stack_version": "0.3.9",
+    "stack_ref": "v0.3.9",
+    "default_verification": [
+      "bash scripts/check.sh"
+    ],
+    "links": {
+      "repo": "https://github.com/viggomeesters/callersignal"
+    }
+  },
+  "after_project": {
+    "schema": "go-workflow.repo-local.project.v1",
+    "kind": "project",
+    "id": "callersignal",
+    "name": "CallerSignal",
+    "source_of_truth": "repo-local",
+    "contract_version": 2,
+    "project_mode": "project",
+    "required_stack_version": "0.3.14",
+    "stack_ref": "v0.3.14",
+    "default_verification": [
+      "bash scripts/check.sh"
+    ],
+    "links": {
+      "repo": "https://github.com/viggomeesters/callersignal"
+    }
+  }
+}

@@ -238,6 +238,10 @@ async function capture(browser, viewport, scenario) {
     });
     await page.waitForTimeout(400);
   }
+  if (!scenario.state && !scenario.detail && !scenario.coverage) {
+    await page.locator(".demo-row").scrollIntoViewIfNeeded();
+    await page.waitForTimeout(200);
+  }
 
   const facts = await page.evaluate(({ state, detail, coverage }) => {
     const visible = (element) => {
@@ -274,6 +278,11 @@ async function capture(browser, viewport, scenario) {
             "#metric-portfolios",
           ].map((selector) => document.querySelector(selector)?.textContent)
         : null,
+      exampleButtons: [...document.querySelectorAll(".example-button")].map((button) => ({
+        label: button.textContent.trim(),
+        number: button.dataset.number,
+        region: button.dataset.region,
+      })),
       temporaryCopy: /\b(?:todo|lorem ipsum|placeholder)\b/i.test(document.body.textContent),
     };
   }, { state: scenario.state, detail: scenario.detail, coverage: scenario.coverage });
@@ -285,6 +294,13 @@ async function capture(browser, viewport, scenario) {
     facts.temporaryCopy ||
     (scenario.state && facts.visibleRiskIcons !== 1) ||
     (scenario.state && !facts.resultTitleMatchesReservedFixture) ||
+    facts.exampleButtons.length !== 3 ||
+    !facts.exampleButtons.some(
+      (button) =>
+        button.label === "NL ACM-blocked number" &&
+        button.number === "0906-8844" &&
+        button.region === "NL",
+    ) ||
     (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["3", "0", "0", "0"]))
   ) {
     throw new Error(`${scenario.name} failed visual facts: ${JSON.stringify(facts)}`);
