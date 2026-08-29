@@ -1,0 +1,40 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "acm_bulk_manifest",
+  "source": {
+    "source_id": "acm_number_register",
+    "name": "ACM public telephone number register",
+    "registry_url": "https://www.acm.nl/nl/telefoonnummers-zoeken",
+    "dataset_url": "https://data.overheid.nl/dataset/register-van-toegekende-telefoonnummers",
+    "license": "CC0 1.0",
+    "license_url": "https://creativecommons.org/publicdomain/zero/1.0/"
+  },
+  "artifact": {
+    "download_url": "https://www.acm.nl/sites/default/files/registers/nummers_csv.zip",
+    "sha256": "372478fa8f23eb49e9152074f2b4c09c321a1871dce404135777ba51ae163da0",
+    "byte_size": 1752047,
+    "archive_member": "nummers.csv",
+    "csv_byte_size": 14436917,
+    "csv_encoding": "utf-8-sig",
+    "csv_delimiter": ";",
+    "expected_columns": [
+      "id",
+      "apl_code",
+      "twn_aanvraagnummer",
+      "twn_bestemming",
+      "twn_datumbeschikking",
+      "twn_datumeind",
+      "twn_netnummer",
+      "twn_nummerstatus",
+      "twn_nummertm",
+      "twn_nummervan",
+      "twn_plaats",
+      "twn_relatienaam",
+      "datummutatie",
+      "twn_relatieid",
+      "twn_kvknummer",
+      "twn_kvkvestigingsnummer"
+    ],
+    "retrieved_at": "2026-08-29T11:23:00Z"
+  }
+}

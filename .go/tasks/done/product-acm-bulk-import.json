@@ -1,0 +1,105 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "product-acm-bulk-import",
+  "project": "callersignal",
+  "status": "done",
+  "order": 730,
+  "summary": "Build a reproducible privacy-minimized ACM bulk importer",
+  "description": "Download the official CC0 ACM register from a pinned manifest, verify archive and CSV structure, project every range into a holder-free read-only SQLite catalog, and emit provenance, freshness, and coverage metadata without committing generated data.",
+  "depends_on": [
+    "product-caller-source-catalog"
+  ],
+  "scope": {
+    "read": [
+      "sources/registry.json",
+      "fixtures/nl/acm_number_register.json",
+      "src/callersignal/adapters/nl.py",
+      "docs/data-safety.md"
+    ],
+    "modify": [
+      "sources/acm-bulk-manifest.json",
+      "scripts/build_acm_catalog.py",
+      "src/callersignal/acm_catalog.py",
+      "tests/fixtures/acm_register_sample.csv",
+      "tests/unit/test_acm_catalog.py",
+      "docs/data-architecture.md",
+      "docs/implementation-plan.md",
+      ".gitignore",
+      "Makefile"
+    ]
+  },
+  "acceptance": [
+    "One deterministic command validates the declared ACM download checksum and exact CSV contract, imports every source row into a SQLite range catalog, and records source URL, dataset URL, license, retrieval time, source digest, row digests, status counts, destination counts, and newest mutation.",
+    "The generated catalog omits holder names, KVK identifiers, addresses, and other unnecessary personal or organisation identifiers; generated databases and downloads remain ignored by Git.",
+    "Malformed archives, schema drift, checksum drift, duplicate source ids, invalid ranges, and zero-row inputs fail closed without replacing the previous catalog."
+  ],
+  "verification": [
+    "uv run pytest tests/unit/test_acm_catalog.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T13:35:58+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-29T13:43:32+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved against task acceptance: the checksum-pinned official CC0 archive built 74,984 source rows into an atomically replaced holder-free SQLite catalogue; metadata records source, dataset, license, retrieval, digest, row and category counts, and newest mutation; generated data is ignored; all required drift and malformed-input cases preserve the previous catalogue; 216 Python tests, 8 web tests, and all repository gates passed.",
+      "transaction_id": "8d54042c126643aea00616510cbc9d99"
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T13:43:26+02:00",
+      "task_id": "product-acm-bulk-import",
+      "agent": "codex",
+      "summary": "changed_files=sources/acm-bulk-manifest.json,scripts/build_acm_catalog.py,src/callersignal/acm_catalog.py,tests/fixtures/acm_register_sample.csv,tests/unit/test_acm_catalog.py,docs/data-architecture.md,docs/implementation-plan.md,.gitignore,Makefile,.go/runs/events.jsonl; tdd_red_1=focused catalogue test failed because callersignal.acm_catalog did not exist; tdd_green_1=privacy-minimized ZIP-to-SQLite slice passed; tdd_red_2=deterministic command test failed because build script did not exist; tdd_green_2=command emitted valid coverage JSON; tdd_red_3=non-HTTPS manifest was incorrectly accepted; tdd_green_3=HTTPS-only source validation passed; fail_closed=10 focused tests cover checksum, malformed ZIP, exact schema, duplicate source ids, invalid ranges, zero rows, atomic preservation, HTTPS, privacy, provenance, and CLI; production_readback=74984 rows, 73409 matchable ranges, statuses Toegekend 73221/Afkoelen 1740/Geblokkeerd 23, 44 destinations, newest mutation 2026-08-28 11:21:06, source sha256 372478fa8f23eb49e9152074f2b4c09c321a1871dce404135777ba51ae163da0; privacy=SQLite schema has ten minimized fields and no holder, relation, KVK, place, subscriber, provider, caller, or report fields; git=generated 17MB database is ignored; verification=make check passed 216 Python tests and 8 web tests plus Go, docs, assets, and public-safety gates; critic=approved atomic replacement, exact archive and CSV contract, deterministic manifest, minimal projection, and explicit numbering-only semantics; Self-reflect: no durable agent/process improvement needed; no skill/memory/config change.",
+      "changed_files": [
+        "sources/acm-bulk-manifest.json",
+        "scripts/build_acm_catalog.py",
+        "src/callersignal/acm_catalog.py",
+        "tests/fixtures/acm_register_sample.csv",
+        "tests/unit/test_acm_catalog.py",
+        "docs/data-architecture.md",
+        "docs/implementation-plan.md",
+        ".gitignore",
+        "Makefile",
+        ".go/runs/events.jsonl"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "make check passed 216 Python tests and 8 web tests plus Go, docs, assets, and public-safety gates",
+        "result": "make check passed 216 Python tests and 8 web tests plus Go, docs, assets, and public-safety gates"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved atomic replacement, exact archive and CSV contract, deterministic manifest, minimal projection, and explicit numbering-only semantics",
+        "skip_reason": null
+      }
+    }
+  ]
+}

@@ -2,6 +2,22 @@
 
 CallerSignal separates deterministic domain logic from persistence through the [`DataStore`](../src/callersignal/storage/ports.py) protocol. The committed [`LocalStore`](../src/callersignal/storage/local.py) is a process-local proof adapter for tests and development. It is not durable, shared, or approved for public mutation traffic.
 
+## Official ACM read catalogue
+
+The complete Dutch ACM telephone-number register is a separate read-only projection, not a user-data store. [`sources/acm-bulk-manifest.json`](../sources/acm-bulk-manifest.json) pins the official ACM download URL, government catalogue, CC0 declaration, retrieval time, archive and CSV sizes, SHA-256 digest, member name, encoding, delimiter, and exact sixteen-column source contract. Build it with:
+
+```console
+make build-acm-catalog
+```
+
+The command downloads the declared ZIP over HTTPS, verifies its checksum and structure, validates every source row, and builds `downloads/acm-number-register.sqlite3`. A temporary database is atomically renamed only after the full import commits. Checksum drift, a malformed or unexpected archive, CSV schema drift, duplicate record identifiers, malformed or reversed ranges, invalid mutation timestamps, and an empty dataset leave any previous catalogue untouched.
+
+Every source row becomes one `number_ranges` record so coverage and source status remain auditable. The projection retains only the source record identifier, normalized national interval, optional NL E.164 interval, destination, neutral number type, register status, mutation time, and a deterministic source-row digest. It deliberately omits range-holder names, relation identifiers, KVK values, establishment identifiers, application metadata, decision dates, network-area fields, and places. A row digest supports provenance without reproducing omitted values.
+
+`catalog_metadata` records source and dataset URLs, license, retrieval time, source digest, total and matchable row counts, status counts, destination counts, and newest mutation. Generated downloads, SQLite files, sidecars, and local generated-data directories are ignored by Git. The catalogue contains official numbering context only: it is not a subscriber, caller-identity, live-provider, reputation, or safety database.
+
+The current pinned release imports 74,984 rows, of which 73,409 have a lookup-compatible NL interval. It contains 73,221 `Toegekend`, 1,740 `Afkoelen`, and 23 `Geblokkeerd` records across 44 destination labels; the newest source mutation is 2026-08-28. These are build readback values, not hand-maintained product promises. Refreshing the pin requires a new checksum, full rebuild, coverage comparison, source-rights review, and repository gate run.
+
 ## Aggregate boundary
 
 The port recognizes four aggregate kinds:
@@ -61,5 +77,6 @@ No production adapter is selected in this repository revision. Vercel continues 
 
 ```console
 uv run pytest tests/storage -q
+uv run pytest tests/unit/test_acm_catalog.py -q
 make check
 ```

@@ -1,4 +1,4 @@
-.PHONY: check test lint validate-go check-docs check-assets check-safety
+.PHONY: check test lint validate-go check-docs check-assets check-safety build-acm-catalog
 
 check:
 	@bash scripts/check.sh
@@ -20,3 +20,6 @@ check-assets:
 
 check-safety:
 	@bash scripts/check-public-safety.sh
+
+build-acm-catalog:
+	@uv run python scripts/build_acm_catalog.py --json

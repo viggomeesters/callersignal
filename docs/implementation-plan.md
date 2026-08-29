@@ -268,7 +268,7 @@ Depends on `product-caller-source-catalog`. Build a reproducible importer for th
 
 Acceptance: archive, checksum, schema, rows, ranges, and duplicate identifiers fail closed; provenance, freshness, digests, status counts, and destination counts are retained; generated downloads and databases remain outside Git.
 
-Verify: `uv run pytest tests/unit/test_acm_catalog.py -q` and `make check`.
+Verify: `uv run pytest tests/unit/test_acm_catalog.py -q`, `make build-acm-catalog`, and `make check`.
 
 ### `product-reputation-status-contract`
 

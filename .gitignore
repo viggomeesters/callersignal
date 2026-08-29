@@ -29,11 +29,13 @@ credentials/
 private/
 data/private/
 downloads/
+data/generated/
 exports/
 recordings/
 screenshots/private/
 *.sqlite
 *.sqlite3
+*.sqlite-*
 *.db
 *.log
 
