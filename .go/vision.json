@@ -3,17 +3,20 @@
   "kind": "vision",
   "project": "callersignal",
   "status": "active",
-  "north_star": "Any agent can turn an unfamiliar displayed phone number into a country-aware, source-backed, uncertainty-honest risk answer in one lookup.",
-  "wedge": "One read-only lookup contract across CLI, MCP, HTTP, and web, starting with official NL, GB, and US numbering evidence and admitting licensed or first-party moderated reputation evidence only after source-rights and privacy gates pass.",
-  "target_user": "AI agents and developers building safe unknown-caller experiences.",
-  "core_promise": "Normalize once, check eligible country-aware evidence, and explain the calibrated risk state, evidence, gaps, and next action without guessing identity or safety.",
+  "north_star": "Any person or agent can turn an unfamiliar displayed phone number into a country-aware, source-backed caller-campaign answer, take a concrete safety action, and privately monitor material changes.",
+  "wedge": "One shared lookup and caller-campaign contract across CLI, MCP, HTTP, and web, starting with official NL, GB, and US evidence and expanding through controlled first-party reports, private watches, verified organisation declarations, corpus transparency, and hosted MCP.",
+  "target_user": "People checking unfamiliar calls, AI agents, and developers building safety-conscious unknown-caller experiences.",
+  "core_promise": "Normalize once, check eligible country-aware evidence, explain the calibrated campaign risk and uncertainty, and offer a safe next action without guessing identity or safety.",
   "product_principles": [
     "Displayed number is evidence context, never proof of caller identity, guilt, reachability, or safety.",
     "Every result uses one of four calibrated risk states: official_warning, elevated_signals, no_risk_evidence, or insufficient_evidence.",
     "No risk evidence requires at least one current, eligible, risk-capable source to have been checked without a match; it never means safe.",
     "Only official, explicitly licensed, or first-party moderated evidence can influence reputation; lookup demand cannot.",
     "Every conclusion carries provenance, freshness, confidence, reasons, gaps, and a plain-language next action.",
-    "Machine-readable contracts lead; CLI, MCP, HTTP, and web render the same truth."
+    "Machine-readable contracts lead; CLI, MCP, HTTP, and web render the same truth.",
+    "Caller campaigns are the durable risk object; membership describes calls displaying bounded values and never proves who called.",
+    "Monitoring is private, verified, revocable, minimized, and triggered only by material state changes.",
+    "Verified organisation portfolios prove a declaration of an official contact route, never the origin of a displayed call."
   ],
   "non_goals": [
     "Expose private subscriber identities, contact-book data, call histories, or requester identities.",
@@ -28,13 +31,18 @@
     "Agents and developers value a prominent but calibrated risk state over either an unsupported identity guess or a dense evidence dump.",
     "Third-party caller-report data is unavailable for ingestion unless a source registry entry documents explicit permission or a compatible licence.",
     "First-party reporting can be introduced only after legal, privacy, moderation, retention, correction, deletion, appeal, and anti-brigading controls are approved and tested.",
-    "Phone-number portability and spoofing prevent allocation or report data from proving current provider, subscriber, or caller identity."
+    "Phone-number portability and spoofing prevent allocation or report data from proving current provider, subscriber, or caller identity.",
+    "Users will opt into private monitoring when notifications are sparse, material, and easy to revoke.",
+    "Organisations can complete a bounded challenge workflow without that verification being misread as caller-origin proof."
   ],
   "success_metrics": [
     "A fresh clone validates all repository and .go contracts with one documented command.",
     "CLI, MCP, HTTP, and web expose the same four-state risk contract and reason codes.",
     "Every published assessment can be traced to eligible timestamped evidence and an explicit next action.",
     "Every enabled source passes a machine-validated rights, provenance, freshness, permitted-fields, and outage gate.",
-    "Desktop and mobile results make the risk state more prominent than source confidence without calling an evidence-free number safe."
+    "Desktop and mobile results make the risk state more prominent than source confidence without calling an evidence-free number safe.",
+    "Every active campaign is schema-valid, freshness-bounded, correction-aware, and traceable to eligible independent evidence.",
+    "Private watches and verified organisation declarations pass consent, anti-enumeration, expiry, revocation, correction, and deletion tests.",
+    "Public corpus metrics explain actual coverage, freshness, moderation thresholds, and gaps without using lookup popularity as risk evidence."
   ]
 }

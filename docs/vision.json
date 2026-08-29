@@ -13,14 +13,16 @@
     "canonical_repository": "https://github.com/viggomeesters/callersignal"
   },
   "vision": {
-    "one_line": "Evidence-backed international phone-number risk signals that agents can inspect and explain.",
-    "north_star": "Any agent can turn an unfamiliar displayed phone number into a country-aware, source-backed, uncertainty-honest risk answer in one lookup.",
-    "promise": "Normalize once, check eligible country-aware evidence, and explain the calibrated risk state, evidence, gaps, and next action without guessing identity or safety.",
-    "wedge": "One read-only contract across CLI, MCP, HTTP, and the web, starting with official NL, GB, and US numbering evidence and admitting licensed or first-party moderated reputation evidence only after source-rights and privacy gates pass.",
+    "one_line": "Evidence-backed international caller-campaign intelligence that people and agents can inspect, act on, and privately monitor.",
+    "north_star": "Any person or agent can turn an unfamiliar displayed phone number into a country-aware, source-backed caller-campaign answer, take a concrete safety action, and privately monitor material changes.",
+    "promise": "Normalize once, check eligible country-aware evidence, explain the calibrated campaign risk and uncertainty, and offer a safe next action without guessing identity or safety.",
+    "wedge": "One shared lookup and caller-campaign contract across CLI, MCP, HTTP, and web, starting with official NL, GB, and US evidence and expanding through controlled first-party reports, private watches, verified organisation declarations, corpus transparency, and hosted MCP.",
     "target_users": [
       "Agents deciding how to handle an unfamiliar phone number",
       "Developers integrating caller context into safety-conscious products",
-      "Maintainers adding lawful, source-backed country coverage"
+      "Maintainers adding lawful, source-backed country coverage",
+      "People who want a private alert when a watched number's risk context materially changes",
+      "Organisations declaring official contact routes without claiming call origin"
     ]
   },
   "principles": [
@@ -179,6 +181,42 @@
       "bad": [
         "Robots permission or public visibility is treated as a licence to republish reports"
       ]
+    },
+    {
+      "id": "campaign-as-risk-object",
+      "category": "product",
+      "title": "Campaigns carry durable risk context",
+      "rule": "A caller campaign groups eligible observations about calls displaying bounded values over time; it never asserts the identity behind a call.",
+      "good": [
+        "A corrected campaign retains its dates, evidence handles, status, and spoofing limitation"
+      ],
+      "bad": [
+        "A phone-number owner is labelled as the actor behind every matching call"
+      ]
+    },
+    {
+      "id": "private-monitoring",
+      "category": "safety",
+      "title": "Monitoring is private and sparse",
+      "rule": "A watch requires verified consent, stores minimized contact material, stays non-public, and notifies only on material state changes.",
+      "good": [
+        "A subscriber can list, revoke, expire, correct, and delete a watch without exposing it publicly"
+      ],
+      "bad": [
+        "A public lookup reveals who is watching a number or every search triggers a message"
+      ]
+    },
+    {
+      "id": "verified-declaration-not-origin",
+      "category": "safety",
+      "title": "Verified declaration is not call origin",
+      "rule": "Organisation verification proves only that an organisation declared a bounded official contact route; caller ID can still be spoofed.",
+      "good": [
+        "The interface labels an official contact route and repeats that a displayed call may be spoofed"
+      ],
+      "bad": [
+        "A verified portfolio badge guarantees that a matching call came from the organisation"
+      ]
     }
   ],
   "non_goals": [
@@ -276,6 +314,21 @@
       "id": "source-intake-authorized",
       "question": "Can every reputation input prove that it is eligible for ingestion?",
       "pass_condition": "Every enabled source has machine-validated authority, reuse basis, permitted fields, privacy status, freshness, outage behavior, and takedown ownership."
+    },
+    {
+      "id": "campaign-explainable",
+      "question": "Can each public caller campaign be inspected, corrected, and understood without an identity claim?",
+      "pass_condition": "Every campaign exposes bounded membership, dates, eligible evidence, diversity, confidence, freshness, actions, correction state, and a spoofing limitation."
+    },
+    {
+      "id": "monitoring-private",
+      "question": "Can a person monitor material changes without creating a public or enumerable subscriber trail?",
+      "pass_condition": "Watch tests prove ownership verification, minimization, private listing, idempotent material-change delivery, expiry, revocation, correction, and deletion."
+    },
+    {
+      "id": "organisation-claim-calibrated",
+      "question": "Does organisation verification remain narrower than caller-origin proof?",
+      "pass_condition": "Challenge, expiry, replay, conflict, audit, correction, deletion, appeal, and public spoofing-language tests all pass."
     }
   ],
   "review_checklist": [
@@ -290,6 +343,9 @@
     "Confirm public copy remains calm, accessible, specific, and non-accusatory.",
     "Confirm official_warning, elevated_signals, no_risk_evidence, and insufficient_evidence remain textually and visually distinct.",
     "Confirm source confidence is subordinate to the risk state and is never presented as a safety percentage.",
+    "Confirm campaign membership describes calls displaying bounded values and never subscriber or caller identity.",
+    "Confirm watches are private, verified, revocable, minimized, and triggered only by material changes.",
+    "Confirm verified organisation portfolios are presented as declarations rather than proof of call origin.",
     "Confirm a fresh clone passes the documented local gate without private dependencies."
   ],
   "maturity_model": [
@@ -308,14 +364,14 @@
     {
       "level": "L2",
       "state": "moderated_reports",
-      "meaning": "Eligible licensed evidence and explicit first-party community observations can be processed under source-rights, privacy, abuse, and correction controls.",
-      "exit_evidence": "Source-rights, moderation, retention, deletion, objection, appeal, and anti-brigading gates pass."
+      "meaning": "Eligible evidence and explicit first-party observations can form explainable caller campaigns under source-rights, privacy, abuse, correction, and durable-data controls.",
+      "exit_evidence": "Campaign, source-rights, moderation, retention, deletion, objection, appeal, anti-brigading, and storage gates pass."
     },
     {
       "level": "L3",
-      "state": "international_network",
-      "meaning": "New country adapters and evidence sources can expand coverage without weakening the contract.",
-      "exit_evidence": "Coverage growth remains source-rights compliant, measurable, and conformance-tested."
+      "state": "trusted_monitoring_network",
+      "meaning": "Private watches, verified organisation declarations, public corpus transparency, and hosted MCP make campaign intelligence useful between one-off searches.",
+      "exit_evidence": "Consent, anti-enumeration, notification, verification, transparency, remote-protocol, and live-deployment gates pass."
     }
   ],
   "residual_risk_wording": "A phone-number lookup can describe numbering context and reported activity, but caller ID may be spoofed and the evidence does not prove who placed a call."

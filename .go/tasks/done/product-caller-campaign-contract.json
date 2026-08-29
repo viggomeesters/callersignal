@@ -4,7 +4,7 @@
   "execution_mode": "agent",
   "id": "product-caller-campaign-contract",
   "project": "callersignal",
-  "status": "open",
+  "status": "done",
   "summary": "Define caller campaigns as the durable risk-intelligence object",
   "description": "Execution brief work unit 1/7. Destination: CallerSignal behaves like a trustworthy HIBP-style caller-campaign intelligence service: one search yields a calibrated answer, campaign history, concrete actions, private monitoring, verified organisation context, transparent corpus coverage, and an agent-native remote MCP surface.",
   "depends_on": [
@@ -63,22 +63,40 @@
       "id": "R1",
       "text": "A versioned campaign contract records status, categories, jurisdictions, first/last seen, eligible evidence, confidence, freshness, recommended actions, and correction state without asserting caller or subscriber identity.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-29T07:31:15+02:00",
+          "agent": "codex",
+          "summary": "schemas/caller-campaign.schema.json and docs/campaigns.md define the versioned lifecycle, evidence, confidence, freshness, action, correction, and no-identity fields; 8 focused contract tests pass."
+        }
+      ]
     },
     {
       "id": "R2",
       "text": "Campaign membership refers only to calls displaying a number or matching a bounded pattern, remains spoofing-aware, and uses only synthetic reserved-number fixtures in repository tests.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-29T07:31:16+02:00",
+          "agent": "codex",
+          "summary": "Campaign membership is limited to displayed_number or bounded_pattern plus explicit call_displayed_value/no-identity semantics; reserved NANPA fixtures and spoofing assertions pass."
+        }
+      ]
     },
     {
       "id": "R3",
       "text": "Campaign lifecycle and evidence invariants are schema-valid, deterministic, and fail closed when evidence is stale, ineligible, contradictory, or insufficient.",
       "source": "execution_brief_acceptance",
-      "status": "pending",
-      "evidence": []
+      "status": "verified",
+      "evidence": [
+        {
+          "created_at": "2026-08-29T07:31:16+02:00",
+          "agent": "codex",
+          "summary": "Determinism, stale exclusion, contradiction review, single-source insufficiency, shared-pattern corroboration, official warnings, bounded patterns, and timeline rejection pass in tests/contracts/test_caller_campaign.py."
+        }
+      ]
     }
   ],
   "acceptance": [
@@ -91,9 +109,65 @@
     "make check"
   ],
   "claim": {
-    "agent": null,
-    "claimed_at": null
+    "agent": "codex",
+    "claimed_at": "2026-08-29T07:23:52+02:00"
   },
-  "evidence": [],
-  "order": 580
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T07:31:33+02:00",
+      "task_id": "product-caller-campaign-contract",
+      "agent": "codex",
+      "summary": "changed_files=.go/vision.json,schemas/caller-campaign.schema.json,src/callersignal/campaigns/__init__.py,src/callersignal/campaigns/model.py,tests/contracts/test_caller_campaign.py,tests/test_repository_contract.py,docs/campaigns.md,docs/vision.json,docs/agent-spec.md,.go/tasks/active/product-caller-campaign-contract.json; verification=uv run pytest tests/contracts/test_caller_campaign.py tests/test_repository_contract.py -q (17 passed) && make check (139 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking identity semantics, source independence, stale/ineligible/contradictory evidence, bounded patterns, temporal invariants, deterministic order, reserved fixtures, schema validity, and public-safety wording",
+      "changed_files": [
+        ".go/vision.json",
+        "schemas/caller-campaign.schema.json",
+        "src/callersignal/campaigns/__init__.py",
+        "src/callersignal/campaigns/model.py",
+        "tests/contracts/test_caller_campaign.py",
+        "tests/test_repository_contract.py",
+        "docs/campaigns.md",
+        "docs/vision.json",
+        "docs/agent-spec.md",
+        ".go/tasks/active/product-caller-campaign-contract.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/contracts/test_caller_campaign.py tests/test_repository_contract.py -q (17 passed) && make check (139 Python and 5 web tests passed) && git diff --check (passed)",
+        "result": "uv run pytest tests/contracts/test_caller_campaign.py tests/test_repository_contract.py -q (17 passed) && make check (139 Python and 5 web tests passed) && git diff --check (passed)"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved by focused self-review after checking identity semantics, source independence, stale/ineligible/contradictory evidence, bounded patterns, temporal invariants, deterministic order, reserved fixtures, schema validity, and public-safety wording",
+        "skip_reason": null
+      }
+    }
+  ],
+  "order": 580,
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-29T07:31:33+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved after contract and safety review: R1-R3 verified; schemas and both visions align; campaign activation requires an official warning or two independent sources sharing a pattern; stale, contradictory, uncorroborated, and invalid inputs fail closed; full gate is green."
+    }
+  ]
 }

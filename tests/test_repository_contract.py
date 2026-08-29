@@ -125,3 +125,21 @@ def test_hybrid_reputation_work_is_dependency_ordered() -> None:
     assert "product-source-rights-registry" in _task("product-report-ingestion")[
         "depends_on"
     ]
+
+
+def test_caller_campaign_direction_is_durable() -> None:
+    public_vision = load_json("docs/vision.json")
+    go_vision = load_json(".go/vision.json")
+    principle_ids = {principle["id"] for principle in public_vision["principles"]}
+    score_ids = {
+        item["id"] for item in public_vision["acceptance_scorecard"]
+    }
+
+    assert {
+        "campaign-as-risk-object",
+        "private-monitoring",
+        "verified-declaration-not-origin",
+    } <= principle_ids
+    assert "campaign-explainable" in score_ids
+    assert "private" in json.dumps(go_vision).lower()
+    assert "campaign" in go_vision["north_star"].lower()
