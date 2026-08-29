@@ -6,11 +6,11 @@
 
 CallerSignal is an agent-first open-source project for answering “what can we responsibly say about this displayed phone number?” It normalizes a number with explicit country context, checks lawful country-specific evidence, and returns sources, gaps, confidence, and residual uncertainty instead of guessing a caller's identity.
 
-> **Current maturity:** `v0.2.0` is the first functional release and is persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It implements the read-only NL, GB, and US lookup wedge across CLI, stdio MCP, Streamable HTTP MCP, HTTP, and web. The production site does not identify a caller, query live subscriber data, accept reports, persist watches, or publish organisation declarations. The release also adds calibrated risk, public-campaign and corpus-transparency contracts plus tested private-watch, organisation-verification, storage, moderation, and operational-safety foundations.
+> **Current maturity:** `v0.3.0` is persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It implements the read-only NL, GB, and US lookup wedge across CLI, stdio MCP, Streamable HTTP MCP, HTTP, and web. Production NL lookups use a validated, holder-free projection of the complete pinned ACM register. The service does not identify a caller, query live subscriber data, accept reports, persist watches, or publish organisation declarations.
 
 The durable direction is a hybrid reputation model: official evidence first, then explicitly licensed or first-party moderated observations only after source-rights, privacy, and abuse gates pass. Every shared result now contains one calibrated risk state: `official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`. The website leads with that state, its basis, and a concrete next action while preserving the evidence and uncertainty underneath. `no_risk_evidence` requires a current eligible risk-capable source and never means that a number is safe; numbering context alone remains `insufficient_evidence`.
 
-> **Corpus reality, 29 August 2026:** CallerSignal has three enabled numbering-context sources across NL, GB, and US, but zero enabled risk-capable sources and zero eligible public campaigns. “No matching evidence” means only that eligible sources returned no publishable match; it does not mean the displayed number is safe. See the versioned [corpus-transparency contract](docs/transparency.md).
+> **Corpus reality, 29 August 2026:** the official ACM catalogue contains 74,984 ranges, of which 73,409 support canonical lookup. CallerSignal indexes 15 caller-report services and four advertised licensing routes, but enables zero reputation feeds and zero eligible public campaigns. “No matching evidence” therefore does not mean the displayed number is safe. See the versioned [corpus-transparency contract](docs/transparency.md).
 
 ## Usage: read-only lookup
 
@@ -40,6 +40,15 @@ PYTHONPATH=src uv run python -m callersignal.mcp_server
 }
 ```
 
+Inspect source coverage without submitting a number:
+
+```console
+PYTHONPATH=src uv run python -m callersignal.cli coverage
+curl --fail-with-body https://callersignal.vercel.app/v1/coverage
+```
+
+CLI `coverage --json`, HTTP `GET /v1/coverage`, and both MCP transports' argument-free `get_source_coverage` tool return the same public-safe projection rendered by the website.
+
 For a local same-origin website and API:
 
 ```console
@@ -58,7 +67,7 @@ Existing “who called me?” experiences often lead with opaque labels, region 
 - every conclusion carries provenance, freshness, reason codes, confidence, gaps, and residual risk;
 - unknown stays unknown when evidence cannot support a stronger answer.
 
-The initial product wedge covers read-only official numbering evidence for the Netherlands, United Kingdom, and United States through shared CLI, MCP, HTTP, and web semantics.
+The product wedge covers read-only official numbering evidence for the Netherlands, United Kingdom, and United States through shared CLI, MCP, HTTP, and web semantics. Caller-report enrichment remains disabled until compatible extraction and republication rights, credentials, privacy controls, correction, takedown, provenance, and operational gates are all proven.
 
 ## Repository map
 
@@ -87,7 +96,7 @@ make check
 ./go next .
 ```
 
-`make check` installs only locked development dependencies and validates Python and web tests, schemas, documentation, assets, privacy rules, formatting, and `.go` state. The GitHub workflow is configured to run that same command. See the complete [onboarding guide](docs/onboarding.md) and [agent contract](docs/agent-contract.md).
+`make check` installs only locked development dependencies and validates Python and web tests, schemas, documentation, assets, privacy rules, formatting, and `.go` state. It is the authoritative repository-local gate. See the complete [onboarding guide](docs/onboarding.md) and [agent contract](docs/agent-contract.md).
 
 ## Development: continue the backlog
 

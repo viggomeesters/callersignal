@@ -2,7 +2,7 @@
 
 ## Status and intent
 
-CallerSignal v0.2.0 is a running read-only public lookup service backed by pinned public-safe NL, GB, and US numbering fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, calibrated assessment, caller-campaign model, corpus transparency, and CLI, stdio MCP, hosted MCP, HTTP, and web surfaces are implemented. Tested service boundaries also exist for controlled first-party reports, replaceable storage, private watches, verified organisation declarations, and privacy-safe operations, but those mutation paths are disabled in production until their real identity, consent, moderation, retention, correction, deletion, and provider controls are configured. Every surface keeps one domain truth and fails closed when evidence is missing or unreliable.
+CallerSignal v0.3.0 is a running read-only public lookup service backed by a validated production projection of the complete pinned Dutch ACM register plus public-safe GB and US fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, calibrated assessment, caller-campaign model, corpus transparency, and CLI, stdio MCP, hosted MCP, HTTP, and web surfaces are implemented. Tested service boundaries also exist for licensed reputation feeds, controlled first-party reports, replaceable storage, private watches, verified organisation declarations, and privacy-safe operations, but those mutation paths remain disabled until their rights, credentials, identity, consent, moderation, retention, correction, deletion, and provider gates pass. Every surface keeps one domain truth and fails closed when evidence is missing or unreliable.
 
 ## Context flow
 
@@ -17,6 +17,10 @@ flowchart LR
     G --> H[Explainable assessment]
     H --> I[Versioned lookup result]
     I --> A
+    J[Checksum-pinned ACM source] --> K[Privacy-minimized catalogue build]
+    K --> E
+    L[Rights-approved reputation feed] -. disabled until every gate passes .-> E
+    M[Committed coverage projection] --> A
 ```
 
 The input boundary records raw input and an explicit origin region when the input is not international. Normalization emits canonical E.164 plus presentation formats without asserting assignment or identity. The orchestrator selects independent country adapters, records observations and gaps, and emits one schema-valid result. Surface adapters render that same result; they may not create a separate verdict path.
@@ -47,7 +51,7 @@ Public reporting is outside the read-only wedge. It can start only after privacy
 
 The domain core remains deterministic: it receives normalized input and source observations, then emits a result. Network access belongs inside country adapters. Durable evidence writes belong behind the evidence-ledger interface. Report mutations belong behind the reporting service. Metrics, logs, caches, notifications, and rate limits are explicit ports rather than hidden domain side effects.
 
-The read-only implementation uses replaceable local interfaces and deterministic public-safe fixtures. A thin Vercel adapter serves the owned production deployment, while a database, queue, cache, analytics vendor, and all mutation infrastructure remain deferred decisions.
+The read-only implementation uses replaceable interfaces, a generated immutable ACM SQLite catalogue, and deterministic public-safe fixtures. The generated database is built during deployment, validated before activation, and never committed. A thin Vercel adapter serves the owned production deployment, while a mutable database, queue, cache, analytics vendor, and all mutation infrastructure remain deferred decisions.
 
 ## Failure semantics
 
@@ -71,10 +75,10 @@ Secrets and private data may exist only in ignored local configuration or an app
 - Evidence stores implement append-only observation semantics.
 - Assessment policies consume typed evidence without mutating it.
 - Report moderation and abuse controls remain independently testable.
-- Source ingestion can move from pinned fixtures to scheduled retrieval without changing the domain result.
+- Official-source refreshes and authorized reputation feeds enter through manifest- and rights-gated adapters without changing the domain result.
 
 ## Repository and validation architecture
 
-`.go` is the source of truth for objectives, dependency order, acceptance, verification, evidence, and task state. `docs/vision.json` is the tested design contract. `make check` is the public local gate; it validates both. The least-privilege GitHub workflow is configured to run that exact command, so local and remote validation have one deterministic truth path when Actions execution is available.
+`.go` is the source of truth for objectives, dependency order, acceptance, verification, evidence, and task state. `docs/vision.json` is the tested design contract. `make check` is the authoritative repository-local gate and validates both without depending on a hosted CI runtime.
 
 Decisions that change a public boundary, schema, source-reuse basis, storage model, moderation policy, or supported claim require an architecture decision record and corresponding updates to the vision contract and affected `.go` tasks.

@@ -3,7 +3,8 @@
 ## Current decision — 29 August 2026
 
 CallerSignal's current tree and Git history are public-safe. Automated secret,
-private-content, large-binary, and generated-state checks are clean. The only
+private-content, large-binary, and generated-state checks are clean after
+ignored Vercel build caches and the generated ACM database are removed. The only
 automated filename signals are two historical locations of the same public
 workflow contract:
 
@@ -23,8 +24,9 @@ git-history would make the product contract less precise without reducing risk.
 The review covered the working tree, tracked files, and git-history filename
 signals. It also checked the original session numbers, high-confidence secret
 patterns, private-key headers, environment files, generated runtime state,
-caches, exports, recordings, and large binaries. Public examples use only a
-NANPA-reserved fictional number.
+caches, exports, recordings, and large binaries. Public examples use only the
+reviewed ACM blocked-number record `0906-8844`, a NANPA-reserved fictional
+number, and an Ofcom-protected drama number.
 
 The repository's forbidden public content remains: real personal phone
 numbers, contact or subscriber identities, raw call reports, lookup histories,

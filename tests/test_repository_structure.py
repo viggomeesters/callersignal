@@ -101,12 +101,12 @@ def test_functional_release_versions_are_consistent() -> None:
         web_lock["packages"][""]["version"],
     }
 
-    assert versions == {"0.2.0"}
-    assert 'version = "0.2.0"' in (ROOT / "uv.lock").read_text(encoding="utf-8")
-    assert '"version": "0.2.0"' in (
+    assert versions == {"0.3.0"}
+    assert 'version = "0.3.0"' in (ROOT / "uv.lock").read_text(encoding="utf-8")
+    assert '"version": "0.3.0"' in (
         ROOT / "src/callersignal/mcp_server.py"
     ).read_text(encoding="utf-8")
-    assert '"version": "0.2.0"' in (
+    assert '"version": "0.3.0"' in (
         ROOT / "src/callersignal/remote_mcp/application.py"
     ).read_text(encoding="utf-8")
 

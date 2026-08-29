@@ -4,13 +4,33 @@ All notable changes to CallerSignal are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-29
+
 ### Added
 
 - A public-safe Netherlands example button backed by the pinned ACM record for blocked number `0906-8844`, using the same country-explicit lookup route as manual input.
+- A reproducible importer for the complete checksum-pinned ACM number register: 74,984 ranges, including 73,409 canonical lookup-compatible ranges, with holder and organisation fields removed.
+- An immutable production read model that Vercel builds from the official CC0 ACM source and activates only after digest, schema, row-count, status-count, destination-count, and freshness validation.
+- A dated index of 15 Dutch and international caller-report services, including four advertised licensing or commercial integration routes and explicit rights/activation decisions for every service.
+- A rights-gated reputation adapter boundary with credential, schedule, rate, size, drift, privacy, provenance, correction, and takedown gates; all adapters remain inert until their source is explicitly enabled.
+- One source-coverage contract shared by HTTP `GET /v1/coverage`, CLI `coverage`, stdio and hosted MCP `get_source_coverage`, and the public website.
+- A two-ledger public coverage view that separates available official numbering context from unavailable caller reputation and never turns source volume into a safety score.
 
 ### Fixed
 
 - A self-contained CallerSignal favicon prevents an otherwise harmless browser-console `404` during fresh page loads.
+- Responsive coverage totals no longer overflow or clip on desktop or 375-pixel mobile layouts; browser proof now gates internal content overflow and semantic-label contrast.
+
+### Safety and evidence boundaries
+
+- No permission-required caller-report site is scraped or copied. The current reputation-source activation count is zero.
+- Public coverage contains no raw number inventory, range-holder name, report text, reporter, requester activity, lookup demand, credential, or private source data.
+- The ACM catalogue supplies official number-plan status only; it does not identify a caller, subscriber, current provider, or safe call.
+
+### Upgrade instructions
+
+- Existing v0.2.0 consumers can upgrade without a lookup-schema migration; schema version `1.0.0` remains compatible.
+- Run `uv sync --locked --dev`, `npm ci`, and `make check` after updating.
 
 ## [0.2.0] - 2026-08-29
 
@@ -61,4 +81,5 @@ All notable changes to CallerSignal are documented here. The format follows [Kee
 
 [0.1.0]: https://github.com/viggomeesters/callersignal/releases/tag/v0.1.0
 [0.2.0]: https://github.com/viggomeesters/callersignal/releases/tag/v0.2.0
-[Unreleased]: https://github.com/viggomeesters/callersignal/compare/v0.2.0...HEAD
+[0.3.0]: https://github.com/viggomeesters/callersignal/releases/tag/v0.3.0
+[Unreleased]: https://github.com/viggomeesters/callersignal/compare/v0.3.0...HEAD

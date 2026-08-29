@@ -306,6 +306,8 @@ Verify: `uv run pytest tests/integration tests/e2e/test_web.py -q`, `npm --prefi
 
 Depends on `product-acm-production-read-model`, `product-authorized-reputation-ingestion`, and `product-source-coverage-surfaces`. Release the complete rights-aware data-expansion slice after local, public-safety, repository, live browser, and protocol gates pass.
 
+Release: `v0.3.0` packages this slice without activating an unlicensed reputation source.
+
 Acceptance: the current official ACM catalogue is proven live with honest coverage; each ingested reputation source has compatible rights and operational privacy controls; no permission-required site is scraped; all canonical surfaces and repository-history safety checks pass.
 
 Verify: `make check` and strict public `repo-complete` validation.
