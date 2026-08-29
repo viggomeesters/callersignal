@@ -4,7 +4,7 @@
 
 Use [GitHub Issues](https://github.com/viggomeesters/callersignal/issues) for reproducible repository defects, documentation gaps, and bounded feature proposals. Search existing issues first and include the revision, operating system, Python and `uv` versions, exact command, sanitized output, and expected behavior.
 
-CallerSignal v0.1.0 is a repository-foundation release. CLI, MCP, HTTP, web lookup, country adapters, public reports, and production deployment are open product tasks, not currently supported features.
+CallerSignal v0.2.0 supports read-only CLI, stdio MCP, hosted MCP, HTTP, and web lookups over the NL, GB, and US numbering-context adapters, plus the public campaign catalogue, methodology, and corpus-transparency reads. The production service does not accept reports, persist watches, or publish organisation declarations; those mutation paths remain locked until their real data provider, OAuth, consent, moderation, retention, and deletion controls are configured.
 
 ## Sensitive matters
 

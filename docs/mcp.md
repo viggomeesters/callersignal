@@ -8,7 +8,7 @@ The production endpoint is `https://callersignal.vercel.app/mcp`. It supports th
 
 The implementation follows the official [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports), including JSON responses, `202` for accepted notifications, protocol-version validation, bounded request bodies, and Origin validation. It is stateless and issues no session identifier. Every response uses `Cache-Control: no-store`.
 
-After deploying a revision that contains the hosted service, add it to Codex with:
+Add the deployed service to Codex with:
 
 ```console
 codex mcp add callersignal --url https://callersignal.vercel.app/mcp
@@ -33,7 +33,7 @@ The lookup tool requires `origin_region` for national-format input. Before calli
 
 ### Protected tools are discoverable but locked
 
-The server lists four future protected operations so clients can inspect their exact risk and permission boundary:
+The server lists four locked protected operations so clients can inspect their exact risk and permission boundary:
 
 | Tool | OAuth scope | Destructive hint | Current availability |
 | --- | --- | ---: | --- |

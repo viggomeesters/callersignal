@@ -2,7 +2,7 @@
 
 ## Status and intent
 
-CallerSignal's unreleased `main` branch is a running read-only lookup service backed by pinned public-safe NL, GB, and US numbering fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, and CLI, MCP, HTTP, and web surfaces are implemented. They keep one domain truth and fail closed when evidence is missing or unreliable. The open `.go` work evolves this foundation into caller-campaign intelligence with controlled first-party reports, durable data ports, private watches, verified organisation portfolios, corpus transparency, hosted MCP, operational safety, and a functional release.
+CallerSignal v0.2.0 is a running read-only public lookup service backed by pinned public-safe NL, GB, and US numbering fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, calibrated assessment, caller-campaign model, corpus transparency, and CLI, stdio MCP, hosted MCP, HTTP, and web surfaces are implemented. Tested service boundaries also exist for controlled first-party reports, replaceable storage, private watches, verified organisation declarations, and privacy-safe operations, but those mutation paths are disabled in production until their real identity, consent, moderation, retention, correction, deletion, and provider controls are configured. Every surface keeps one domain truth and fails closed when evidence is missing or unreliable.
 
 ## Context flow
 

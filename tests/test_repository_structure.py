@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 import stat
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -81,6 +82,33 @@ def test_readme_is_content_first_and_maturity_honest() -> None:
     assert "https://callersignal.vercel.app/" in readme[:1_000]
     assert "Go" in readme
     assert "202-555-0147" in readme
+
+
+def test_functional_release_versions_are_consistent() -> None:
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
+    package_lock = json.loads((ROOT / "package-lock.json").read_text(encoding="utf-8"))
+    web_package = json.loads((ROOT / "web/package.json").read_text(encoding="utf-8"))
+    web_lock = json.loads((ROOT / "web/package-lock.json").read_text(encoding="utf-8"))
+    versions = {
+        pyproject["project"]["version"],
+        package["version"],
+        package_lock["version"],
+        package_lock["packages"][""]["version"],
+        package_lock["packages"]["web"]["version"],
+        web_package["version"],
+        web_lock["version"],
+        web_lock["packages"][""]["version"],
+    }
+
+    assert versions == {"0.2.0"}
+    assert 'version = "0.2.0"' in (ROOT / "uv.lock").read_text(encoding="utf-8")
+    assert '"version": "0.2.0"' in (
+        ROOT / "src/callersignal/mcp_server.py"
+    ).read_text(encoding="utf-8")
+    assert '"version": "0.2.0"' in (
+        ROOT / "src/callersignal/remote_mcp/application.py"
+    ).read_text(encoding="utf-8")
 
 
 def test_no_unfinished_markers_in_public_markdown() -> None:

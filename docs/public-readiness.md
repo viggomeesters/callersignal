@@ -1,75 +1,123 @@
 # Public Readiness Evidence
 
-## Current `main` revalidation — 2026-08-27
+## Current release state — 29 August 2026
 
-The public/professional profile was revalidated after the read-only CLI, MCP, HTTP, and web surfaces were added. The current gate includes 106 Python tests, three web unit tests, schema and `.go` validation, documentation and asset checks, and privacy protections. A least-privilege GitHub workflow is configured to invoke the same `make check` command with immutable action revisions; it does not create a second validation path.
+CallerSignal v0.2.0 is the first functional public release. The repository is
+public at `viggomeesters/callersignal`, `main` is the default branch, and the
+read-only product is live at `https://callersignal.vercel.app/`. CLI, stdio MCP,
+Streamable HTTP MCP, HTTP, and web clients share the same versioned lookup and
+four-state risk contract.
 
-The current web-profile command is:
+The current corpus is intentionally modest and explicit: three enabled
+numbering-context sources, zero enabled risk-capable sources, and zero eligible
+public campaigns. CallerSignal therefore does not call an unmatched number
+safe, identify its owner, or prove where a call originated. Report collection,
+watch persistence, organisation publication, and outbound notifications remain
+disabled in production until their provider, identity, consent, moderation,
+rate, retention, objection, correction, and deletion controls exist.
+
+## Release gate
+
+The authoritative local gate is:
+
+```console
+make check
+```
+
+It verifies locked Python and JavaScript dependencies, formatting and linting,
+Python and web tests, every committed schema, repository documentation and
+assets, the repo-local `.go` state, public-safety rules, whitespace, and package
+version consistency. The least-privilege GitHub workflow invokes the same gate
+with immutable action revisions. GitHub currently rejects remote execution
+because Actions is disabled at the repository-owner account level; this is a
+documented external boundary, not a silently claimed green remote run.
+
+The v0.2.0 release run completed with 198 Python tests and 8 web tests passing.
+
+Strict public validation uses:
 
 ```console
 python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py \
-  --public --mode validate --path . --kind web-app \
-  --remote-policy required --release-policy required --url-policy required --json-schema
+  --public --mode validate --path . \
+  --remote-policy required --release-policy required --json-schema
 ```
 
-After authenticated production deployment, the command returned `JA`, exit code `0`, and zero hard blockers with deploy-URL checks required. GitHub homepage metadata and the README both point to the live `https://callersignal.vercel.app/` alias; homepage, lookup, health, security-header, and real-browser readbacks all passed.
+The v0.2.0 release run returned `JA`, exit code `0`, and zero hard blockers. The
+profile covers repository identity and history, vision and design contracts,
+onboarding and public policies, local gates, remote metadata, live URL, hero
+assets, visual proof, release readiness, secrets, privacy, and large binaries.
 
-Post-push readback registered `.github/workflows/ci.yml` as an active workflow. GitHub nevertheless rejected a manual run with HTTP `422` because Actions is disabled for the repository owner's account. The repository does not change that account-level setting autonomously. Until the owner enables Actions, the repeatedly green local `make check` execution is the authoritative equivalent gate; remote execution remains explicitly unproven.
+## Product and protocol proof
 
-## Verdict
+Contract, unit, integration, parity, privacy, and end-to-end tests exercise:
 
-CallerSignal's repository foundation passed the strict public/professional validation profile on 2026-08-26. `repo-complete` returned `JA`, exit code `0`, and `0` hard blockers with remote, release, and metadata policies required. The validated publication revision was `95572648d71e4df6ec2a7f0372a45d12112a8583`.
+- country-explicit normalization and fail-closed NL, GB, and US adapters;
+- immutable evidence, source eligibility, freshness, and typed gaps;
+- identical four-state assessment semantics across every interface;
+- caller-campaign publication thresholds and correction behavior;
+- consent-bound private watches and verified organisation declarations without
+  making either feature public in production;
+- exact corpus-transparency output with no popularity or raw-report leakage;
+- hosted MCP discovery, initialization, nine tool declarations, public reads,
+  locked scoped mutations, Origin and protocol validation, bounded bodies,
+  notifications, and `no-store` responses;
+- privacy-safe operational metrics, incident handling, deletion, correction,
+  takedown, and abuse controls.
 
-The v0.1.0 certification covered repository foundation only. The current unreleased branch implements normalization, the evidence ledger, NL/GB/US adapters, lookup orchestration, CLI, MCP, HTTP, web, calibrated four-state risk assessment and presentation, and machine-gated source eligibility. Eleven dependency-ordered tasks now cover the caller-campaign contract, privacy-sensitive reporting and aggregation, durable storage ports, private watch, verified organisation portfolios, campaign UX, corpus transparency, hosted MCP, operational safety, and the first functional release. The README and `.go` state are authoritative for current maturity.
-
-## Local quality proof
-
-`make check` completed with exit code `0` immediately before publication review. It reported:
-
-- locked dependency synchronization succeeded;
-- Ruff completed with no findings;
-- all 13 repository tests passed;
-- repo-local `.go` validation passed;
-- documentation, asset, public-safety, and whitespace checks passed.
-
-The vision contract validates against the committed schema and contains explicit product, design, engineering, and safety principles. The current `.go` contract contains thirty-three tasks: six repository-foundation/readiness tasks and twenty-seven product tasks. Sixteen product tasks are approved and eleven remain open; the documentation synchronization task records this current state.
-
-## Repository-complete proof
-
-The strict command was:
-
-```console
-python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py \
-  --public --mode validate --path . --kind generic \
-  --remote-policy required --release-policy required --url-policy none --json-schema
-```
-
-All hard checks reported `OK`, including README, license, Git metadata, design vision, contribution policy, changelog, local validation quality, remote strategy, public documentation, security policy, secret scrub, private filenames, Git-history privacy, large binaries, public visibility, GitHub description, GitHub topics, rendered hero, visual proof, and release readiness. A deploy URL is not applicable to this repository-foundation release and was explicitly disabled with `--url-policy none`.
+The MCP acceptance deployment `dpl_8t4545JvbgcDtbCqZKiRw9bsVfHm` reported
+`Ready` and owned the stable alias. Live readback proved the homepage and health
+route, protocol discovery, all public tool responses, the locked protected-tool
+boundary, hostile-Origin rejection, and the exact transparency snapshot. The
+release publication repeats the same readback against the tagged commit.
 
 ## Visual proof
 
-The README renders `assets/hero.png` near the top. A separate 2:1 `assets/social-preview.png` is committed. Both rasters passed automated dimension and ratio checks and original-resolution inspection for clipping, overlap, contrast, readability, private data, text, watermarks, edge safety, and non-alarmist semantics. Exact dimensions and digests are recorded in [`docs/visual-proof.md`](visual-proof.md).
+The README displays `assets/hero.png` at the top and GitHub uses the companion
+2:1 `assets/social-preview.png`. Their dimensions, digests, and original-scale
+inspection are recorded in [`visual-proof.md`](visual-proof.md).
+
+The responsive website was rendered at 1440-pixel desktop and 375-pixel mobile
+widths across default, invalid, insufficient-evidence, no-risk-evidence,
+elevated-signals, official-warning, and corpus-coverage states. Twelve committed
+captures in `web/proof/` were checked for clipping, overlap, horizontal overflow,
+contrast, text hierarchy, readable actions, temporary copy, and console errors.
 
 ## Privacy, secrets, and history proof
 
-The current tree and every Git revision were checked for the original session numbers, high-confidence token formats, private-key headers, secret or private filenames, generated environments, caches, and non-canonical `.go` runtime state. No disallowed value or tracked runtime artifact was found.
+The current tree and every Git revision are checked for the original session
+numbers, high-confidence token formats, private-key headers, secret files,
+generated environments, caches, runtime state, exports, recordings, and large
+binaries. The repository contains no real personal number, subscriber identity,
+contact record, raw report, lookup history, recording, private screenshot,
+credential, proprietary dataset, or sensitive log.
 
-Repository history contains one root foundation revision at the certification point. The largest tracked files are the two reviewed public visual assets at less than 2 MB each; no tracked file exceeds 5 MB. `.gitignore` was read back against representative environment, credential, private-data, export, recording, cache, lock, and run-state paths.
+The automated filename scanner recognizes the phrase `private-watch` in one
+public product-task contract. [`public-readiness-review.md`](public-readiness-review.md)
+records the exact paths, git-history review, why they are public-safe false
+positives, the forbidden-content boundary, and the rule that any new signal
+requires a fresh human decision. No history rewrite is warranted.
 
-The committed documentation uses one NANPA-reserved fictional number for interface examples. No real personal phone number, contact record, lookup history, report, recording, private screenshot, credential, proprietary dataset, or raw sensitive log is included.
+`.gitignore` excludes credentials, private data, generated runtime state, local
+databases, caches, environments, coverage output, deployment metadata, exports,
+recordings, and screenshots that are not deliberate reviewed public assets.
 
-## GitHub readback
+## GitHub and deployment readback
 
-GitHub reported:
+GitHub reports:
 
 - repository: `viggomeesters/callersignal`;
 - URL: `https://github.com/viggomeesters/callersignal`;
 - visibility: `PUBLIC`;
 - default branch: `main`;
+- homepage: `https://callersignal.vercel.app/`;
 - description: `Evidence-backed international phone-number intelligence for agents, CLIs, MCP clients, and the web.`;
-- topics: `agent-first`, `caller-id`, `e164`, `fraud-prevention`, `mcp`, `open-source`, `phone-number`, and `telecom`.
+- topics: `agent-first`, `caller-id`, `e164`, `fraud-prevention`, `mcp`,
+  `open-source`, `phone-number`, and `telecom`.
 
-The publication checkpoint `v0.1.0-rc.1` is a non-draft prerelease and resolves to the validated revision. The definitive release is created only from the clean, fully certified repository HEAD.
+Vercel production deployment is intentionally manual because no GitHub-Vercel
+integration is configured. Deployment requires the explicit
+`viggos-projects-eac4720a` scope. Release readback covers the stable alias,
+immutable deployment, health route, MCP version, and function inventory.
 
 ## Reproduction
 
@@ -77,9 +125,11 @@ The publication checkpoint `v0.1.0-rc.1` is a non-draft prerelease and resolves 
 make check
 ./go validate .
 python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py \
-  --public --mode validate --path . --kind generic \
-  --remote-policy required --release-policy required --url-policy none --json-schema
+  --public --mode validate --path . \
+  --remote-policy required --release-policy required --json-schema
 gh repo view viggomeesters/callersignal \
-  --json name,url,visibility,defaultBranchRef,description,repositoryTopics
-git ls-remote origin refs/heads/main refs/tags/v0.1.0
+  --json name,url,visibility,defaultBranchRef,description,homepageUrl,repositoryTopics
+git ls-remote origin refs/heads/main refs/tags/v0.2.0
+npx --yes vercel@latest inspect https://callersignal.vercel.app \
+  --scope viggos-projects-eac4720a
 ```

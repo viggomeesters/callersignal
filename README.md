@@ -6,7 +6,7 @@
 
 CallerSignal is an agent-first open-source project for answering “what can we responsibly say about this displayed phone number?” It normalizes a number with explicit country context, checks lawful country-specific evidence, and returns sources, gaps, confidence, and residual uncertainty instead of guessing a caller's identity.
 
-> **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge, the campaign and report-safety domain foundations, private-watch and verified-organisation ports, public campaign views, and an honest corpus-transparency page, persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). The production site remains read-only: it does not identify a caller, query live subscriber data, accept reports, persist watches, or publish organisation declarations. The `v0.1.0` tag remains the earlier repository-foundation release.
+> **Current maturity:** `v0.2.0` is the first functional release and is persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It implements the read-only NL, GB, and US lookup wedge across CLI, stdio MCP, Streamable HTTP MCP, HTTP, and web. The production site does not identify a caller, query live subscriber data, accept reports, persist watches, or publish organisation declarations. The release also adds calibrated risk, public-campaign and corpus-transparency contracts plus tested private-watch, organisation-verification, storage, moderation, and operational-safety foundations.
 
 The durable direction is a hybrid reputation model: official evidence first, then explicitly licensed or first-party moderated observations only after source-rights, privacy, and abuse gates pass. Every shared result now contains one calibrated risk state: `official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`. The website leads with that state, its basis, and a concrete next action while preserving the evidence and uncertainty underneath. `no_risk_evidence` requires a current eligible risk-capable source and never means that a number is safe; numbering context alone remains `insufficient_evidence`.
 
@@ -91,7 +91,7 @@ make check
 
 ## Development: continue the backlog
 
-The public lookup, campaign-experience, safety-domain, operational-safety, and transparency foundations are implemented. The remaining dependency-ordered work exposes the safe read surface through hosted MCP and cuts the first functional release. Read [`AGENTS.md`](AGENTS.md), then run:
+The complete dependency-ordered foundation and first functional release backlog is implemented and reviewed. New work enters through the repo-local workflow rather than an undocumented queue. Read [`AGENTS.md`](AGENTS.md), then run:
 
 ```console
 Go

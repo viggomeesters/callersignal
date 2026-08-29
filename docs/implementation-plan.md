@@ -2,7 +2,7 @@
 
 ## Planning contract
 
-The repository foundation shipped at v0.1.0. On the unreleased `main` branch, sixteen of the twenty-seven product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, web, hybrid reputation direction, calibrated risk assessment, risk-result UX, and source-rights intake. Eleven remain open to turn that foundation into a caller-campaign intelligence service with controlled reporting, private monitoring, verified organisation context, corpus transparency, and hosted MCP. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
+The repository foundation shipped at v0.1.0. CallerSignal v0.2.0 completes all twenty-seven dependency-ordered product tasks below: shared lookup and risk contracts, NL/GB/US adapters, CLI, stdio and hosted MCP, HTTP, web, caller campaigns, controlled report and storage foundations, private watches, verified organisation declarations, operational safety, public transparency, and release proof. Their reviewed `.go` JSON files are authoritative; this document remains the human-readable dependency and verification map for maintenance and extension work.
 
 Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
