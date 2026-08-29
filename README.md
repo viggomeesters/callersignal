@@ -88,7 +88,7 @@ make check
 
 ## Development: continue the backlog
 
-The public read-only wedge is implemented. Privacy-sensitive reporting, reputation aggregation, operational safety, and the first functional release remain explicit `.go` work. Read [`AGENTS.md`](AGENTS.md), then run:
+The public read-only wedge is implemented. The next dependency-ordered work adds a caller-campaign contract, controlled first-party reports and aggregation, durable data ports, private watches, verified organisation portfolios, an action-oriented campaign experience, corpus transparency, hosted MCP, operational safety, and the first functional release. Read [`AGENTS.md`](AGENTS.md), then run:
 
 ```console
 Go

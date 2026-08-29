@@ -75,6 +75,19 @@
             "product-operational-safety",
             "product-first-release"
           ]
+        },
+        {
+          "id": "campaign-intelligence",
+          "title": "Campaign intelligence, trust, and monitoring",
+          "tasks": [
+            "product-caller-campaign-contract",
+            "product-production-data-foundation",
+            "product-private-watch-subscriptions",
+            "product-verified-organization-portfolios",
+            "product-public-campaign-experience",
+            "product-corpus-transparency",
+            "product-hosted-mcp-service"
+          ]
         }
       ],
       "tasks": []

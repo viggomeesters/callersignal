@@ -2,7 +2,7 @@
 
 ## Planning contract
 
-The repository foundation shipped at v0.1.0. On the unreleased `main` branch, sixteen of the twenty product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, web, hybrid reputation direction, calibrated risk assessment, risk-result UX, and source-rights intake. Four remain open: report ingestion, reputation aggregation, operational safety, and the first functional release. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
+The repository foundation shipped at v0.1.0. On the unreleased `main` branch, sixteen of the twenty-seven product tasks below are implemented and approved: domain contracts, normalization, the evidence ledger, the adapter contract, all three initial country adapters, the lookup orchestrator, CLI, MCP, HTTP, web, hybrid reputation direction, calibrated risk assessment, risk-result UX, and source-rights intake. Eleven remain open to turn that foundation into a caller-campaign intelligence service with controlled reporting, private monitoring, verified organisation context, corpus transparency, and hosted MCP. Their `.go` JSON files are authoritative; this document is the human-readable execution map. A task may start only when every listed dependency is approved as done.
 
 Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
@@ -148,11 +148,19 @@ Acceptance: enabled official sources have complete rights metadata; unlicensed c
 
 Verify: `uv run pytest tests/contracts/test_source_registry.py -q` and `make check`.
 
-## Phase 6 — Moderated evidence and operations
+### `product-caller-campaign-contract`
+
+Depends on `product-risk-assessment-contract` and `product-source-rights-registry`. Define the versioned, spoofing-aware caller-campaign object and adopt it in the durable product vision.
+
+Acceptance: status, categories, jurisdictions, seen dates, eligible evidence, confidence, freshness, actions, and corrections are deterministic; membership refers only to displayed-number observations and never proves identity.
+
+Verify: `uv run pytest tests/contracts/test_caller_campaign.py -q` and `make check`.
+
+## Phase 6 — Moderated evidence and durable data
 
 ### `product-report-ingestion`
 
-Depends on `product-evidence-ledger`, `product-lookup-orchestrator`, and `product-source-rights-registry`. Accept explicit reports as unverified observations only after legal, privacy, moderation, and source-eligibility controls exist.
+Depends on `product-caller-campaign-contract`, `product-evidence-ledger`, `product-lookup-orchestrator`, and `product-source-rights-registry`. Accept explicit reports as unverified observations only after legal, privacy, moderation, and source-eligibility controls exist.
 
 Acceptance: reports describe calls displaying a number; retention, correction, deletion, rate limiting, deduplication, and brigading controls are enforced.
 
@@ -160,27 +168,77 @@ Verify: `uv run pytest tests/integration/test_reports.py -q`.
 
 ### `product-reputation-aggregation`
 
-Depends on `product-report-ingestion`. Compute explainable signals from independent, recent, moderated evidence.
+Depends on `product-caller-campaign-contract` and `product-report-ingestion`. Compute explainable signals and freshness-bounded campaign records from independent, recent, moderated evidence.
 
 Acceptance: labels expose confidence, reasons, evidence diversity, freshness, and uncertainty; lookup volume and one unverified report cannot create a fraud verdict.
 
-Verify: `uv run pytest tests/unit/test_assessment.py -q`.
+Verify: `uv run pytest tests/unit/test_assessment.py tests/unit/test_campaigns.py -q`.
+
+### `product-production-data-foundation`
+
+Depends on `product-caller-campaign-contract` and `product-report-ingestion`. Add replaceable storage ports for reports, campaigns, watches, verification challenges, outbox messages, corrections, and deletions.
+
+Acceptance: local proof covers atomic operations, retention, deduplication, deletion receipts, and outbox semantics without retaining requester IP addresses or raw lookup histories; production provider adoption remains an explicit reviewed gate.
+
+Verify: `uv run pytest tests/storage -q` and `make check`.
+
+### `product-private-watch-subscriptions`
+
+Depends on `product-production-data-foundation` and `product-reputation-aggregation`. Implement private, verified, revocable watch subscriptions with idempotent notifications for material state changes.
+
+Acceptance: ownership, consent, minimization, anti-enumeration, delivery failure, expiry, correction, deletion, and unsubscribe behavior fail closed.
+
+Verify: `uv run pytest tests/integration/test_watch.py -q` and `make check`.
+
+### `product-verified-organization-portfolios`
+
+Depends on `product-http-read-api`, `product-production-data-foundation`, and `product-source-rights-registry`. Let organisations declare bounded official-number portfolios only after a challenge workflow.
+
+Acceptance: verification proves the declaration, never call origin; challenge expiry, replay, conflict, audit, correction, deletion, and appeal paths are tested.
+
+Verify: `uv run pytest tests/integration/test_organizations.py -q` and `make check`.
 
 ### `product-operational-safety`
 
-Depends on `product-http-read-api`, `product-report-ingestion`, and `product-reputation-aggregation`. Add privacy-preserving observability, abuse controls, and operational runbooks.
+Depends on the HTTP API, reporting, aggregation, durable data, watch, and organisation workflows. Add privacy-preserving observability, abuse controls, and operational runbooks.
 
 Acceptance: health metrics avoid raw-number and personal request trails; incident, deletion, correction, takedown, and abuse runbooks are executable.
 
 Verify: `uv run pytest tests/operations -q`.
 
-## Phase 7 — First functional release
+## Phase 7 — Public campaign product and agent surface
+
+### `product-public-campaign-experience`
+
+Depends on aggregation, private watch, verified portfolios, and operational safety. Turn the lookup result into an action-oriented campaign experience and add a safe public campaign catalogue and detail view.
+
+Acceptance: the displayed number, calibrated state, recency, checklist, campaign history, report/watch actions, corrections, and source coverage are clear across desktop and mobile without exposing private reports or lookup popularity.
+
+Verify: `npm --prefix web test`, `uv run pytest tests/e2e/test_web.py -q`, and `make check`.
+
+### `product-corpus-transparency`
+
+Depends on the public campaign experience, aggregation, source-rights registry, and verified portfolios. Publish honest, privacy-thresholded corpus and coverage metrics.
+
+Acceptance: metrics derive only from enabled sources and eligible aggregate records; jurisdictions, freshness, ingest gaps, moderation thresholds, corrections, methodology version, and the meaning of no matching evidence are explicit.
+
+Verify: `uv run pytest tests/integration/test_transparency.py -q` and `make check`.
+
+### `product-hosted-mcp-service`
+
+Depends on transparency, operations, private watch, and verified portfolios. Publish a hosted remote MCP endpoint over the canonical contracts.
+
+Acceptance: discovery and public read-only tools work anonymously; protected mutation tools require precise OAuth scopes and preserve verification, consent, rate, privacy, and deletion controls; local protocol tests and live production proof pass.
+
+Verify: `uv run pytest tests/integration/test_remote_mcp.py -q`, `make check`, and production protocol probes.
+
+## Phase 8 — First functional release
 
 ### `product-first-release`
 
-Depends on `product-cli-lookup`, `product-mcp-lookup`, `product-public-web-lookup`, `product-risk-result-ux`, and `product-operational-safety`. Publish only after the complete read-only wedge, calibrated risk presentation, and operational boundaries are proven.
+Depends on the existing CLI/MCP/web wedge, calibrated risk presentation, campaign experience, corpus transparency, hosted MCP, and operational safety. Publish only after those public and private boundaries are proven.
 
-Acceptance: NL, GB, and US pass contracts, integration, privacy, adapter, and cross-surface parity gates; release notes state support, unsupported claims, known gaps, and upgrades.
+Acceptance: NL, GB, and US lookups plus campaign intelligence, private watch, verified organisation context, transparency, and hosted MCP pass contracts, integration, privacy, and cross-surface parity gates; release notes state support, unsupported claims, provider boundaries, known gaps, and upgrades.
 
 Verify: `make check` and strict public `repo-complete` validation.
 
@@ -211,17 +269,46 @@ flowchart TD
     DIR --> RISK[product-risk-assessment-contract]
     RISK --> RUX[product-risk-result-ux]
     DIR --> SR[product-source-rights-registry]
+    RISK --> CC[product-caller-campaign-contract]
+    SR --> CC
+    CC --> R
     E --> R[product-report-ingestion]
     O --> R
     SR --> R
     R --> A[product-reputation-aggregation]
+    CC --> A
+    R --> DATA[product-production-data-foundation]
+    CC --> DATA
+    DATA --> WATCH[product-private-watch-subscriptions]
+    A --> WATCH
+    DATA --> ORG[product-verified-organization-portfolios]
+    HTTP --> ORG
+    SR --> ORG
     HTTP --> OPS[product-operational-safety]
     A --> OPS
+    DATA --> OPS
+    WATCH --> OPS
+    ORG --> OPS
+    OPS --> EXP[product-public-campaign-experience]
+    WATCH --> EXP
+    ORG --> EXP
+    A --> EXP
+    EXP --> TRANS[product-corpus-transparency]
+    A --> TRANS
+    ORG --> TRANS
+    SR --> TRANS
+    TRANS --> RMCP[product-hosted-mcp-service]
+    OPS --> RMCP
+    WATCH --> RMCP
+    ORG --> RMCP
     CLI --> REL[product-first-release]
     MCP --> REL
     WEB --> REL
     RUX --> REL
     OPS --> REL
+    EXP --> REL
+    TRANS --> REL
+    RMCP --> REL
 ```
 
 Use `./go next .` rather than selecting from the diagram by eye; the repo-local workflow is the source of task state and eligibility.

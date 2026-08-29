@@ -9,6 +9,7 @@
   "summary": "Add privacy-aware call-report ingestion and moderation",
   "description": "Accept explicit reports as unverified observations with correction, abuse, and spoofing safeguards.",
   "depends_on": [
+    "product-caller-campaign-contract",
     "product-evidence-ledger",
     "product-lookup-orchestrator",
     "product-source-rights-registry"

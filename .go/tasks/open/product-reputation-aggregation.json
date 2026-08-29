@@ -9,25 +9,31 @@
   "summary": "Compute explainable reputation signals from moderated evidence",
   "description": "Aggregate independent, recent evidence without allowing lookup counts to influence risk.",
   "depends_on": [
+    "product-caller-campaign-contract",
     "product-report-ingestion"
   ],
   "scope": {
     "read": [
+      "src/callersignal/campaigns/**",
       "src/callersignal/evidence/**",
       "src/callersignal/reports/**"
     ],
     "modify": [
+      "src/callersignal/campaigns/**",
       "src/callersignal/assessment.py",
+      "tests/unit/test_campaigns.py",
       "tests/unit/test_assessment.py",
       "docs/methodology.md"
     ]
   },
   "acceptance": [
     "R-1: Every label exposes confidence, reasons, evidence diversity, freshness, and residual uncertainty.",
-    "R-2: Lookup volume, raw popularity, and a single unverified report cannot produce a fraud verdict."
+    "R-2: Lookup volume, raw popularity, and a single unverified report cannot produce a fraud verdict.",
+    "R-3: Eligible independent observations can form an explainable, freshness-bounded campaign record without asserting caller identity."
   ],
   "verification": [
-    "uv run pytest tests/unit/test_assessment.py -q"
+    "uv run pytest tests/unit/test_assessment.py tests/unit/test_campaigns.py -q",
+    "make check"
   ],
   "claim": {
     "agent": null,

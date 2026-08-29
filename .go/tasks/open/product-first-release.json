@@ -7,10 +7,13 @@
   "status": "open",
   "order": 700,
   "summary": "Validate and publish the first functional CallerSignal release",
-  "description": "Ship the proven read-only wedge only after cross-surface parity, safety, and country-adapter gates pass.",
+  "description": "Ship the proven caller-campaign intelligence product only after cross-surface parity, privacy, safety, and country-adapter gates pass.",
   "depends_on": [
     "product-cli-lookup",
+    "product-corpus-transparency",
+    "product-hosted-mcp-service",
     "product-mcp-lookup",
+    "product-public-campaign-experience",
     "product-public-web-lookup",
     "product-risk-result-ux",
     "product-operational-safety"
@@ -25,8 +28,8 @@
     ]
   },
   "acceptance": [
-    "R-1: NL, GB, and US read-only lookups pass contract, integration, privacy, and cross-surface parity tests.",
-    "R-2: Release notes state supported evidence, unsupported claims, known gaps, and upgrade instructions."
+    "R-1: NL, GB, and US lookups, campaign intelligence, private watch, verified organisation context, transparency, and hosted MCP pass contract, integration, privacy, and cross-surface parity tests.",
+    "R-2: Release notes state supported evidence and actions, unsupported identity and safety claims, known gaps, data-provider boundaries, and upgrade instructions."
   ],
   "verification": [
     "make check",

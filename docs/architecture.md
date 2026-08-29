@@ -2,7 +2,7 @@
 
 ## Status and intent
 
-CallerSignal's unreleased `main` branch is a running read-only lookup service backed by pinned public-safe NL, GB, and US numbering fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, and CLI, MCP, HTTP, and web surfaces are implemented. They keep one domain truth and fail closed when evidence is missing or unreliable. Report ingestion, reputation aggregation, production operations, and the first functional release remain open `.go` work.
+CallerSignal's unreleased `main` branch is a running read-only lookup service backed by pinned public-safe NL, GB, and US numbering fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, and CLI, MCP, HTTP, and web surfaces are implemented. They keep one domain truth and fail closed when evidence is missing or unreliable. The open `.go` work evolves this foundation into caller-campaign intelligence with controlled first-party reports, durable data ports, private watches, verified organisation portfolios, corpus transparency, hosted MCP, operational safety, and a functional release.
 
 ## Context flow
 

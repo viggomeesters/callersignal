@@ -20,7 +20,7 @@ Post-push readback registered `.github/workflows/ci.yml` as an active workflow. 
 
 CallerSignal's repository foundation passed the strict public/professional validation profile on 2026-08-26. `repo-complete` returned `JA`, exit code `0`, and `0` hard blockers with remote, release, and metadata policies required. The validated publication revision was `95572648d71e4df6ec2a7f0372a45d12112a8583`.
 
-The v0.1.0 certification covered repository foundation only. The current unreleased branch implements normalization, the evidence ledger, NL/GB/US adapters, lookup orchestration, CLI, MCP, HTTP, web, calibrated four-state risk assessment and presentation, and machine-gated source eligibility. Privacy-sensitive report ingestion, reputation aggregation, operational safety, and the first functional release remain dependency-ordered work. The README and `.go` state are authoritative for current maturity.
+The v0.1.0 certification covered repository foundation only. The current unreleased branch implements normalization, the evidence ledger, NL/GB/US adapters, lookup orchestration, CLI, MCP, HTTP, web, calibrated four-state risk assessment and presentation, and machine-gated source eligibility. Eleven dependency-ordered tasks now cover the caller-campaign contract, privacy-sensitive reporting and aggregation, durable storage ports, private watch, verified organisation portfolios, campaign UX, corpus transparency, hosted MCP, operational safety, and the first functional release. The README and `.go` state are authoritative for current maturity.
 
 ## Local quality proof
 
@@ -32,7 +32,7 @@ The v0.1.0 certification covered repository foundation only. The current unrelea
 - repo-local `.go` validation passed;
 - documentation, asset, public-safety, and whitespace checks passed.
 
-The vision contract validates against the committed schema and contains explicit product, design, engineering, and safety principles. The current `.go` contract contains twenty-six tasks: six repository-foundation/readiness tasks and twenty product tasks. The four hybrid-reputation follow-up tasks—direction, calibrated risk, result UX, and source-rights intake—are approved; the documentation synchronization task records this current state.
+The vision contract validates against the committed schema and contains explicit product, design, engineering, and safety principles. The current `.go` contract contains thirty-three tasks: six repository-foundation/readiness tasks and twenty-seven product tasks. Sixteen product tasks are approved and eleven remain open; the documentation synchronization task records this current state.
 
 ## Repository-complete proof
 

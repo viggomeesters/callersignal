@@ -1,0 +1,99 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-hosted-mcp-service",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Expose CallerSignal through a discoverable hosted MCP service",
+  "description": "Execution brief work unit 7/7. Destination: CallerSignal behaves like a trustworthy HIBP-style caller-campaign intelligence service: one search yields a calibrated answer, campaign history, concrete actions, private monitoring, verified organisation context, transparent corpus coverage, and an agent-native remote MCP surface.",
+  "depends_on": [
+    "product-corpus-transparency",
+    "product-operational-safety",
+    "product-private-watch-subscriptions",
+    "product-verified-organization-portfolios"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/mcp.py",
+      "src/callersignal/watch/**",
+      "src/callersignal/organizations/**",
+      "src/callersignal/transparency/**",
+      "docs/mcp.md"
+    ],
+    "modify": [
+      "api/mcp.py",
+      "src/callersignal/remote_mcp/**",
+      "tests/integration/test_remote_mcp.py",
+      "docs/mcp.md",
+      "vercel.json"
+    ]
+  },
+  "intent_source": {
+    "text": "CallerSignal has a strong read-only lookup and risk presentation, but most results still expose numbering context rather than risk-capable campaign evidence, and the product lacks the recurring value loops, verified ownership workflows, public corpus transparency, and hosted agent access that make HIBP useful beyond a one-off search.",
+    "sha256": "836d1ee5abf61c7c462a4ee13ed21aa13cc8341813d5e6e3485553a9ba556fbe",
+    "source_ref": "codex:thread:callersignal-hibp-product-direction"
+  },
+  "execution_brief": {
+    "schema": "go-workflow.execution-brief.v1",
+    "destination": "CallerSignal behaves like a trustworthy HIBP-style caller-campaign intelligence service: one search yields a calibrated answer, campaign history, concrete actions, private monitoring, verified organisation context, transparent corpus coverage, and an agent-native remote MCP surface.",
+    "problem": "CallerSignal has a strong read-only lookup and risk presentation, but most results still expose numbering context rather than risk-capable campaign evidence, and the product lacks the recurring value loops, verified ownership workflows, public corpus transparency, and hosted agent access that make HIBP useful beyond a one-off search.",
+    "chosen_approach": "Make CallerSignal a HIBP-like caller-campaign intelligence service: model campaigns as the durable risk object; collect only structured first-party reports under privacy and moderation controls; add private watch notifications and verified organisation number portfolios; publish consumer campaign transparency and a hosted OAuth-aware MCP surface; keep source-rights, spoofing, no-safe-number, and no-lookup-popularity invariants.",
+    "non_goals": [
+      "Scrape, copy, or derive reputation from unlicensed third-party caller-report databases.",
+      "Publish free-text accusations, requester identities, raw call histories, lookup trails, or real phone-number fixtures in Git.",
+      "Treat a displayed number, number ownership claim, lookup volume, or one unverified report as proof of caller identity, guilt, or safety.",
+      "Ship live outbound notifications, persistent personal data, or authentication against an undeclared provider or without explicit retention, deletion, abuse, and incident controls.",
+      "Turn the public consumer UI into an alternative source of truth distinct from CLI, MCP, and HTTP contracts."
+    ],
+    "source": {
+      "recommendation": "Make CallerSignal a HIBP-like caller-campaign intelligence service: model campaigns as the durable risk object; collect only structured first-party reports under privacy and moderation controls; add private watch notifications and verified organisation number portfolios; publish consumer campaign transparency and a hosted OAuth-aware MCP surface; keep source-rights, spoofing, no-safe-number, and no-lookup-popularity invariants.",
+      "sha256": "e2b16bd46e4be169c4fa36f36443c82fad6f4f30c449556d0b77d5f69423c01d",
+      "source_ref": "codex:thread:callersignal-hibp-product-direction"
+    }
+  },
+  "work_unit": {
+    "id": "product-hosted-mcp-service",
+    "position": 7,
+    "total": 7
+  },
+  "outcome_tracking_version": 1,
+  "requested_outcomes": [
+    {
+      "id": "R1",
+      "text": "A hosted MCP endpoint publishes discovery metadata and read-only tools for number lookup, campaign research, source coverage, and methodology with the same canonical contracts as CLI and HTTP.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "R2",
+      "text": "Protected watch and organisation tools require explicit OAuth scopes and consent, advertise accurate read-only/open-world/destructive hints, and cannot bypass verification, rate, privacy, or deletion controls.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "R3",
+      "text": "Local protocol tests and live Vercel proof cover discovery, initialization, tool listing, representative public calls, unauthorized protected calls, no-store headers, privacy-safe errors, and production alias health.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    }
+  ],
+  "acceptance": [
+    "A hosted MCP endpoint publishes discovery metadata and read-only tools for number lookup, campaign research, source coverage, and methodology with the same canonical contracts as CLI and HTTP.",
+    "Protected watch and organisation tools require explicit OAuth scopes and consent, advertise accurate read-only/open-world/destructive hints, and cannot bypass verification, rate, privacy, or deletion controls.",
+    "Local protocol tests and live Vercel proof cover discovery, initialization, tool listing, representative public calls, unauthorized protected calls, no-store headers, privacy-safe errors, and production alias health."
+  ],
+  "verification": [
+    "uv run pytest tests/integration/test_remote_mcp.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "evidence": [],
+  "order": 670
+}

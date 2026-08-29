@@ -1,0 +1,103 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-public-campaign-experience",
+  "project": "callersignal",
+  "status": "open",
+  "summary": "Build the consumer campaign timeline and action experience",
+  "description": "Execution brief work unit 5/7. Destination: CallerSignal behaves like a trustworthy HIBP-style caller-campaign intelligence service: one search yields a calibrated answer, campaign history, concrete actions, private monitoring, verified organisation context, transparent corpus coverage, and an agent-native remote MCP surface.",
+  "depends_on": [
+    "product-operational-safety",
+    "product-private-watch-subscriptions",
+    "product-reputation-aggregation",
+    "product-verified-organization-portfolios"
+  ],
+  "scope": {
+    "read": [
+      "web/**",
+      "schemas/caller-campaign.schema.json",
+      "docs/campaigns.md",
+      "docs/watch.md",
+      "docs/organizations.md"
+    ],
+    "modify": [
+      "src/callersignal/http_api.py",
+      "web/index.html",
+      "web/assets/app.js",
+      "web/assets/styles.css",
+      "web/tests/**",
+      "tests/e2e/test_web.py",
+      "docs/web.md",
+      "web/proof/**"
+    ]
+  },
+  "intent_source": {
+    "text": "CallerSignal has a strong read-only lookup and risk presentation, but most results still expose numbering context rather than risk-capable campaign evidence, and the product lacks the recurring value loops, verified ownership workflows, public corpus transparency, and hosted agent access that make HIBP useful beyond a one-off search.",
+    "sha256": "836d1ee5abf61c7c462a4ee13ed21aa13cc8341813d5e6e3485553a9ba556fbe",
+    "source_ref": "codex:thread:callersignal-hibp-product-direction"
+  },
+  "execution_brief": {
+    "schema": "go-workflow.execution-brief.v1",
+    "destination": "CallerSignal behaves like a trustworthy HIBP-style caller-campaign intelligence service: one search yields a calibrated answer, campaign history, concrete actions, private monitoring, verified organisation context, transparent corpus coverage, and an agent-native remote MCP surface.",
+    "problem": "CallerSignal has a strong read-only lookup and risk presentation, but most results still expose numbering context rather than risk-capable campaign evidence, and the product lacks the recurring value loops, verified ownership workflows, public corpus transparency, and hosted agent access that make HIBP useful beyond a one-off search.",
+    "chosen_approach": "Make CallerSignal a HIBP-like caller-campaign intelligence service: model campaigns as the durable risk object; collect only structured first-party reports under privacy and moderation controls; add private watch notifications and verified organisation number portfolios; publish consumer campaign transparency and a hosted OAuth-aware MCP surface; keep source-rights, spoofing, no-safe-number, and no-lookup-popularity invariants.",
+    "non_goals": [
+      "Scrape, copy, or derive reputation from unlicensed third-party caller-report databases.",
+      "Publish free-text accusations, requester identities, raw call histories, lookup trails, or real phone-number fixtures in Git.",
+      "Treat a displayed number, number ownership claim, lookup volume, or one unverified report as proof of caller identity, guilt, or safety.",
+      "Ship live outbound notifications, persistent personal data, or authentication against an undeclared provider or without explicit retention, deletion, abuse, and incident controls.",
+      "Turn the public consumer UI into an alternative source of truth distinct from CLI, MCP, and HTTP contracts."
+    ],
+    "source": {
+      "recommendation": "Make CallerSignal a HIBP-like caller-campaign intelligence service: model campaigns as the durable risk object; collect only structured first-party reports under privacy and moderation controls; add private watch notifications and verified organisation number portfolios; publish consumer campaign transparency and a hosted OAuth-aware MCP surface; keep source-rights, spoofing, no-safe-number, and no-lookup-popularity invariants.",
+      "sha256": "e2b16bd46e4be169c4fa36f36443c82fad6f4f30c449556d0b77d5f69423c01d",
+      "source_ref": "codex:thread:callersignal-hibp-product-direction"
+    }
+  },
+  "work_unit": {
+    "id": "product-public-campaign-experience",
+    "position": 5,
+    "total": 7
+  },
+  "outcome_tracking_version": 1,
+  "requested_outcomes": [
+    {
+      "id": "R1",
+      "text": "The number replaces the generic result title and the first screen shows one calibrated state, coverage recency, a concrete safety checklist, campaign history, and clear report/watch actions while technical evidence is progressively disclosed.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "R2",
+      "text": "A public campaign catalogue and detail route expose only eligible aggregated evidence, transparent status and dates, verified organisation context, corrections, and exact source coverage without displaying private reports or lookup popularity.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    },
+    {
+      "id": "R3",
+      "text": "Mobile and desktop browser proof shows accessible text-and-icon semantics, no clipping, overlap, overflow, temporary copy, or console errors across empty, unknown, elevated, official-warning, and campaign-detail states.",
+      "source": "execution_brief_acceptance",
+      "status": "pending",
+      "evidence": []
+    }
+  ],
+  "acceptance": [
+    "The number replaces the generic result title and the first screen shows one calibrated state, coverage recency, a concrete safety checklist, campaign history, and clear report/watch actions while technical evidence is progressively disclosed.",
+    "A public campaign catalogue and detail route expose only eligible aggregated evidence, transparent status and dates, verified organisation context, corrections, and exact source coverage without displaying private reports or lookup popularity.",
+    "Mobile and desktop browser proof shows accessible text-and-icon semantics, no clipping, overlap, overflow, temporary copy, or console errors across empty, unknown, elevated, official-warning, and campaign-detail states."
+  ],
+  "verification": [
+    "npm --prefix web test",
+    "uv run pytest tests/e2e/test_web.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "evidence": [],
+  "order": 650
+}
