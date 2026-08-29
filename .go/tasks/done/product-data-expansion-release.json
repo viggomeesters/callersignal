@@ -1,0 +1,115 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-data-expansion-release",
+  "project": "callersignal",
+  "status": "done",
+  "order": 770,
+  "summary": "Ship ACM-scale coverage and authorized reputation ingestion",
+  "description": "Release the complete data-expansion slice only after the source index, ACM bulk production read model, calibrated status contract, authorized ingestion boundary, agent surfaces, privacy review, and live production evidence pass.",
+  "depends_on": [
+    "product-acm-production-read-model",
+    "product-authorized-reputation-ingestion",
+    "product-source-coverage-surfaces"
+  ],
+  "scope": {
+    "read": [
+      "**"
+    ],
+    "modify": [
+      "CHANGELOG.md",
+      "README.md",
+      "docs/architecture.md",
+      "docs/data-architecture.md",
+      "docs/implementation-plan.md",
+      "docs/mcp.md",
+      "docs/public-readiness.md",
+      "docs/public-readiness-review.md",
+      "docs/source-rights.md",
+      "package.json",
+      "package-lock.json",
+      "web/package.json",
+      "web/package-lock.json",
+      "pyproject.toml",
+      "uv.lock",
+      "src/callersignal/mcp_server.py",
+      "src/callersignal/remote_mcp/application.py",
+      "tests/test_repository_structure.py",
+      "scripts/validate_repository.py",
+      "web/proof/browser-proof.json",
+      "web/proof/desktop-1440-elevated.jpg",
+      "web/proof/desktop-1440-official-warning.jpg",
+      "web/proof/desktop-1440-unknown.jpg",
+      "web/proof/mobile-375-elevated.jpg",
+      "web/proof/mobile-375-official-warning.jpg",
+      "web/proof/mobile-375-unknown.jpg"
+    ]
+  },
+  "acceptance": [
+    "The full ACM catalog is built from the current checksum-pinned official CC0 source and proven live in production with honest freshness and coverage statistics.",
+    "The caller-report service index is current and every actually ingested reputation source has explicit compatible rights, privacy, provenance, correction, and takedown evidence; no permission-required site is scraped.",
+    "All canonical surfaces preserve calibrated four-state semantics, repository history contains no real report corpus or generated database, strict public repo-complete has zero blockers, and production browser and protocol probes pass."
+  ],
+  "verification": [
+    "make check",
+    "python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --remote-policy required --release-policy required --json-schema"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T14:49:01+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "review",
+  "review_history": [],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T15:00:43+02:00",
+      "task_id": "product-data-expansion-release",
+      "agent": "codex",
+      "summary": "release=v0.3.0; build=npm run build:vercel and vercel build --prod succeeded with checksum-pinned ACM 74984 rows, 73409 matchable, 44 destinations, statuses Toegekend 73221/Afkoelen 1740/Geblokkeerd 23, digest 372478fa8f23eb49e9152074f2b4c09c321a1871dce404135777ba51ae163da0; deployment=dpl_FdrKqYExGUTVKudYwoDYSEgjZpUQ Ready, production alias https://callersignal.vercel.app, pushed release-prep commit 22ad8f7; live=homepage 200, health ok, /v1/coverage exact ACM counts and 15 indexed/4 licensable/0 enabled reputation sources, Dutch public-safe test record returned matched ACM number_type/regulatory_status and insufficient_evidence, hosted MCP version 0.3.0 with nine tools and get_source_coverage parity, hostile Origin 403; browser=12 production desktop/mobile scenarios, 1440 and 375 coverage facts exact, zero page/content overflow, clipping, console errors, or temporary copy, contrast 8.68:1 and 7.26:1, rendered screenshots visually approved; verification=make check passed 253 Python tests and 8 web tests plus Go/docs/assets/public-safety, git diff --check and ./go validate passed; repo_complete=JA missing_hard_count=0 exit_code=0, 29 content-first docs passed, live URL/public metadata/hero/privacy/history/large-binary checks OK; privacy=original session numbers and variants absent from current tree and all Git history, high-confidence secret history clean, generated ACM database/Vercel state absent from Git, 15 indexed caller sites all disabled and permission-required sites make zero report-page requests; critic=approved focused release review after verifying rights fail-closed behavior, source-count non-safety semantics, current checksum pin, live protocol parity, privacy history, visual proof, rollback, and first-hour checks; rollback=promote the prior immutable Vercel deployment or revert the v0.3.0 commits, then rerun make check; first_hour=homepage, health, ACM Dutch lookup, coverage parity, MCP discovery/version/tool, 4xx boundary, latency and source-freshness checks; delivery=product-v5 restricted because inherited local-path provenance is not public-safe; Self-reflect: no additional durable process change needed in this task because the previous surface task already added internal content-overflow and contrast regression gates after visual review exposed the gap.",
+      "changed_files": [
+        ".go/tasks/active/product-data-expansion-release.json",
+        "docs/mcp.md",
+        "docs/public-readiness.md",
+        "web/proof/browser-proof.json",
+        "web/proof/desktop-1440-elevated.jpg",
+        "web/proof/desktop-1440-official-warning.jpg",
+        "web/proof/desktop-1440-unknown.jpg",
+        "web/proof/mobile-375-elevated.jpg",
+        "web/proof/mobile-375-official-warning.jpg",
+        "web/proof/mobile-375-unknown.jpg",
+        ".go/deliveries/product-v5/index.html",
+        ".go/deliveries/product-v5/manifest.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "make check passed 253 Python tests and 8 web tests plus Go/docs/assets/public-safety, git diff --check and ./go validate passed",
+        "result": "make check passed 253 Python tests and 8 web tests plus Go/docs/assets/public-safety, git diff --check and ./go validate passed"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved focused release review after verifying rights fail-closed behavior, source-count non-safety semantics, current checksum pin, live protocol parity, privacy history, visual proof, rollback, and first-hour checks",
+        "skip_reason": null
+      }
+    }
+  ]
+}

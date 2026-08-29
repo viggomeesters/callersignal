@@ -86,14 +86,15 @@ The integration suite covers discovery, initialization, tool listing, representa
 
 ### Live production proof
 
-Deployment `dpl_8t4545JvbgcDtbCqZKiRw9bsVfHm`, built from pushed commit `2002a63`, reported `Ready` and owned the stable `https://callersignal.vercel.app` alias on 29 August 2026. Direct alias readback proved:
+Deployment `dpl_FdrKqYExGUTVKudYwoDYSEgjZpUQ`, built from pushed release commit `22ad8f7`, reported `Ready` and owned the stable `https://callersignal.vercel.app` alias on 29 August 2026. Direct alias readback proved:
 
 - homepage and `/healthz` returned `200`, with health status `ok`;
 - `server/discover` returned `2026-07-28`, `2025-11-25`, and `2025-06-18`;
 - legacy `initialize` negotiated `2025-11-25`;
 - `tools/list` returned all five public reads and four locked protected operations;
 - the NANPA-reserved lookup returned its expected fictional canonical value with `insufficient_evidence`;
-- campaign research returned the canonical empty eligible catalogue, and source coverage returned the committed three-enabled-source snapshot;
+- campaign research returned the canonical empty eligible catalogue, and source coverage returned 74,984 ACM ranges, 73,409 lookup-compatible intervals, 15 indexed caller-report services, four advertised licensing routes, and zero enabled reputation feeds;
+- the server reported version `0.3.0`, and the argument-free `get_source_coverage` tool exactly matched HTTP `GET /v1/coverage`;
 - every public MCP call and protected failure returned `Cache-Control: no-store`;
 - a protected watch call returned `401` with only `callersignal.watch:write` in its challenge;
 - an unapproved Origin returned `403`, `GET /mcp` returned the documented `405`, and protected-resource metadata reported OAuth as not configured;

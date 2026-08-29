@@ -70,8 +70,9 @@ Contract, unit, integration, parity, privacy, and end-to-end tests exercise:
 - privacy-safe operational metrics, incident handling, deletion, correction,
   takedown, and abuse controls.
 
-Production readback proves the homepage and health route, full ACM-backed Dutch
-lookup, HTTP source coverage, protocol discovery, public MCP source coverage,
+Production deployment `dpl_FdrKqYExGUTVKudYwoDYSEgjZpUQ` reported `Ready` and
+owned the stable alias. Readback proves the homepage and health route, full
+ACM-backed Dutch lookup, HTTP source coverage, protocol discovery, public MCP source coverage,
 the locked protected-tool boundary, hostile-Origin rejection, and `no-store`
 responses. Exact immutable deployment and alias evidence is recorded in the
 repo-local release task.
