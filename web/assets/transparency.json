@@ -3,7 +3,7 @@
   "kind": "corpus_transparency",
   "generated_at": "2026-08-29T08:35:00Z",
   "methodology_version": "1.0.0",
-  "registry_reviewed_at": "2026-08-28",
+  "registry_reviewed_at": "2026-08-29",
   "coverage": {
     "enabled_source_count": 3,
     "risk_capable_source_count": 0,

@@ -292,7 +292,7 @@ Depends on `product-caller-source-catalog` and `product-reputation-status-contra
 
 Acceptance: authorized feeds admit only permitted aggregate status fields; disabled sources perform zero report-page requests; narratives, names, lookup popularity, requester data, and source-native safety claims cannot enter processing.
 
-Verify: `uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q` and `make check`.
+Verify: `uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q` (authorization, zero-request, normalization, rate, schedule, outage, drift, and stale proofs) and `make check`.
 
 ### `product-source-coverage-surfaces`
 

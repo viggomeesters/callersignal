@@ -1,0 +1,110 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "product-authorized-reputation-ingestion",
+  "project": "callersignal",
+  "status": "done",
+  "order": 750,
+  "summary": "Ingest authorized caller-reputation status feeds",
+  "description": "Implement bounded HTTP adapters and scheduled ingestion for indexed sources only after a registry entry documents an explicit compatible licence or service agreement, admitting aggregate status fields but never copying narratives or identity claims.",
+  "depends_on": [
+    "product-caller-source-catalog",
+    "product-reputation-status-contract"
+  ],
+  "scope": {
+    "read": [
+      "sources/caller-report-services.json",
+      "sources/registry.json",
+      "src/callersignal/adapters/base.py",
+      "src/callersignal/storage/ports.py"
+    ],
+    "modify": [
+      "src/callersignal/reputation/__init__.py",
+      "src/callersignal/reputation/feed.py",
+      "src/callersignal/reputation/ingest.py",
+      "schemas/source-registry.schema.json",
+      "sources/registry.json",
+      "tests/integration/test_reputation_ingest.py",
+      "tests/contracts/test_source_registry.py",
+      "docs/source-rights.md",
+      "docs/operations.md",
+      "docs/implementation-plan.md",
+      "web/assets/transparency.json"
+    ]
+  },
+  "acceptance": [
+    "Every indexed source with explicit compatible ingestion and republication rights can be fetched through a rate-limited adapter that honors terms, stores only permitted aggregate status fields, and preserves source record, retrieval time, transformation, and content digest.",
+    "Sources without documented rights, credentials, privacy approval, takedown ownership, or supported values remain disabled and perform zero report-page requests; robots permission alone cannot enable ingestion.",
+    "Free text, names, lookup popularity, requester data, and source-native safe claims cannot enter reputation processing; source outage and drift fail closed without converting absence into safety."
+  ],
+  "verification": [
+    "uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T14:07:17+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-29T14:20:08+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved after direct acceptance readback: only cross-approved licensed services with runtime credentials can instantiate an adapter; current public configuration creates zero adapters and zero requests; the tested feed projection admits only neutral aggregate status metadata with provenance/freshness and cannot turn missing, stale, unknown, unsafe-native, or failed source data into safety.",
+      "transaction_id": "c2633998362249c99f131dea21a1978c"
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T14:20:03+02:00",
+      "task_id": "product-authorized-reputation-ingestion",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/reputation/__init__.py,src/callersignal/reputation/feed.py,src/callersignal/reputation/ingest.py,schemas/source-registry.schema.json,sources/registry.json,tests/integration/test_reputation_ingest.py,tests/contracts/test_source_registry.py,docs/source-rights.md,docs/operations.md,docs/implementation-plan.md,web/assets/transparency.json,.go/runs/events.jsonl; verification=uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q rc=0 with 22 passed; make check rc=0 with 247 Python tests, 8 web tests, Go/docs/assets/public-safety green; git diff --check rc=0; ./go validate . rc=0; tdd=initial integration collection failed because the reputation package did not exist, then authorization, zero-request, normalized evidence, credential, rate, outage, drift, native-safe, stale, scheduler, runtime-gate, and schema proofs passed; critic=approved by focused adversarial review after verifying dual index/registry authorization, all seven gates, credential gating, HTTPS-only non-redirecting transport, bounded timeout/body/rate/schedule, aggregate allow-list, opaque non-phone record IDs, admitted-field digest, no raw persistence, source-only scheduler state, and typed fail-closed outage/drift behavior; current_state=15 indexed, 4 advertised licensable routes, 0 contracted/credentialed/enabled reputation feeds, 0 report-page or feed requests; Self-reflect: no durable agent/process improvement needed; all findings were product boundary hardening and regression-tested.",
+      "changed_files": [
+        "src/callersignal/reputation/__init__.py",
+        "src/callersignal/reputation/feed.py",
+        "src/callersignal/reputation/ingest.py",
+        "schemas/source-registry.schema.json",
+        "sources/registry.json",
+        "tests/integration/test_reputation_ingest.py",
+        "tests/contracts/test_source_registry.py",
+        "docs/source-rights.md",
+        "docs/operations.md",
+        "docs/implementation-plan.md",
+        "web/assets/transparency.json",
+        ".go/runs/events.jsonl"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q rc=0 with 22 passed",
+        "result": "uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q rc=0 with 22 passed"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved by focused adversarial review after verifying dual index/registry authorization, all seven gates, credential gating, HTTPS-only non-redirecting transport, bounded timeout/body/rate/schedule, aggregate allow-list, opaque non-phone record IDs, admitted-field digest, no raw persistence, source-only scheduler state, and typed fail-closed outage/drift behavior",
+        "skip_reason": null
+      }
+    }
+  ]
+}

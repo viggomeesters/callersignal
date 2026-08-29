@@ -91,10 +91,18 @@ High traffic, repeated reports, or many lookups never become proof of fraud. Abu
 - Deployment rollback must preserve schema compatibility and must not resurrect deleted or expired data.
 - Health recovery requires source checks, queue/outbox state, deletion backlog, correction backlog, and public alias probes at the deployed revision.
 
+## Licensed reputation refresh
+
+`activate_reputation_feeds` reads the service index and source registry together at process start. The checked-in state deliberately activates zero reputation feeds. A future production scheduler may pass transient, already-normalized lookup subjects to `ReputationRefreshScheduler`; the scheduler stores only a source-to-last-attempt timestamp and respects the source's reviewed refresh interval. Each adapter separately applies the contractual request window, so a large input batch cannot bypass provider limits.
+
+Before a scheduled run, verify that the provider agreement still covers extraction, caching or transient processing, transformation, and public display; that its credential is present in the deployment secret store; and that privacy, takedown, and provenance owners are available. Never put credentials, raw provider responses, number lists, or scheduler inputs in Git, `.go`, logs, build artifacts, or issue trackers.
+
+An absent credential, disabled index entry, missing registry entry, incomplete gate, invalid configuration, or transport-construction error yields no adapter and therefore no network request. At runtime, rate exhaustion and provider outage yield typed unavailable gaps. Unknown fields are ignored, while an unknown category, native `safe` value, invalid source record, malformed time, oversized body, non-JSON response, or implausible future timestamp fails closed. Re-enable after source takedown only through a newly reviewed registry revision.
+
 ## Validation
 
 ```console
-uv run pytest tests/operations -q
+uv run pytest tests/operations tests/integration/test_reputation_ingest.py -q
 make check
 ```
 

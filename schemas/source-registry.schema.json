@@ -39,6 +39,79 @@
         }
       }
     },
+    "feed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "transport",
+        "endpoint",
+        "credential_env",
+        "requests_per_window",
+        "window_seconds",
+        "request_timeout_seconds",
+        "max_response_bytes",
+        "schedule_seconds",
+        "native_category_map"
+      ],
+      "properties": {
+        "transport": { "const": "licensed_https_json_api" },
+        "endpoint": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "credential_env": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{5,79}$"
+        },
+        "requests_per_window": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10000
+        },
+        "window_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 86400
+        },
+        "request_timeout_seconds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 30
+        },
+        "max_response_bytes": {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 1048576
+        },
+        "schedule_seconds": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 2592000
+        },
+        "native_category_map": {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 32,
+          "propertyNames": {
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^(?![Ss][Aa][Ff][Ee]$).+$"
+          },
+          "additionalProperties": {
+            "enum": [
+              "spam",
+              "phishing",
+              "scam",
+              "telemarketing",
+              "robocall",
+              "nuisance",
+              "no_current_risk_match"
+            ]
+          }
+        }
+      }
+    },
     "source": {
       "type": "object",
       "additionalProperties": false,
@@ -54,6 +127,7 @@
         "stable_url",
         "evidence_classes",
         "risk_capable",
+        "feed",
         "reuse",
         "intake",
         "gates",
@@ -110,6 +184,12 @@
           "items": { "$ref": "#/$defs/token" }
         },
         "risk_capable": { "type": "boolean" },
+        "feed": {
+          "oneOf": [
+            { "$ref": "#/$defs/feed" },
+            { "type": "null" }
+          ]
+        },
         "reuse": {
           "type": "object",
           "additionalProperties": false,
@@ -248,6 +328,7 @@
             "properties": {
               "adapter_id": { "type": "null" },
               "adapter_enabled": { "const": false },
+              "feed": { "type": "null" },
               "evidence_classes": { "maxItems": 0 },
               "risk_capable": { "const": false },
               "intake": {
@@ -292,10 +373,53 @@
           "then": {
             "properties": {
               "adapter_enabled": { "const": false },
+              "feed": { "type": "null" },
               "risk_capable": { "const": false },
               "intake": {
                 "properties": {
                   "outage_behavior": { "const": "disabled" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "source_type": { "const": "licensed_reputation" },
+              "status": { "const": "enabled" }
+            },
+            "required": ["source_type", "status"]
+          },
+          "then": {
+            "properties": {
+              "authority": {
+                "properties": { "type": { "const": "licensed_data_provider" } }
+              },
+              "evidence_classes": {
+                "contains": { "const": "licensed_reputation_observation" }
+              },
+              "risk_capable": { "const": true },
+              "feed": { "$ref": "#/$defs/feed" },
+              "intake": {
+                "properties": {
+                  "permitted_fields": {
+                    "minItems": 6,
+                    "maxItems": 6,
+                    "items": {
+                      "enum": [
+                        "reputation_status",
+                        "source_native_value",
+                        "sample_basis",
+                        "confidence",
+                        "observed_at",
+                        "source_record_id"
+                      ]
+                    }
+                  },
+                  "personal_data_allowed": { "const": false },
+                  "free_text_allowed": { "const": false },
+                  "outage_behavior": { "const": "typed_gap" }
                 }
               }
             }
@@ -312,7 +436,8 @@
           },
           "then": {
             "properties": {
-              "risk_capable": { "const": false }
+              "risk_capable": { "const": false },
+              "feed": { "type": "null" }
             }
           }
         }

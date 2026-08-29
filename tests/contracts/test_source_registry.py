@@ -201,3 +201,37 @@ def test_registry_contains_no_copied_reports_or_phone_records(registry: dict) ->
                 walk(child)
 
     walk(registry)
+
+
+def test_current_registry_has_no_enabled_reputation_feed(registry: dict) -> None:
+    reputation_sources = [
+        source
+        for source in registry["sources"]
+        if source["source_type"]
+        in {"licensed_reputation", "third_party_caller_reports"}
+    ]
+
+    assert reputation_sources
+    assert all(source["adapter_enabled"] is False for source in reputation_sources)
+    assert all(source["feed"] is None for source in reputation_sources)
+
+
+def test_schema_rejects_feed_configuration_on_permission_required_source(
+    registry: dict, validator: Draft202012Validator
+) -> None:
+    unsafe_registry = copy.deepcopy(registry)
+    candidate = _sources_by_id(unsafe_registry)["wieheeftmijgebeld_nl"]
+    candidate["feed"] = {
+        "transport": "licensed_https_json_api",
+        "endpoint": "https://example.com/api/reputation",
+        "credential_env": "CALLERSIGNAL_EXAMPLE_TOKEN",
+        "requests_per_window": 1,
+        "window_seconds": 60,
+        "request_timeout_seconds": 5,
+        "max_response_bytes": 4096,
+        "schedule_seconds": 3600,
+        "native_category_map": {"junk": "spam"},
+    }
+
+    with pytest.raises(ValidationError):
+        validator.validate(unsafe_registry)

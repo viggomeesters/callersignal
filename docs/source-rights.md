@@ -10,6 +10,8 @@ The bounded ACM, Ofcom, and NANPA numbering fixtures are enabled for their decla
 
 `wieheeftmijgebeld_nl` is recorded as `permission_required`. It has no adapter, no evidence classes, no permitted ingestion fields, and no copied records. Its public pages contain phone-number records, ratings, activity counts, and user-authored narratives. Its copyright notice requires explicit written permission for reproduction or publication. CallerSignal therefore does not crawl, copy, transform, aggregate, cache, embed, or republish that content.
 
+No caller-reputation feed is currently enabled. The source index contains fifteen services and four advertised licensing routes, but an advertised product is not a CallerSignal licence. With the checked-in registry and no approved partner credential, the activation engine creates zero reputation adapters and performs zero report-page or API requests.
+
 The review used the following primary sources on 2026-08-28:
 
 - the publisher's [copyright notice](https://wieheeftmijgebeld.nl/copyright/), [contribution terms](https://wieheeftmijgebeld.nl/voorwaarden/), and [robots file](https://wieheeftmijgebeld.nl/robots.txt);
@@ -56,6 +58,16 @@ A source may become `enabled` only when:
 8. `uv run pytest tests/contracts/test_source_registry.py -q` and `make check` pass.
 
 The JSON Schema additionally prevents a `permission_required` source from being enabled while its adapter is absent, fields are empty, or legal, privacy, takedown, and provenance gates remain open.
+
+## Authorized feed contract
+
+[`src/callersignal/reputation`](../src/callersignal/reputation) implements the dormant production boundary for a future licensed feed. Activation is the intersection of two independent records: the discovery index must say that rights, integration, and activation are enabled, and the source registry must contain the same identifier as an enabled, risk-capable `licensed_reputation` source. All seven registry gates must pass, the runtime credential must exist, and the feed must use the bounded HTTPS JSON contract. A permissive robots file, a public page, a commercial product page, or a credential without republication rights cannot activate it.
+
+The admitted response is fixed to an opaque source record identifier, a reviewed source-native category, observation time, and confidence. The normalizer maps only reviewed categories to `spam`, `phishing`, `scam`, `telemarketing`, `robocall`, `nuisance`, or explicit `no_current_risk_match`. Names, narratives, popularity, requester metadata, unexpected fields, unknown categories, and native `safe` claims are discarded or rejected. The evidence digest covers only the admitted aggregate projection; the raw response is not persisted.
+
+The HTTP client requires HTTPS, blocks downgrade redirects, sends lookups in a JSON body, applies a short timeout and response-size limit, and never owns logging. The adapter has a fail-fast per-source rate limiter. The scheduler retains only the last attempt time per source; it does not retain numbers or requester history. Transport failure becomes `source_unavailable`, contract drift becomes `source_error`, and expired observations remain explicitly stale. None of those states becomes a safety claim.
+
+Activating a real provider requires a schema-valid registry and service-index change containing the executed agreement reference, exact fields, jurisdictions, native-category map, rate and schedule terms, credential environment key, privacy decision, takedown owner, and provenance policy. Add provider conformance tests with synthetic protected numbers; never commit the credential or a copied production payload.
 
 ## Safe growth routes
 
