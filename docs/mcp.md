@@ -84,6 +84,23 @@ make check
 
 The integration suite covers discovery, initialization, tool listing, representative public calls, canonical campaign parity, the committed transparency snapshot, unauthorized protected calls, arbitrary bearer-token rejection, Origin and protocol rejection, notification handling, no-store headers, privacy-safe errors, Vercel rewrites, and protected-resource metadata.
 
+### Live production proof
+
+Deployment `dpl_8t4545JvbgcDtbCqZKiRw9bsVfHm`, built from pushed commit `2002a63`, reported `Ready` and owned the stable `https://callersignal.vercel.app` alias on 29 August 2026. Direct alias readback proved:
+
+- homepage and `/healthz` returned `200`, with health status `ok`;
+- `server/discover` returned `2026-07-28`, `2025-11-25`, and `2025-06-18`;
+- legacy `initialize` negotiated `2025-11-25`;
+- `tools/list` returned all five public reads and four locked protected operations;
+- the NANPA-reserved lookup returned its expected fictional canonical value with `insufficient_evidence`;
+- campaign research returned the canonical empty eligible catalogue, and source coverage returned the committed three-enabled-source snapshot;
+- every public MCP call and protected failure returned `Cache-Control: no-store`;
+- a protected watch call returned `401` with only `callersignal.watch:write` in its challenge;
+- an unapproved Origin returned `403`, `GET /mcp` returned the documented `405`, and protected-resource metadata reported OAuth as not configured;
+- Vercel readback listed `api/mcp` beside the lookup, campaigns, and health functions.
+
+These checks used only reserved fictional input and recorded no request bodies or lookup history. A later release deployment may replace the alias owner while this acceptance deployment remains immutable.
+
 ## Local stdio server
 
 The original stdio transport remains useful for local clients and exposes `lookup_phone_number` only:
