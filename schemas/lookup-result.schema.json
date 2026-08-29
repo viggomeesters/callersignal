@@ -251,6 +251,10 @@
         "reason_codes",
         "evidence_ids",
         "source_ids",
+        "confidence",
+        "evidence_diversity",
+        "freshness",
+        "residual_uncertainty",
         "recommended_action"
       ],
       "properties": {
@@ -279,6 +283,46 @@
           "type": "array",
           "uniqueItems": true,
           "items": { "$ref": "#/$defs/token" }
+        },
+        "confidence": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["level", "score"],
+          "properties": {
+            "level": { "enum": ["none", "low", "medium", "high"] },
+            "score": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "evidence_diversity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["evidence_count", "source_count", "source_ids"],
+          "properties": {
+            "evidence_count": { "type": "integer", "minimum": 0 },
+            "source_count": { "type": "integer", "minimum": 0 },
+            "source_ids": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/token" }
+            }
+          }
+        },
+        "freshness": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["as_of", "status"],
+          "properties": {
+            "as_of": { "type": "string", "format": "date-time" },
+            "status": {
+              "enum": ["current", "mixed", "stale", "unavailable", "no_evidence"]
+            }
+          }
+        },
+        "residual_uncertainty": {
+          "type": "string",
+          "minLength": 40,
+          "maxLength": 800,
+          "pattern": "[Ss]poof"
         },
         "recommended_action": {
           "type": "object",

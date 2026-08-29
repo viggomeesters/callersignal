@@ -11,7 +11,6 @@ _ELIGIBLE_CLASSES = {
     "community_report_aggregate",
     "regulatory_notice",
 }
-_ELIGIBLE_VERIFICATION = {"observed", "verified"}
 
 
 def build_campaign(
@@ -129,14 +128,24 @@ def build_campaign(
 
 def _is_eligible(item: Mapping[str, Any]) -> bool:
     observation = item.get("observation", {})
+    evidence_class = observation.get("evidence_class")
     return (
         item.get("freshness", {}).get("status") == "current"
         and observation.get("publication_status") == "public"
-        and observation.get("verification_status") in _ELIGIBLE_VERIFICATION
-        and observation.get("evidence_class") in _ELIGIBLE_CLASSES
+        and _verification_is_eligible(
+            evidence_class,
+            observation.get("verification_status"),
+        )
+        and evidence_class in _ELIGIBLE_CLASSES
         and bool(item.get("source", {}).get("source_id"))
         and bool(item.get("evidence_id"))
     )
+
+
+def _verification_is_eligible(evidence_class: object, status: object) -> bool:
+    if status == "verified":
+        return True
+    return evidence_class == "regulatory_notice" and status == "observed"
 
 
 def _validate_inputs(
@@ -209,7 +218,10 @@ def _excluded_reasons(evidence: Sequence[Mapping[str, Any]]) -> list[str]:
             reasons.add("publication_restricted")
         if observation.get("verification_status") == "contradicted":
             reasons.add("contradictory_evidence")
-        elif observation.get("verification_status") not in _ELIGIBLE_VERIFICATION:
+        elif not _verification_is_eligible(
+            observation.get("evidence_class"),
+            observation.get("verification_status"),
+        ):
             reasons.add("verification_ineligible")
         if observation.get("evidence_class") not in _ELIGIBLE_CLASSES:
             reasons.add("evidence_class_ineligible")

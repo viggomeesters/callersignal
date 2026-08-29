@@ -179,6 +179,19 @@ def lookup_result() -> dict:
                 "reason_codes": ["no_risk_capable_source_checked"],
                 "evidence_ids": [],
                 "source_ids": [],
+                "confidence": {"level": "none", "score": 0},
+                "evidence_diversity": {
+                    "evidence_count": 0,
+                    "source_count": 0,
+                    "source_ids": [],
+                },
+                "freshness": {
+                    "as_of": "2026-08-26T12:00:01Z",
+                    "status": "no_evidence",
+                },
+                "residual_uncertainty": (
+                    "Caller ID can be spoofed; this label does not prove who placed a call."
+                ),
                 "recommended_action": {
                     "code": "treat_as_unknown",
                     "message": (

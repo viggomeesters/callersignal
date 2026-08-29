@@ -9,6 +9,17 @@ from callersignal.assessment import assess_risk
 NOW = datetime(2026, 8, 28, 8, 0, tzinfo=UTC)
 
 
+def assert_explainable(risk: dict) -> None:
+    assert set(risk["confidence"]) == {"level", "score"}
+    assert set(risk["evidence_diversity"]) == {
+        "evidence_count",
+        "source_count",
+        "source_ids",
+    }
+    assert set(risk["freshness"]) == {"as_of", "status"}
+    assert "spoof" in risk["residual_uncertainty"].lower()
+
+
 def numbering_evidence() -> dict:
     return {
         "evidence_id": "ev_numbering-context",
@@ -80,6 +91,7 @@ def test_numbering_context_alone_is_insufficient_risk_evidence() -> None:
     assert risk["reason_codes"] == ["no_risk_capable_source_checked"]
     assert risk["evidence_ids"] == []
     assert risk["recommended_action"]["code"] == "treat_as_unknown"
+    assert_explainable(risk)
 
 
 def test_current_official_warning_leads_the_risk_state() -> None:
@@ -109,6 +121,42 @@ def test_current_official_warning_leads_the_risk_state() -> None:
     assert risk["evidence_ids"] == ["ev_official-warning"]
     assert risk["source_ids"] == ["official_warning_feed"]
     assert risk["recommended_action"]["code"] == "avoid_and_verify"
+    assert_explainable(risk)
+
+
+def test_risk_label_is_independently_explainable() -> None:
+    warning = risk_evidence(
+        evidence_id="ev_explainable-warning",
+        source_id="official_warning_feed",
+        evidence_class="regulatory_notice",
+        authority_type="official_regulator",
+        reason_codes=["official_fraud_warning"],
+    )
+
+    risk = assess_risk(
+        evidence=[warning],
+        gaps=[],
+        sources_checked=[
+            {
+                "source_id": "official_warning_feed",
+                "status": "matched",
+                "risk_capable": True,
+            }
+        ],
+        checked_at=NOW,
+    )
+
+    assert risk["confidence"] == {"level": "high", "score": 0.95}
+    assert risk["evidence_diversity"] == {
+        "evidence_count": 1,
+        "source_count": 1,
+        "source_ids": ["official_warning_feed"],
+    }
+    assert risk["freshness"] == {
+        "as_of": "2026-08-28T08:00:00Z",
+        "status": "current",
+    }
+    assert "spoof" in risk["residual_uncertainty"].lower()
 
 
 def test_warning_evidence_from_a_non_risk_capable_check_cannot_raise_risk() -> None:
@@ -168,6 +216,7 @@ def test_two_independent_verified_sources_produce_elevated_signals() -> None:
     assert risk["evidence_ids"] == ["ev_licensed-signal", "ev_moderated-signal"]
     assert risk["source_ids"] == ["licensed_reputation", "moderated_reports"]
     assert risk["recommended_action"]["code"] == "avoid_sensitive_actions"
+    assert_explainable(risk)
 
 
 def test_current_risk_source_no_match_produces_no_risk_evidence_not_safe() -> None:
@@ -197,6 +246,7 @@ def test_current_risk_source_no_match_produces_no_risk_evidence_not_safe() -> No
     assert risk["source_ids"] == ["licensed_reputation"]
     assert "not proof" in risk["summary"].lower()
     assert risk["recommended_action"]["code"] == "stay_cautious"
+    assert_explainable(risk)
 
 
 def test_unverified_or_single_source_reports_cannot_elevate_risk() -> None:
@@ -230,6 +280,29 @@ def test_unverified_or_single_source_reports_cannot_elevate_risk() -> None:
 
     assert unverified_risk["state"] == "insufficient_evidence"
     assert same_source_risk["state"] == "insufficient_evidence"
+
+
+def test_lookup_popularity_cannot_amplify_one_unverified_report() -> None:
+    unverified = risk_evidence(
+        evidence_id="ev_popular-unverified",
+        source_id="moderated_reports",
+        evidence_class="community_report_aggregate",
+        authority_type="moderated_community_aggregate",
+        verification_status="unverified",
+    )
+    unverified["lookup_count"] = 1_000_000
+
+    risk = assess_risk(
+        evidence=[unverified],
+        gaps=[],
+        sources_checked=[
+            {"source_id": "moderated_reports", "status": "matched", "risk_capable": True}
+        ],
+        checked_at=NOW,
+    )
+
+    assert risk["state"] == "insufficient_evidence"
+    assert risk["confidence"] == {"level": "none", "score": 0}
 
 
 def test_stale_or_conflicting_risk_coverage_is_insufficient() -> None:
