@@ -426,11 +426,18 @@ def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> No
         "/v1/campaigns": "/api/campaigns",
         "/v1/campaigns/:campaign_id": "/api/campaigns?campaign_id=:campaign_id",
         "/healthz": "/api/healthz",
+        "/mcp": "/api/mcp",
+        "/.well-known/oauth-protected-resource": (
+            "/api/mcp?route=oauth-protected-resource"
+        ),
+        "/.well-known/oauth-protected-resource/mcp": (
+            "/api/mcp?route=oauth-protected-resource"
+        ),
         "/assets/:path*": "/web/assets/:path*",
         "/campaigns": "/web/index",
         "/campaigns/:campaign_id": "/web/index",
         "/": "/web/index",
     }
     assert config["functions"]["api/**/*.py"]["includeFiles"] == (
-        "src/callersignal/**"
+        "{src/callersignal/**,schemas/**,fixtures/**,web/assets/transparency.json}"
     )

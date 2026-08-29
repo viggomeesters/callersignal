@@ -20,6 +20,18 @@
       "destination": "/api/healthz"
     },
     {
+      "source": "/mcp",
+      "destination": "/api/mcp"
+    },
+    {
+      "source": "/.well-known/oauth-protected-resource",
+      "destination": "/api/mcp?route=oauth-protected-resource"
+    },
+    {
+      "source": "/.well-known/oauth-protected-resource/mcp",
+      "destination": "/api/mcp?route=oauth-protected-resource"
+    },
+    {
       "source": "/assets/:path*",
       "destination": "/web/assets/:path*"
     },
@@ -74,7 +86,7 @@
   ],
   "functions": {
     "api/**/*.py": {
-      "includeFiles": "src/callersignal/**",
+      "includeFiles": "{src/callersignal/**,schemas/**,fixtures/**,web/assets/transparency.json}",
       "excludeFiles": "{tests/**,**/__pycache__/**,.go/**,docs/**,assets/**,web/proof/**}"
     }
   }

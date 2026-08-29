@@ -1,37 +1,103 @@
-# MCP lookup server
+# MCP servers
 
-CallerSignal exposes one read-only MCP tool, `lookup_phone_number`, over the standard stdio transport. The server is dependency-free beyond the repository runtime and delegates every lookup to `LookupService`; it does not maintain a second truth path or persist lookup history.
+CallerSignal exposes the same evidence and uncertainty contracts through a local stdio server and a stateless Streamable HTTP server. Neither transport maintains a lookup history or computes a browser-only verdict.
 
-## Start the server
+## Hosted endpoint
 
-From the repository root:
+The production endpoint is `https://callersignal.vercel.app/mcp`. It supports the current stateless MCP revision `2026-07-28` through `server/discover` and remains compatible with `initialize` clients using `2025-11-25` or `2025-06-18`. Each JSON-RPC message is one HTTP `POST`; this deployment does not offer a server-sent-event stream, so `GET /mcp` returns `405 Method Not Allowed` as permitted by Streamable HTTP.
 
-```bash
+The implementation follows the official [Streamable HTTP transport](https://modelcontextprotocol.io/specification/2025-11-25/basic/transports), including JSON responses, `202` for accepted notifications, protocol-version validation, bounded request bodies, and Origin validation. It is stateless and issues no session identifier. Every response uses `Cache-Control: no-store`.
+
+After deploying a revision that contains the hosted service, add it to Codex with:
+
+```console
+codex mcp add callersignal --url https://callersignal.vercel.app/mcp
+codex mcp get callersignal
+```
+
+No bearer token is needed for the five public read tools. This command is the locally verified syntax from `codex mcp add --help`; clients that support Streamable HTTP can use the same endpoint URL.
+
+### Public tools
+
+| Tool | Purpose | Data boundary |
+| --- | --- | --- |
+| `lookup_phone_number` | Normalize with explicit country semantics and return canonical evidence, gaps, calibrated risk, and action | Pinned rights-approved public sources; no lookup persistence |
+| `list_public_campaigns` | List campaigns that pass aggregate evidence and publication gates | Exact public HTTP campaign catalogue |
+| `get_public_campaign` | Read one eligible campaign by opaque identifier | Public aggregate fields and exact source coverage only |
+| `get_source_coverage` | Read corpus counts, source capability, freshness, last ingest, gaps, thresholds, and corrections | Exact committed transparency snapshot |
+| `get_methodology` | Read the versioned four-state risk policy | Machine-readable form of [`methodology.md`](methodology.md) |
+
+All five tools advertise `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, and `openWorldHint: false`. “Closed world” means they read CallerSignal's bounded published corpus; it does not imply complete coverage or a safe-number guarantee.
+
+The lookup tool requires `origin_region` for national-format input. Before calling it, an agent should say which country interpretation it is checking. International `+` input determines the country independently. The returned `assessment.risk` is the canonical risk conclusion. `no_risk_evidence` is not proof of safety, and numbering context alone remains `insufficient_evidence`.
+
+### Protected tools are discoverable but locked
+
+The server lists four future protected operations so clients can inspect their exact risk and permission boundary:
+
+| Tool | OAuth scope | Destructive hint | Current availability |
+| --- | --- | ---: | --- |
+| `create_private_watch` | `callersignal.watch:write` | false | Locked |
+| `delete_private_watch` | `callersignal.watch:delete` | true | Locked |
+| `submit_organization_portfolio` | `callersignal.organizations:write` | false | Locked |
+| `delete_organization_portfolio` | `callersignal.organizations:delete` | true | Locked |
+
+Every protected schema requires a consent receipt and idempotency key. Calls are intercepted at the HTTP boundary and return a privacy-safe `401 Unauthorized` with a scoped `WWW-Authenticate` challenge. Tool handlers are never reached.
+
+Protected Resource Metadata is published at `/.well-known/oauth-protected-resource` and `/.well-known/oauth-protected-resource/mcp`. It names the canonical resource and scopes but reports `callersignal.dev/authorization_status: not_configured` and an empty `authorization_servers` list. That is deliberate: CallerSignal does not invent an issuer, accept unvalidated bearer tokens, or pretend that OAuth is ready. The [MCP authorization specification](https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization) requires issuer discovery, audience-bound token validation, and least-privilege scopes before protected operations can run. A future release must configure a real OAuth 2.1 issuer, PKCE/client discovery, resource indicators, audience validation, consent, rate, privacy, retention, and deletion controls before changing this status.
+
+## Remote protocol smoke tests
+
+Start the local HTTP transport on loopback only:
+
+```console
+PYTHONPATH=src uv run python -m callersignal.remote_mcp
+```
+
+Discover its supported revisions:
+
+```console
+curl --silent --show-error \
+  --request POST http://127.0.0.1:8766/mcp \
+  --header 'Content-Type: application/json' \
+  --header 'Accept: application/json, text/event-stream' \
+  --header 'MCP-Protocol-Version: 2026-07-28' \
+  --data '{"jsonrpc":"2.0","id":1,"method":"server/discover","params":{"_meta":{}}}'
+```
+
+Call the lookup tool with the NANPA-reserved fictional number:
+
+```console
+curl --silent --show-error \
+  --request POST http://127.0.0.1:8766/mcp \
+  --header 'Content-Type: application/json' \
+  --header 'Accept: application/json, text/event-stream' \
+  --data '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"lookup_phone_number","arguments":{"number":"202-555-0147","origin_region":"US"}}}'
+```
+
+Run the deterministic protocol gate:
+
+```console
+uv run pytest tests/integration/test_remote_mcp.py -q
+make check
+```
+
+The integration suite covers discovery, initialization, tool listing, representative public calls, canonical campaign parity, the committed transparency snapshot, unauthorized protected calls, arbitrary bearer-token rejection, Origin and protocol rejection, notification handling, no-store headers, privacy-safe errors, Vercel rewrites, and protected-resource metadata.
+
+## Local stdio server
+
+The original stdio transport remains useful for local clients and exposes `lookup_phone_number` only:
+
+```console
 PYTHONPATH=src uv run python -m callersignal.mcp_server
 ```
 
-Configure an MCP client to launch `uv` with arguments `run python -m callersignal.mcp_server`, set `PYTHONPATH` to `src`, and use the repository root as the process working directory. The server writes only newline-delimited JSON-RPC messages to standard output and writes no lookup data to standard error.
+Configure a client to launch `uv` with `run python -m callersignal.mcp_server`, set `PYTHONPATH=src`, and use the repository root as its working directory. The process writes only newline-delimited JSON-RPC to standard output and writes no lookup data to standard error.
 
-## Tool contract
+The stdio tool returns the same lookup object in `structuredContent` and as JSON text for older clients. Invalid arguments return `isError: true` without structured content. Source unavailability remains a successful lookup containing typed evidence gaps, not a protocol failure.
 
-`lookup_phone_number` accepts:
+## Deployment and observability boundary
 
-- `number` — required national-format or `+`-prefixed international input, one to 64 characters;
-- `origin_region` — optional uppercase ISO alpha-2 code, but required whenever `number` is national-format.
+Vercel bundles the shared source, schemas, pinned fictional/public-safe fixtures, and committed transparency snapshot. The MCP endpoint delegates lookup to `LookupService` and campaign reads to the canonical HTTP application; it does not maintain a parallel database or assessment policy.
 
-The tool description instructs agents to state which origin country they are checking before presenting the result. International input determines its country independently. The annotations declare the tool read-only and closed-world because the current adapters query pinned public fixtures without runtime network access.
-
-The tool advertises a bundled JSON Schema 2020-12 `outputSchema` derived from [`lookup-result.schema.json`](../schemas/lookup-result.schema.json). A successful call returns the same lookup object twice as required for compatibility:
-
-- `structuredContent` contains the machine-readable lookup result;
-- the first text content block contains its JSON serialization for older clients.
-
-Invalid arguments and missing national-origin context return `isError: true` without `structuredContent`. Source unavailability is a successful lookup contract containing typed evidence gaps, not a protocol failure.
-
-Agents must present `assessment.risk` as the risk conclusion and preserve its calibrated language. `no_risk_evidence` means eligible sources returned no match, not that the number or caller is safe; `insufficient_evidence` must never be upgraded from numbering context or lookup popularity. `sources_checked[].risk_capable`, reason codes, evidence IDs, and the spoofing-aware residual-risk text provide the auditable explanation. The full decision policy is documented in the [risk assessment methodology](methodology.md).
-
-## Protocol support
-
-The stdio server implements MCP initialization, initialized notifications, ping, tool listing, and tool calls using newline-delimited JSON-RPC 2.0. It supports protocol revisions `2025-11-25` and `2025-06-18`, advertises no list-change notifications, and rejects operational requests before initialization completes.
-
-The server intentionally exposes no resources, prompts, sampling, write tools, report ingestion, or remote HTTP transport. Remote website access uses the separately tested read-only HTTP adapter.
+Production observability is metadata-only: route, method, status class, duration bucket, and bounded source-health dimensions. Do not log authorization headers, JSON-RPC bodies, raw or normalized numbers, contacts, consent receipts, organisation declarations, prompt/response text, IP addresses, or lookup histories. Deployment does not authorize report collection, watch persistence, organisation publication, or any other protected mutation.

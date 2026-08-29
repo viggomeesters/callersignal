@@ -4,7 +4,7 @@
   "execution_mode": "agent",
   "id": "product-hosted-mcp-service",
   "project": "callersignal",
-  "status": "open",
+  "status": "active",
   "summary": "Expose CallerSignal through a discoverable hosted MCP service",
   "description": "Execution brief work unit 7/7. Destination: CallerSignal behaves like a trustworthy HIBP-style caller-campaign intelligence service: one search yields a calibrated answer, campaign history, concrete actions, private monitoring, verified organisation context, transparent corpus coverage, and an agent-native remote MCP surface.",
   "depends_on": [
@@ -15,16 +15,21 @@
   ],
   "scope": {
     "read": [
-      "src/callersignal/mcp.py",
+      "src/callersignal/mcp_server.py",
+      "src/callersignal/http_api.py",
+      "src/callersignal/lookup.py",
       "src/callersignal/watch/**",
       "src/callersignal/organizations/**",
       "src/callersignal/transparency/**",
+      "web/assets/transparency.json",
+      "schemas/**",
       "docs/mcp.md"
     ],
     "modify": [
       "api/mcp.py",
       "src/callersignal/remote_mcp/**",
       "tests/integration/test_remote_mcp.py",
+      "tests/e2e/test_web.py",
       "docs/mcp.md",
       "vercel.json"
     ]
@@ -91,9 +96,12 @@
     "make check"
   ],
   "claim": {
-    "agent": null,
-    "claimed_at": null
+    "agent": "codex",
+    "claimed_at": "2026-08-29T08:45:57+02:00"
   },
   "evidence": [],
-  "order": 670
+  "order": 670,
+  "work_status": "in_progress",
+  "review_status": "none",
+  "review_history": []
 }
