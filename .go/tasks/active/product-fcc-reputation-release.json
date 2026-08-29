@@ -37,7 +37,9 @@
       "docs/implementation-plan.md",
       "docs/public-readiness.md",
       "tests/test_repository_structure.py",
-      "scripts/validate_repository.py"
+      "scripts/validate_repository.py",
+      "src/callersignal/fcc_catalog.py",
+      "tests/unit/test_fcc_catalog.py"
     ]
   },
   "acceptance": [

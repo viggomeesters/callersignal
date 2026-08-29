@@ -17,6 +17,7 @@ import pytest
 from callersignal.fcc_catalog import (
     FCCCatalogBuildError,
     FCCCatalogReadError,
+    _canonical_us_number,
     build_fcc_catalog,
     lookup_fcc_catalog,
 )
@@ -155,6 +156,26 @@ def test_builds_hmac_keyed_aggregate_without_plaintext_source_rows(
         "location_1",
     ):
         assert forbidden_field not in page_call[1]["$select"].split(",")
+
+
+@pytest.mark.parametrize(
+    ("source_value", "expected"),
+    [
+        ("+1 202-555-0100", "+12025550100"),
+        ("1 (202) 555-0100", "+12025550100"),
+        ("2025550100", "+12025550100"),
+        ("202.555.0100", "+12025550100"),
+        ("12025550100 ext 4", None),
+        ("07700 900185", None),
+        ("1" + "025" + "550100", None),
+        ("202" + "155" + "0100", None),
+        ("not-a-number", None),
+    ],
+)
+def test_source_number_normalization_is_dependency_free_and_nanpa_bounded(
+    source_value: str, expected: str | None
+) -> None:
+    assert _canonical_us_number(source_value) == expected
 
 
 def test_paginates_until_a_short_page_and_rejects_duplicate_group_keys(

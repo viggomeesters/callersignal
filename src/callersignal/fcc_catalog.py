@@ -19,8 +19,6 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import quote, urlencode
 
-from callersignal.numbering import normalize_phone_number
-
 JSONFetcher = Callable[[str, dict[str, str]], Any]
 
 _SOURCE_ID = "fcc_unwanted_call_complaints"
@@ -70,6 +68,7 @@ _ROW_FIELDS = {
 }
 _CATEGORY_VALUES = {"nuisance", "robocall"}
 _DIGEST_PATTERN = re.compile(r"[0-9a-f]{64}")
+_US_SOURCE_NUMBER_PATTERN = re.compile(r"[+0-9(). -]+")
 
 
 class FCCCatalogBuildError(ValueError):
@@ -645,19 +644,22 @@ def _project_row(
 
 
 def _canonical_us_number(value: str) -> str | None:
-    try:
-        normalized = normalize_phone_number(value, origin_region="US")
-    except (TypeError, ValueError):
+    candidate = value.strip()
+    if not candidate or _US_SOURCE_NUMBER_PATTERN.fullmatch(candidate) is None:
         return None
-    canonical = normalized.get("canonical", {})
+    digits = re.sub(r"\D", "", candidate)
     if (
-        normalized.get("interpretation", {}).get("status") != "valid"
-        or canonical.get("region") != "US"
-        or not isinstance(canonical.get("e164"), str)
-        or not canonical["e164"].startswith("+1")
+        len(digits) == 11
+        and digits.startswith("1")
+    ):
+        digits = digits[1:]
+    if (
+        len(digits) != 10
+        or digits[0] not in "23456789"
+        or digits[3] not in "23456789"
     ):
         return None
-    return str(canonical["e164"])
+    return f"+1{digits}"
 
 
 def _source_date(value: str) -> date | None:
