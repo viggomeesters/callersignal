@@ -16,6 +16,10 @@ Every source row becomes one `number_ranges` record so coverage and source statu
 
 `catalog_metadata` records source and dataset URLs, license, retrieval time, source digest, total and matchable row counts, status counts, destination counts, and newest mutation. Generated downloads, SQLite files, sidecars, and local generated-data directories are ignored by Git. The catalogue contains official numbering context only: it is not a subscriber, caller-identity, live-provider, reputation, or safety database.
 
+The Netherlands adapter activates this full catalogue only through an explicit `catalog_path` or `CALLERSIGNAL_ACM_CATALOG_PATH`. It opens SQLite in immutable read-only mode, validates the catalogue identity, schema, source digest, coverage counts, matching record, status, type, timestamp, and row digest, then selects the narrowest matching canonical E.164 interval deterministically. A catalogue result emits only `number_type` and normalized `regulatory_status`; it does not expose destination text, range bounds, holder data, KVK data, provider claims, or identities.
+
+Missing or invalid catalogues never turn the one-record fixture into global coverage. The fixture may answer only its exact documented public-safe record; every other request returns a retryable `source_unavailable` gap. A valid full catalogue can return an authoritative `no_authoritative_data` no-match. Stale matching rows remain visible as stale numbering context with a `source_stale` gap. This distinction prevents an unavailable bulk dataset from being mistaken for absence of evidence.
+
 The current pinned release imports 74,984 rows, of which 73,409 have a lookup-compatible NL interval. It contains 73,221 `Toegekend`, 1,740 `Afkoelen`, and 23 `Geblokkeerd` records across 44 destination labels; the newest source mutation is 2026-08-28. These are build readback values, not hand-maintained product promises. Refreshing the pin requires a new checksum, full rebuild, coverage comparison, source-rights review, and repository gate run.
 
 ## Aggregate boundary

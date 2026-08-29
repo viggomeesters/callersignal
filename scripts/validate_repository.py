@@ -14,6 +14,7 @@ EXCLUDED_PARTS = {
     ".venv",
     ".pytest_cache",
     ".ruff_cache",
+    ".vercel",
     "__pycache__",
     "node_modules",
 }

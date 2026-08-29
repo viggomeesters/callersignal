@@ -147,3 +147,9 @@ def test_gitignore_protects_sensitive_and_runtime_state() -> None:
         ".go/runs/resume.sh",
         ".go/runs/*/",
     } <= entries
+
+
+def test_public_safety_scan_excludes_generated_vercel_runtime() -> None:
+    validator = (ROOT / "scripts/validate_repository.py").read_text(encoding="utf-8")
+
+    assert '".vercel"' in validator

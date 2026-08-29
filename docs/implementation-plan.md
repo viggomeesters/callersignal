@@ -284,7 +284,7 @@ Depends on `product-acm-bulk-import`. Use the generated ACM catalogue in canonic
 
 Acceptance: matching uses canonical E.164 intervals and emits only number type and regulatory status with record provenance; missing, stale, invalid, or unavailable catalogues fail closed; no holder, subscriber, provider, caller, or safety claim is inferred.
 
-Verify: `uv run pytest tests/adapters/test_nl.py tests/integration/test_lookup.py tests/e2e/test_web.py -q` and `make check`.
+Verify: `npm run build:acm`, `uv run pytest tests/adapters/test_nl.py tests/integration/test_lookup.py tests/e2e/test_web.py -q`, and `make check`.
 
 ### `product-authorized-reputation-ingestion`
 

@@ -16,7 +16,7 @@
         "name": "Autoriteit Consument & Markt"
       },
       "stable_url": "https://www.acm.nl/nl/telefoonnummers-zoeken",
-      "evidence_classes": ["range_allocation", "regulatory_notice"],
+      "evidence_classes": ["number_plan_fact", "range_allocation", "regulatory_notice"],
       "risk_capable": false,
       "reuse": {
         "basis": "The Dutch government data catalogue publishes the ACM register as public CC0 data.",
@@ -25,7 +25,7 @@
         "permission_reference": "https://data.overheid.nl/dataset/register-van-toegekende-telefoonnummers"
       },
       "intake": {
-        "permitted_fields": ["range_holder", "regulatory_status"],
+        "permitted_fields": ["number_type", "range_holder", "regulatory_status"],
         "personal_data_allowed": false,
         "free_text_allowed": false,
         "freshness_max_age_seconds": 2592000,

@@ -78,9 +78,9 @@ node web/proof/capture.mjs
 
 ## Vercel shape
 
-`vercel.json` defines the static site, campaign page routes, same-origin `/v1/lookup`, `/v1/campaigns`, and `/healthz` rewrites, response-security headers, and Python function bundle. `api/index.py`, `api/campaigns.py`, and `api/healthz.py` export the WSGI apps expected by Vercel and map platform paths to the canonical HTTP application. The repository-root `pyproject.toml` and `uv.lock` provide the pinned production dependency.
+`vercel.json` defines the static site, campaign page routes, same-origin `/v1/lookup`, `/v1/campaigns`, and `/healthz` rewrites, response-security headers, and Python function bundle. Its build command runs the checksum-pinned ACM catalogue builder before packaging. A bounded staging script copies only `web/index.html` and `web/assets/` into the ignored `public/` output directory, so tests, proof artifacts, and repository files cannot become static deployment output. The generated ignored SQLite file is explicitly included in every Python function and activated through `CALLERSIGNAL_ACM_CATALOG_PATH`. `api/index.py`, `api/campaigns.py`, and `api/healthz.py` export the WSGI apps expected by Vercel and map platform paths to the canonical HTTP application. The repository-root `pyproject.toml` and `uv.lock` provide the pinned production dependency.
 
-Deploy from the repository root. The function configuration explicitly includes `src/callersignal`; the deployment therefore bundles shared domain code without maintaining a copy or a browser-only truth path. No production secret is required for the read-only pinned-source wedge.
+Deploy from the repository root. The function configuration explicitly includes `src/callersignal` and the generated ACM catalogue; the deployment therefore bundles shared domain code and the privacy-minimized official read model without committing source downloads, generated databases, maintaining a code copy, or adding a browser-only truth path. No production secret is required for the read-only pinned-source wedge.
 
 ```bash
 npx vercel@latest deploy --prod --yes

@@ -8,6 +8,8 @@
     "web"
   ],
   "scripts": {
+    "build:acm": "python3 scripts/build_acm_catalog.py --json",
+    "build:vercel": "npm run build:acm && node scripts/stage_vercel_static.mjs",
     "check": "npm --prefix web run check",
     "test": "npm --prefix web test"
   },

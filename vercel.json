@@ -1,7 +1,12 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
+  "buildCommand": "npm run build:vercel",
+  "outputDirectory": "public",
   "cleanUrls": true,
+  "env": {
+    "CALLERSIGNAL_ACM_CATALOG_PATH": "downloads/acm-number-register.sqlite3"
+  },
   "rewrites": [
     {
       "source": "/v1/lookup",
@@ -32,20 +37,16 @@
       "destination": "/api/mcp?route=oauth-protected-resource"
     },
     {
-      "source": "/assets/:path*",
-      "destination": "/web/assets/:path*"
-    },
-    {
       "source": "/campaigns",
-      "destination": "/web/index"
+      "destination": "/index"
     },
     {
       "source": "/campaigns/:campaign_id",
-      "destination": "/web/index"
+      "destination": "/index"
     },
     {
       "source": "/",
-      "destination": "/web/index"
+      "destination": "/index"
     }
   ],
   "headers": [
@@ -86,7 +87,7 @@
   ],
   "functions": {
     "api/**/*.py": {
-      "includeFiles": "{src/callersignal/**,schemas/**,fixtures/**,web/assets/transparency.json}",
+      "includeFiles": "{src/callersignal/**,schemas/**,fixtures/**,downloads/acm-number-register.sqlite3,web/assets/transparency.json}",
       "excludeFiles": "{tests/**,**/__pycache__/**,.go/**,docs/**,assets/**,web/proof/**}"
     }
   }

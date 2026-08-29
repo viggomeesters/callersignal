@@ -431,6 +431,7 @@ def test_vercel_health_entrypoint_delegates_to_canonical_health_result() -> None
 
 def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> None:
     config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
+    package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
 
     rewrites = {
         item["source"]: item["destination"] for item in config["rewrites"]
@@ -447,11 +448,21 @@ def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> No
         "/.well-known/oauth-protected-resource/mcp": (
             "/api/mcp?route=oauth-protected-resource"
         ),
-        "/assets/:path*": "/web/assets/:path*",
-        "/campaigns": "/web/index",
-        "/campaigns/:campaign_id": "/web/index",
-        "/": "/web/index",
+        "/campaigns": "/index",
+        "/campaigns/:campaign_id": "/index",
+        "/": "/index",
     }
     assert config["functions"]["api/**/*.py"]["includeFiles"] == (
-        "{src/callersignal/**,schemas/**,fixtures/**,web/assets/transparency.json}"
+        "{src/callersignal/**,schemas/**,fixtures/**,downloads/acm-number-register.sqlite3,web/assets/transparency.json}"
+    )
+    assert package["scripts"]["build:acm"] == (
+        "python3 scripts/build_acm_catalog.py --json"
+    )
+    assert package["scripts"]["build:vercel"] == (
+        "npm run build:acm && node scripts/stage_vercel_static.mjs"
+    )
+    assert config["buildCommand"] == "npm run build:vercel"
+    assert config["outputDirectory"] == "public"
+    assert config["env"]["CALLERSIGNAL_ACM_CATALOG_PATH"] == (
+        "downloads/acm-number-register.sqlite3"
     )

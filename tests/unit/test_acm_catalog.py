@@ -218,3 +218,33 @@ def test_manifest_rejects_non_https_source_locations(tmp_path: Path) -> None:
             tmp_path / "catalog.sqlite3",
             archive_path=archive_path,
         )
+
+
+def test_download_uses_https_only_curl_fallback_without_bypassing_digest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    archive_path = tmp_path / "fixture.zip"
+    archive_bytes = _write_archive(archive_path)
+    manifest_path = tmp_path / "manifest.json"
+    _write_manifest(manifest_path, archive_bytes)
+    commands: list[list[str]] = []
+
+    def fail_urlopen(*args, **kwargs):
+        del args, kwargs
+        raise OSError("fixture TLS failure")
+
+    def fake_curl(command: list[str], **kwargs) -> None:
+        del kwargs
+        commands.append(command)
+        destination = Path(command[command.index("--output") + 1])
+        destination.write_bytes(archive_bytes)
+
+    monkeypatch.setattr("callersignal.acm_catalog.urllib.request.urlopen", fail_urlopen)
+    monkeypatch.setattr("callersignal.acm_catalog.subprocess.run", fake_curl)
+
+    summary = build_acm_catalog(manifest_path, tmp_path / "catalog.sqlite3")
+
+    assert summary.source_sha256 == hashlib.sha256(archive_bytes).hexdigest()
+    assert commands
+    assert ["--proto", "=https"] == commands[0][2:4]
+    assert ["--proto-redir", "=https"] == commands[0][4:6]

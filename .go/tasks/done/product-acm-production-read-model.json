@@ -1,0 +1,126 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-acm-production-read-model",
+  "project": "callersignal",
+  "status": "done",
+  "order": 740,
+  "summary": "Serve the full ACM range catalog in production lookups",
+  "description": "Integrate the generated ACM range database with the canonical NL adapter and Vercel build so production lookups use all current register ranges while preserving the existing pinned public-safe fallback and neutral evidence semantics.",
+  "depends_on": [
+    "product-acm-bulk-import"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/acm_catalog.py",
+      "src/callersignal/adapters/nl.py",
+      "src/callersignal/lookup.py",
+      "vercel.json"
+    ],
+    "modify": [
+      "src/callersignal/acm_catalog.py",
+      "src/callersignal/adapters/nl.py",
+      "sources/registry.json",
+      "api/index.py",
+      "package.json",
+      "vercel.json",
+      "scripts/stage_vercel_static.mjs",
+      "scripts/validate_repository.py",
+      ".gitignore",
+      "tests/adapters/test_nl.py",
+      "tests/unit/test_acm_catalog.py",
+      "tests/integration/test_lookup.py",
+      "tests/e2e/test_web.py",
+      "tests/test_repository_structure.py",
+      "docs/data-architecture.md",
+      "docs/web.md",
+      "docs/implementation-plan.md"
+    ]
+  },
+  "acceptance": [
+    "When the generated catalog exists, NL lookups query all imported ranges by canonical E.164 interval and emit only number type and regulatory status with record-level provenance and current freshness.",
+    "Missing, stale, invalid, or unavailable production catalogs fail closed to typed gaps or the documented public-safe fixture path; range holder, subscriber, provider, caller, and safety claims are never fabricated.",
+    "The Vercel production build creates and bundles the checksum-pinned catalog without committing the database or downloaded CSV."
+  ],
+  "verification": [
+    "uv run pytest tests/adapters/test_nl.py tests/integration/test_lookup.py tests/e2e/test_web.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T13:50:42+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-29T14:06:29+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved after readback of task acceptance and full gate evidence: complete ACM coverage is build-generated from the pinned official source; public responses expose only number type and normalized regulatory status with record provenance/freshness; unavailable or corrupt state fails closed; no personal range-holder data is returned or committed; Vercel bundle includes the ignored database and approved static assets.",
+      "transaction_id": "9c49d5a153b94a7e84b5415112935fde",
+      "delivery": {
+        "delivery_id": "product-v3",
+        "html": ".go/deliveries/product-v3/index.html",
+        "manifest": ".go/deliveries/product-v3/manifest.json",
+        "source_sha256": "e69016a4dd6544d560b33228f4edd9e2b6dd1fb49bcb796a1daecb46afdb75dc",
+        "html_sha256": "85d45d5ccdf49a94cd0598d0c0d180355bf7c0e870d394fdd355f28601af4468"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T14:06:23+02:00",
+      "task_id": "product-acm-production-read-model",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/acm_catalog.py,src/callersignal/adapters/nl.py,sources/registry.json,package.json,vercel.json,scripts/stage_vercel_static.mjs,scripts/validate_repository.py,.gitignore,tests/adapters/test_nl.py,tests/unit/test_acm_catalog.py,tests/e2e/test_web.py,tests/test_repository_structure.py,docs/data-architecture.md,docs/web.md,docs/implementation-plan.md,.go/runs/events.jsonl; verification=make check rc=0 with 235 Python tests, 8 web tests, Go/docs/assets/public-safety green; npm run build:vercel rc=0; npx vercel@latest build --yes rc=0; git diff --check rc=0; ./go validate . rc=0; catalog=74,984 rows and 73,409 matchable with checksum 372478fa8f23eb49e9152074f2b4c09c321a1871dce404135777ba51ae163da0; tdd=three observed red failures repaired for injection, fail-closed invalid rows, and Vercel bundle contract; critic=approved by focused self-review after verifying minimized claims, immutable read-only SQLite, schema/digest/count/freshness validation, exact fixture-only fallback, missing/stale/invalid typed gaps, HTTPS-only curl fallback, ignored generated database/static/runtime state, and Vercel function filePathMap inclusion; Self-reflect: no durable agent/process improvement needed; product portability and generated-cache findings were fixed and regression-tested.",
+      "changed_files": [
+        "src/callersignal/acm_catalog.py",
+        "src/callersignal/adapters/nl.py",
+        "sources/registry.json",
+        "package.json",
+        "vercel.json",
+        "scripts/stage_vercel_static.mjs",
+        "scripts/validate_repository.py",
+        ".gitignore",
+        "tests/adapters/test_nl.py",
+        "tests/unit/test_acm_catalog.py",
+        "tests/e2e/test_web.py",
+        "tests/test_repository_structure.py",
+        "docs/data-architecture.md",
+        "docs/web.md",
+        "docs/implementation-plan.md",
+        ".go/runs/events.jsonl"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "make check rc=0 with 235 Python tests, 8 web tests, Go/docs/assets/public-safety green",
+        "result": "make check rc=0 with 235 Python tests, 8 web tests, Go/docs/assets/public-safety green"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved by focused self-review after verifying minimized claims, immutable read-only SQLite, schema/digest/count/freshness validation, exact fixture-only fallback, missing/stale/invalid typed gaps, HTTPS-only curl fallback, ignored generated database/static/runtime state, and Vercel function filePathMap inclusion",
+        "skip_reason": null
+      }
+    }
+  ]
+}

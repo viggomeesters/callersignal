@@ -9,6 +9,7 @@ import json
 import os
 import re
 import sqlite3
+import subprocess
 import tempfile
 import urllib.request
 import zipfile
@@ -17,6 +18,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 EXPECTED_COLUMNS = (
     "id",
@@ -37,10 +39,25 @@ EXPECTED_COLUMNS = (
     "twn_kvkvestigingsnummer",
 )
 _RANGE_PATTERN = re.compile(r"[0-9 .()-]+")
+_CATALOG_NUMBER_TYPES = {
+    "business_access",
+    "freephone",
+    "geographic",
+    "machine_to_machine",
+    "mobile",
+    "network_code",
+    "other",
+    "premium_rate",
+}
+_CATALOG_REGISTER_STATUSES = {"Afkoelen", "Geblokkeerd", "Toegekend"}
 
 
 class CatalogBuildError(ValueError):
     """Raised when the source cannot safely replace the current catalogue."""
+
+
+class CatalogReadError(ValueError):
+    """Raised when a generated catalogue is missing or violates its read contract."""
 
 
 @dataclass(frozen=True)
@@ -54,6 +71,154 @@ class CatalogBuildSummary:
     destination_counts: dict[str, int]
     newest_mutation: str | None
     source_sha256: str
+
+
+@dataclass(frozen=True)
+class CatalogMetadata:
+    """Validated source identity and freshness metadata for one catalogue."""
+
+    retrieved_at: str
+    source_sha256: str
+    row_count: int
+    matchable_row_count: int
+
+
+@dataclass(frozen=True)
+class CatalogRecord:
+    """Privacy-minimized range row returned by a read-only catalogue lookup."""
+
+    source_record_id: str
+    national_from: str
+    national_to: str
+    e164_from: int
+    e164_to: int
+    destination: str
+    number_type: str
+    register_status: str
+    source_changed_at: str | None
+    source_row_sha256: str
+
+
+def lookup_acm_catalog(
+    catalog_path: Path,
+    canonical_e164: str,
+) -> tuple[CatalogMetadata, CatalogRecord | None]:
+    """Read one canonical number from an immutable generated catalogue."""
+    digits = canonical_e164.removeprefix("+")
+    if not digits.isdigit() or not canonical_e164.startswith("+"):
+        raise CatalogReadError("Catalog lookup requires a canonical E.164 number")
+    path = catalog_path.resolve()
+    if not path.is_file():
+        raise CatalogReadError("Generated ACM catalogue is unavailable")
+    locator = f"file:{quote(str(path))}?mode=ro&immutable=1"
+    try:
+        with sqlite3.connect(locator, uri=True) as connection:
+            connection.row_factory = sqlite3.Row
+            metadata = _read_catalog_metadata(connection)
+            row = connection.execute(
+                """
+                SELECT source_record_id, national_from, national_to, e164_from,
+                       e164_to, destination, number_type, register_status,
+                       source_changed_at, source_row_sha256
+                  FROM number_ranges
+                 WHERE e164_from <= ? AND e164_to >= ?
+                 ORDER BY (e164_to - e164_from), source_record_id
+                 LIMIT 1
+                """,
+                (int(digits), int(digits)),
+            ).fetchone()
+    except sqlite3.Error as error:
+        raise CatalogReadError(f"Generated ACM catalogue is invalid: {error}") from error
+
+    record = _validated_catalog_record(dict(row)) if row is not None else None
+    return metadata, record
+
+
+def _validated_catalog_record(row: dict[str, Any]) -> CatalogRecord:
+    source_record_id = row.get("source_record_id")
+    national_from = row.get("national_from")
+    national_to = row.get("national_to")
+    row_digest = row.get("source_row_sha256")
+    if not isinstance(source_record_id, str) or re.fullmatch(
+        r"[A-Za-z0-9_-]+", source_record_id
+    ) is None:
+        raise CatalogReadError("Generated ACM catalogue record identifier is invalid")
+    if (
+        not isinstance(national_from, str)
+        or not national_from.isdigit()
+        or not isinstance(national_to, str)
+        or not national_to.isdigit()
+        or len(national_from) != len(national_to)
+        or int(national_from) > int(national_to)
+    ):
+        raise CatalogReadError("Generated ACM catalogue record range is invalid")
+    if row.get("number_type") not in _CATALOG_NUMBER_TYPES:
+        raise CatalogReadError("Generated ACM catalogue number type is unsupported")
+    if row.get("register_status") not in _CATALOG_REGISTER_STATUSES:
+        raise CatalogReadError("Generated ACM catalogue register status is unsupported")
+    if not isinstance(row_digest, str) or re.fullmatch(r"[0-9a-f]{64}", row_digest) is None:
+        raise CatalogReadError("Generated ACM catalogue record digest is invalid")
+    changed_at = row.get("source_changed_at")
+    if changed_at is not None:
+        try:
+            datetime.strptime(str(changed_at), "%Y-%m-%d %H:%M:%S")
+        except ValueError as error:
+            raise CatalogReadError(
+                "Generated ACM catalogue mutation timestamp is invalid"
+            ) from error
+    return CatalogRecord(**row)
+
+
+def _read_catalog_metadata(connection: sqlite3.Connection) -> CatalogMetadata:
+    expected_columns = {
+        "source_record_id",
+        "national_from",
+        "national_to",
+        "e164_from",
+        "e164_to",
+        "destination",
+        "number_type",
+        "register_status",
+        "source_changed_at",
+        "source_row_sha256",
+    }
+    columns = {str(row[1]) for row in connection.execute("PRAGMA table_info(number_ranges)")}
+    if columns != expected_columns:
+        raise CatalogReadError("Generated ACM catalogue has an unexpected range schema")
+    try:
+        values = dict(connection.execute("SELECT key, value FROM catalog_metadata"))
+    except sqlite3.Error as error:
+        raise CatalogReadError("Generated ACM catalogue metadata is unavailable") from error
+    required = {
+        "schema_version",
+        "source_id",
+        "retrieved_at",
+        "source_sha256",
+        "row_count",
+        "matchable_row_count",
+    }
+    if not required <= set(values):
+        raise CatalogReadError("Generated ACM catalogue metadata is incomplete")
+    if values["schema_version"] != "1.0.0" or values["source_id"] != (
+        "acm_number_register"
+    ):
+        raise CatalogReadError("Generated ACM catalogue identity is unsupported")
+    if re.fullmatch(r"[0-9a-f]{64}", values["source_sha256"]) is None:
+        raise CatalogReadError("Generated ACM catalogue source digest is invalid")
+    try:
+        datetime.fromisoformat(values["retrieved_at"].replace("Z", "+00:00"))
+        row_count = int(values["row_count"])
+        matchable_row_count = int(values["matchable_row_count"])
+    except (TypeError, ValueError) as error:
+        raise CatalogReadError("Generated ACM catalogue metadata values are invalid") from error
+    if row_count <= 0 or not 0 <= matchable_row_count <= row_count:
+        raise CatalogReadError("Generated ACM catalogue coverage counts are invalid")
+    return CatalogMetadata(
+        retrieved_at=values["retrieved_at"],
+        source_sha256=values["source_sha256"],
+        row_count=row_count,
+        matchable_row_count=matchable_row_count,
+    )
 
 
 def build_acm_catalog(
@@ -166,8 +331,32 @@ def _download(url: str, destination: Path) -> None:
             with destination.open("wb") as output:
                 while chunk := response.read(1024 * 1024):
                     output.write(chunk)
-    except OSError as error:
-        raise CatalogBuildError(f"Could not download the pinned ACM archive: {error}") from error
+    except OSError:
+        try:
+            subprocess.run(
+                [
+                    "curl",
+                    "--fail",
+                    "--proto",
+                    "=https",
+                    "--proto-redir",
+                    "=https",
+                    "--tlsv1.2",
+                    "--location",
+                    "--silent",
+                    "--show-error",
+                    "--output",
+                    str(destination),
+                    url,
+                ],
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+        except (OSError, subprocess.CalledProcessError) as fallback_error:
+            raise CatalogBuildError(
+                "Could not download the pinned ACM archive over HTTPS"
+            ) from fallback_error
 
 
 def _temporary_database_path(output_path: Path) -> Path:
