@@ -4,7 +4,9 @@ import test from "node:test";
 import {
   buildCampaignURL,
   buildLookupURL,
+  buildTransparencyURL,
   toCampaignViewModel,
+  toTransparencyViewModel,
   toViewModel,
 } from "../assets/app.js";
 
@@ -240,4 +242,71 @@ test("campaign view model exposes aggregate context without private activity", (
   assert.equal(view.sourceCoverage.length, 2);
   assert.equal(JSON.stringify(view).includes("lookup"), false);
   assert.equal(JSON.stringify(view).includes("reporter"), false);
+});
+
+test("transparency view model preserves honest zero-state corpus boundaries", () => {
+  const snapshot = {
+    generated_at: "2026-08-29T08:35:00Z",
+    methodology_version: "1.0.0",
+    registry_reviewed_at: "2026-08-28",
+    coverage: {
+      risk_capable_source_count: 0,
+      jurisdictions: [
+        { jurisdiction: "GB", enabled_sources: ["ofcom_protected_numbers"] },
+        { jurisdiction: "NL", enabled_sources: ["acm_number_register"] },
+        { jurisdiction: "US", enabled_sources: ["nanpa_public_numbering"] },
+      ],
+      sources: [
+        {
+          source_id: "acm_number_register",
+          name: "ACM public telephone number register",
+          jurisdictions: ["NL"],
+          risk_capable: false,
+          last_successful_ingest: "2026-08-27T07:30:00Z",
+          freshness: "current",
+          gaps: [],
+        },
+      ],
+      unavailable_sources: [
+        {
+          source_id: "wieheeftmijgebeld_nl",
+          jurisdictions: ["NL"],
+          gap: "reuse_permission_required",
+        },
+      ],
+    },
+    corpus: {
+      eligible_campaigns: 0,
+      verified_organization_portfolios: 0,
+      privacy_thresholded_aggregates: 0,
+      corrections: { campaigns: 0, organization_portfolios: 0 },
+    },
+    moderation: {
+      status: "not_approved",
+      public_aggregate_minimum: null,
+    },
+    interpretation: {
+      no_matching_evidence:
+        "No matching evidence means only that eligible sources returned no publishable match; it does not mean a displayed number is safe.",
+      lookup_popularity_used_for_reputation: false,
+    },
+  };
+
+  assert.equal(buildTransparencyURL(), "/assets/transparency.json");
+  const view = toTransparencyViewModel(snapshot);
+
+  assert.deepEqual(view.metrics, {
+    jurisdictions: 3,
+    riskSources: 0,
+    campaigns: 0,
+    portfolios: 0,
+  });
+  assert.equal(view.sources[0].scope, "Numbering context only");
+  assert.equal(view.unavailableSources[0].gap, "reuse permission required");
+  assert.equal(
+    view.moderationThreshold,
+    "Not approved; public report aggregation is disabled",
+  );
+  assert.match(view.noMatchMeaning, /does not mean a displayed number is safe/);
+  assert.equal(JSON.stringify(view).includes("lookup_popularity"), false);
 });

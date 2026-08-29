@@ -157,6 +157,15 @@ def test_page_has_semantic_lookup_form_status_and_metadata() -> None:
         "campaigns",
         "campaign-list",
         "campaign-detail",
+        "coverage",
+        "coverage-no-match",
+        "metric-jurisdictions",
+        "metric-risk-sources",
+        "metric-campaigns",
+        "metric-portfolios",
+        "source-coverage-list",
+        "moderation-threshold",
+        "unavailable-source-list",
     } <= facts.ids
     assert "Report this call" in html
     assert "Watch this number" in html
@@ -198,7 +207,24 @@ def test_browser_code_uses_the_shared_api_without_a_local_verdict_path() -> None
     assert "Math.random" not in script
     assert "localStorage" not in script
     assert 'fetch(buildCampaignURL(' in script
+    assert "fetch(buildTransparencyURL()" in script
     assert "resultTitle.textContent = view.number.title" in script
+
+
+def test_committed_transparency_asset_exposes_coverage_not_vanity_totals() -> None:
+    snapshot = json.loads(
+        (WEB / "assets" / "transparency.json").read_text(encoding="utf-8")
+    )
+
+    assert snapshot["kind"] == "corpus_transparency"
+    assert snapshot["coverage"]["enabled_source_count"] == 3
+    assert snapshot["coverage"]["risk_capable_source_count"] == 0
+    assert snapshot["corpus"]["eligible_campaigns"] == 0
+    assert snapshot["moderation"]["status"] == "not_approved"
+    assert snapshot["interpretation"]["lookup_popularity_used_for_reputation"] is False
+    serialized = json.dumps(snapshot)
+    assert "lookup_count" not in serialized
+    assert "raw_report_count" not in serialized
 
 
 def test_public_campaign_routes_project_only_eligible_aggregate_evidence() -> None:

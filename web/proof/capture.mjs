@@ -229,8 +229,17 @@ async function capture(browser, viewport, scenario) {
     await page.locator("#campaign-detail").waitFor({ state: "visible" });
     await page.waitForTimeout(400);
   }
+  if (scenario.coverage) {
+    await page.waitForFunction(
+      () => document.querySelector("#metric-jurisdictions")?.textContent.trim() === "3",
+    );
+    await page.locator("#coverage").evaluate((element) => {
+      element.scrollIntoView({ behavior: "instant", block: "start" });
+    });
+    await page.waitForTimeout(400);
+  }
 
-  const facts = await page.evaluate(({ state, detail }) => {
+  const facts = await page.evaluate(({ state, detail, coverage }) => {
     const visible = (element) => {
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
@@ -257,9 +266,17 @@ async function capture(browser, viewport, scenario) {
         : null,
       focusedElement: document.activeElement?.id || document.activeElement?.tagName,
       detailTitle: detail ? document.querySelector("#campaign-detail-title")?.textContent : null,
+      coverageMetrics: coverage
+        ? [
+            "#metric-jurisdictions",
+            "#metric-risk-sources",
+            "#metric-campaigns",
+            "#metric-portfolios",
+          ].map((selector) => document.querySelector(selector)?.textContent)
+        : null,
       temporaryCopy: /\b(?:todo|lorem ipsum|placeholder)\b/i.test(document.body.textContent),
     };
-  }, { state: scenario.state, detail: scenario.detail });
+  }, { state: scenario.state, detail: scenario.detail, coverage: scenario.coverage });
   facts.consoleErrors = consoleErrors;
   if (
     facts.horizontalOverflow !== 0 ||
@@ -267,7 +284,8 @@ async function capture(browser, viewport, scenario) {
     facts.consoleErrors.length > 0 ||
     facts.temporaryCopy ||
     (scenario.state && facts.visibleRiskIcons !== 1) ||
-    (scenario.state && !facts.resultTitleMatchesReservedFixture)
+    (scenario.state && !facts.resultTitleMatchesReservedFixture) ||
+    (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["3", "0", "0", "0"]))
   ) {
     throw new Error(`${scenario.name} failed visual facts: ${JSON.stringify(facts)}`);
   }
@@ -287,6 +305,7 @@ const browser = await chromium.launch({
 });
 const scenarios = [
   { name: "empty", filename: "hero", state: null, withCampaign: false },
+  { name: "coverage", filename: "coverage", state: null, withCampaign: false, coverage: true },
   { name: "unknown", filename: "unknown", state: "insufficient_evidence", withCampaign: false },
   { name: "elevated", filename: "elevated", state: "elevated_signals", withCampaign: true },
   { name: "official-warning", filename: "official-warning", state: "official_warning", withCampaign: true },

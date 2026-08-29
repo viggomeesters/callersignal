@@ -18,6 +18,10 @@ STATIC_FILES = {
     "/index.html": (WEB / "index.html", "text/html; charset=utf-8"),
     "/assets/app.js": (WEB / "assets" / "app.js", "text/javascript; charset=utf-8"),
     "/assets/styles.css": (WEB / "assets" / "styles.css", "text/css; charset=utf-8"),
+    "/assets/transparency.json": (
+        WEB / "assets" / "transparency.json",
+        "application/json; charset=utf-8",
+    ),
 }
 
 

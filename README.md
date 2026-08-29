@@ -6,9 +6,11 @@
 
 CallerSignal is an agent-first open-source project for answering “what can we responsibly say about this displayed phone number?” It normalizes a number with explicit country context, checks lawful country-specific evidence, and returns sources, gaps, confidence, and residual uncertainty instead of guessing a caller's identity.
 
-> **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge across CLI, MCP, HTTP, and web surfaces, persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It uses pinned public-safe numbering fixtures and does not identify a caller, query live subscriber data, or accept public reports. The `v0.1.0` tag remains the earlier repository-foundation release.
+> **Current maturity:** the unreleased `main` branch implements the read-only NL, GB, and US lookup wedge, the campaign and report-safety domain foundations, private-watch and verified-organisation ports, public campaign views, and an honest corpus-transparency page, persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). The production site remains read-only: it does not identify a caller, query live subscriber data, accept reports, persist watches, or publish organisation declarations. The `v0.1.0` tag remains the earlier repository-foundation release.
 
 The durable direction is a hybrid reputation model: official evidence first, then explicitly licensed or first-party moderated observations only after source-rights, privacy, and abuse gates pass. Every shared result now contains one calibrated risk state: `official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`. The website leads with that state, its basis, and a concrete next action while preserving the evidence and uncertainty underneath. `no_risk_evidence` requires a current eligible risk-capable source and never means that a number is safe; numbering context alone remains `insufficient_evidence`.
+
+> **Corpus reality, 29 August 2026:** CallerSignal has three enabled numbering-context sources across NL, GB, and US, but zero enabled risk-capable sources and zero eligible public campaigns. “No matching evidence” means only that eligible sources returned no publishable match; it does not mean the displayed number is safe. See the versioned [corpus-transparency contract](docs/transparency.md).
 
 ## Usage: read-only lookup
 
@@ -68,6 +70,7 @@ The initial product wedge covers read-only official numbering evidence for the N
 | [`docs/implementation-plan.md`](docs/implementation-plan.md) | Dependency-ordered product backlog with acceptance and verification |
 | [`docs/onboarding.md`](docs/onboarding.md) | Fresh-clone setup for developers and agents |
 | [`docs/data-safety.md`](docs/data-safety.md) | Privacy, evidence, moderation, and publication boundaries |
+| [`docs/transparency.md`](docs/transparency.md) | Reproducible corpus, source coverage, freshness, gaps, and publication thresholds |
 | [`docs/agent-spec.md`](docs/agent-spec.md) | Shared agent behavior, four-state evaluations, deployment, and observability contract |
 | [`schemas/`](schemas/) | Committed repository and versioned product contracts |
 | [`scripts/check.sh`](scripts/check.sh) | One-command local repository gate |
@@ -88,7 +91,7 @@ make check
 
 ## Development: continue the backlog
 
-The public read-only wedge is implemented. The next dependency-ordered work adds a caller-campaign contract, controlled first-party reports and aggregation, durable data ports, private watches, verified organisation portfolios, an action-oriented campaign experience, corpus transparency, hosted MCP, operational safety, and the first functional release. Read [`AGENTS.md`](AGENTS.md), then run:
+The public lookup, campaign-experience, safety-domain, operational-safety, and transparency foundations are implemented. The remaining dependency-ordered work exposes the safe read surface through hosted MCP and cuts the first functional release. Read [`AGENTS.md`](AGENTS.md), then run:
 
 ```console
 Go

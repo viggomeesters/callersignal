@@ -1092,6 +1092,170 @@ h3 {
   font-size: 0.84rem;
 }
 
+.transparency {
+  padding-block: clamp(4.5rem, 9vw, 8rem);
+  border-top: 1px solid var(--line-strong);
+}
+
+.transparency-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.6fr);
+  gap: clamp(2rem, 8vw, 8rem);
+  align-items: end;
+}
+
+.transparency-heading p:last-child {
+  max-width: 42ch;
+  margin: 0;
+  padding-left: 1rem;
+  border-left: 5px solid var(--accent);
+  color: var(--muted);
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+
+.corpus-scorecard {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin: 2rem 0;
+  border: 1px solid var(--line-strong);
+  background: var(--line-strong);
+}
+
+.corpus-scorecard > div {
+  min-width: 0;
+  padding: clamp(1.15rem, 3vw, 2rem);
+  background: var(--surface);
+}
+
+.corpus-scorecard dt {
+  min-height: 2.8em;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 760;
+  letter-spacing: 0.06em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.corpus-scorecard dd {
+  margin: 0.5rem 0 0;
+  font-size: clamp(2.8rem, 6vw, 5rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  line-height: 0.95;
+}
+
+.coverage-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+  gap: 1px;
+  border: 1px solid var(--line-strong);
+  background: var(--line-strong);
+}
+
+.coverage-layout > * {
+  min-width: 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--surface);
+}
+
+.source-coverage-list {
+  margin-top: 1.25rem;
+}
+
+.source-coverage-row {
+  padding-block: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.source-coverage-row header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: baseline;
+}
+
+.source-coverage-row strong {
+  overflow-wrap: anywhere;
+}
+
+.source-scope {
+  flex: 0 0 auto;
+  padding: 0.22rem 0.4rem;
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+  font-size: 0.67rem;
+  font-weight: 760;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.source-scope::before {
+  content: "○ ";
+  color: var(--accent-dark);
+}
+
+.source-coverage-facts,
+.source-gap {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.source-gap {
+  color: var(--accent-dark);
+  font-weight: 680;
+}
+
+.corpus-boundaries {
+  background: var(--soft);
+}
+
+.corpus-boundaries dl {
+  margin: 1.3rem 0;
+}
+
+.corpus-boundaries dl > div {
+  display: grid;
+  grid-template-columns: minmax(8rem, 0.85fr) minmax(0, 1.15fr);
+  gap: 1rem;
+  padding-block: 0.65rem;
+  border-top: 1px solid var(--line-strong);
+  font-size: 0.8rem;
+}
+
+.corpus-boundaries dt {
+  font-weight: 760;
+}
+
+.corpus-boundaries dd {
+  margin: 0;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+
+.unavailable-source-list {
+  margin: 0 0 1.2rem;
+  padding-left: 1.1rem;
+  color: var(--accent-dark);
+  font-family: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+  word-spacing: normal;
+}
+
+.corpus-boundaries > p {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.corpus-boundaries > a {
+  color: var(--accent-dark);
+  font-size: 0.84rem;
+  font-weight: 740;
+}
+
 .method,
 .agents {
   padding-block: clamp(4.5rem, 9vw, 8rem);
@@ -1236,10 +1400,16 @@ footer p {
   .result-grid,
   .decision-grid,
   .campaign-index-heading,
+  .transparency-heading,
+  .coverage-layout,
   #campaign-detail-body,
   .method,
   .agents {
     grid-template-columns: 1fr;
+  }
+
+  .corpus-scorecard {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1299,6 +1469,12 @@ footer p {
 
   .campaign-card header {
     grid-template-columns: 1fr;
+  }
+
+  .source-coverage-row header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.4rem;
   }
 
   .campaign-card-dates,

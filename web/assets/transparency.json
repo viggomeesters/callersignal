@@ -1,0 +1,105 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "corpus_transparency",
+  "generated_at": "2026-08-29T08:35:00Z",
+  "methodology_version": "1.0.0",
+  "registry_reviewed_at": "2026-08-28",
+  "coverage": {
+    "enabled_source_count": 3,
+    "risk_capable_source_count": 0,
+    "sources": [
+      {
+        "source_id": "acm_number_register",
+        "name": "ACM public telephone number register",
+        "jurisdictions": ["NL"],
+        "risk_capable": false,
+        "runtime_status": "success",
+        "last_successful_ingest": "2026-08-27T07:30:00Z",
+        "freshness": "current",
+        "freshness_max_age_seconds": 2592000,
+        "gaps": []
+      },
+      {
+        "source_id": "nanpa_public_numbering",
+        "name": "NANPA public numbering references",
+        "jurisdictions": ["US"],
+        "risk_capable": false,
+        "runtime_status": "success",
+        "last_successful_ingest": "2026-08-27T08:00:00Z",
+        "freshness": "current",
+        "freshness_max_age_seconds": 2592000,
+        "gaps": []
+      },
+      {
+        "source_id": "ofcom_protected_numbers",
+        "name": "Ofcom long-term protected number ranges",
+        "jurisdictions": ["GB"],
+        "risk_capable": false,
+        "runtime_status": "success",
+        "last_successful_ingest": "2026-08-27T07:45:00Z",
+        "freshness": "current",
+        "freshness_max_age_seconds": 2592000,
+        "gaps": []
+      }
+    ],
+    "jurisdictions": [
+      {
+        "jurisdiction": "GB",
+        "enabled_sources": ["ofcom_protected_numbers"],
+        "risk_capable_sources": [],
+        "last_successful_ingest": "2026-08-27T07:45:00Z",
+        "freshness": "current",
+        "gaps": ["no_risk_capable_source"]
+      },
+      {
+        "jurisdiction": "NL",
+        "enabled_sources": ["acm_number_register"],
+        "risk_capable_sources": [],
+        "last_successful_ingest": "2026-08-27T07:30:00Z",
+        "freshness": "current",
+        "gaps": ["no_risk_capable_source"]
+      },
+      {
+        "jurisdiction": "US",
+        "enabled_sources": ["nanpa_public_numbering"],
+        "risk_capable_sources": [],
+        "last_successful_ingest": "2026-08-27T08:00:00Z",
+        "freshness": "current",
+        "gaps": ["no_risk_capable_source"]
+      }
+    ],
+    "unavailable_sources": [
+      {
+        "source_id": "wieheeftmijgebeld_nl",
+        "jurisdictions": ["NL"],
+        "status": "permission_required",
+        "gap": "reuse_permission_required"
+      }
+    ]
+  },
+  "corpus": {
+    "eligible_campaigns": 0,
+    "verified_organization_portfolios": 0,
+    "privacy_thresholded_aggregates": 0,
+    "corrections": {
+      "campaigns": 0,
+      "organization_portfolios": 0
+    }
+  },
+  "moderation": {
+    "status": "not_approved",
+    "public_aggregate_minimum": null,
+    "independent_observer_minimum": 2,
+    "public_free_text_allowed": false
+  },
+  "interpretation": {
+    "no_matching_evidence": "No matching evidence means only that eligible sources returned no publishable match; it does not mean a displayed number is safe.",
+    "lookup_popularity_used_for_reputation": false,
+    "excluded_public_totals": [
+      "lookup_demand",
+      "raw_reports",
+      "reporter_identities",
+      "watch_subscribers"
+    ]
+  }
+}

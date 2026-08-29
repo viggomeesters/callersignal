@@ -30,6 +30,7 @@
       </a>
       <nav aria-label="Main navigation">
         <a href="/campaigns">Campaigns</a>
+        <a href="#coverage">Coverage</a>
         <a href="#method">Method</a>
         <a href="#agents">For agents</a>
         <a href="https://github.com/viggomeesters/callersignal">GitHub</a>
@@ -300,6 +301,71 @@
           </header>
           <div id="campaign-detail-body"></div>
         </article>
+      </section>
+
+      <section id="coverage" class="transparency" aria-labelledby="coverage-title">
+        <header class="transparency-heading">
+          <div>
+            <p class="eyebrow">The corpus, without inflated totals</p>
+            <h2 id="coverage-title">What CallerSignal can see today</h2>
+          </div>
+          <p id="coverage-no-match">
+            No matching evidence is a coverage result, never a safe-number verdict.
+          </p>
+        </header>
+
+        <p id="transparency-status" class="catalogue-status" role="status" aria-live="polite">
+          Loading public corpus coverage…
+        </p>
+
+        <dl class="corpus-scorecard" aria-label="Public corpus facts">
+          <div>
+            <dt>Numbering jurisdictions</dt>
+            <dd id="metric-jurisdictions"></dd>
+          </div>
+          <div>
+            <dt>Risk-capable sources</dt>
+            <dd id="metric-risk-sources"></dd>
+          </div>
+          <div>
+            <dt>Eligible campaigns</dt>
+            <dd id="metric-campaigns"></dd>
+          </div>
+          <div>
+            <dt>Verified portfolios</dt>
+            <dd id="metric-portfolios"></dd>
+          </div>
+        </dl>
+
+        <div class="coverage-layout">
+          <section aria-labelledby="source-coverage-title">
+            <div class="section-heading">
+              <div>
+                <p class="section-kicker">Exact enabled coverage</p>
+                <h3 id="source-coverage-title">Sources and last ingest</h3>
+              </div>
+              <span id="source-coverage-count" class="count-label"></span>
+            </div>
+            <div id="source-coverage-list" class="source-coverage-list"></div>
+          </section>
+
+          <aside class="corpus-boundaries" aria-labelledby="corpus-boundaries-title">
+            <p class="section-kicker">Publication boundaries</p>
+            <h3 id="corpus-boundaries-title">What the totals exclude</h3>
+            <dl>
+              <div><dt>Community threshold</dt><dd id="moderation-threshold"></dd></div>
+              <div><dt>Corrections published</dt><dd id="correction-count"></dd></div>
+              <div><dt>Methodology</dt><dd id="methodology-version"></dd></div>
+              <div><dt>Unavailable sources</dt><dd id="unavailable-source-count"></dd></div>
+            </dl>
+            <ul id="unavailable-source-list" class="unavailable-source-list"></ul>
+            <p>
+              Lookup demand, raw reports, reporter identities, and watch subscribers are
+              deliberately absent. Popularity never becomes reputation evidence.
+            </p>
+            <a href="https://github.com/viggomeesters/callersignal/blob/main/docs/transparency.md">Read the transparency contract</a>
+          </aside>
+        </div>
       </section>
 
       <section class="method" id="method" aria-labelledby="method-title">

@@ -32,6 +32,10 @@ export function buildCampaignURL(campaignId) {
     : "/v1/campaigns";
 }
 
+export function buildTransparencyURL() {
+  return "/assets/transparency.json";
+}
+
 export function toViewModel(result) {
   const canonical = result.phone_number.canonical;
   const presentation = result.phone_number.presentation;
@@ -112,6 +116,47 @@ export function toCampaignViewModel(record) {
   };
 }
 
+export function toTransparencyViewModel(snapshot) {
+  const corpus = snapshot.corpus;
+  const coverage = snapshot.coverage;
+  const correctionCount =
+    corpus.corrections.campaigns + corpus.corrections.organization_portfolios;
+  return {
+    generatedAt: snapshot.generated_at,
+    registryReviewedAt: snapshot.registry_reviewed_at,
+    methodologyVersion: snapshot.methodology_version,
+    noMatchMeaning: snapshot.interpretation.no_matching_evidence,
+    metrics: {
+      jurisdictions: coverage.jurisdictions.filter(
+        (item) => item.enabled_sources.length > 0,
+      ).length,
+      riskSources: coverage.risk_capable_source_count,
+      campaigns: corpus.eligible_campaigns,
+      portfolios: corpus.verified_organization_portfolios,
+    },
+    sources: coverage.sources.map((source) => ({
+      id: source.source_id,
+      name: source.name,
+      jurisdictions: source.jurisdictions,
+      scope: source.risk_capable ? "Risk-capable evidence" : "Numbering context only",
+      lastIngest: source.last_successful_ingest,
+      freshness: humanize(source.freshness),
+      gaps: source.gaps.map(humanize),
+    })),
+    unavailableSources: coverage.unavailable_sources.map((source) => ({
+      id: source.source_id,
+      jurisdictions: source.jurisdictions,
+      gap: humanize(source.gap),
+    })),
+    moderationThreshold:
+      snapshot.moderation.status === "approved" &&
+      Number.isInteger(snapshot.moderation.public_aggregate_minimum)
+        ? `At least ${formatCount(snapshot.moderation.public_aggregate_minimum)} independently controlled observations`
+        : "Not approved; public report aggregation is disabled",
+    correctionCount,
+  };
+}
+
 function humanize(value) {
   return String(value ?? "unknown").replaceAll("_", " ");
 }
@@ -130,6 +175,9 @@ function formatValue(value) {
 }
 
 function formatDate(value) {
+  if (!value) {
+    return "time unavailable";
+  }
   const date = new Date(value);
   if (Number.isNaN(date.valueOf())) {
     return "time unavailable";
@@ -376,6 +424,69 @@ async function loadCampaignCatalogue(elements) {
   }
 }
 
+function renderTransparency(snapshot, elements) {
+  const view = toTransparencyViewModel(snapshot);
+  elements.metricJurisdictions.textContent = formatCount(view.metrics.jurisdictions);
+  elements.metricRiskSources.textContent = formatCount(view.metrics.riskSources);
+  elements.metricCampaigns.textContent = formatCount(view.metrics.campaigns);
+  elements.metricPortfolios.textContent = formatCount(view.metrics.portfolios);
+  elements.coverageNoMatch.textContent = view.noMatchMeaning;
+  elements.sourceCoverageCount.textContent = `${formatCount(view.sources.length)} enabled ${view.sources.length === 1 ? "source" : "sources"}`;
+
+  const sourceRows = view.sources.map((source) => {
+    const article = document.createElement("article");
+    article.className = "source-coverage-row";
+    const header = document.createElement("header");
+    header.append(
+      textElement("strong", source.name),
+      textElement("span", source.scope, "source-scope"),
+    );
+    const facts = textElement(
+      "p",
+      `${source.jurisdictions.join(", ")} · last successful ingest ${formatDate(source.lastIngest)} UTC · freshness ${source.freshness}`,
+      "source-coverage-facts",
+    );
+    article.append(header, facts);
+    if (source.gaps.length > 0) {
+      article.append(textElement("p", `Gaps: ${source.gaps.join(", ")}.`, "source-gap"));
+    }
+    return article;
+  });
+  elements.sourceCoverageList.replaceChildren(...sourceRows);
+  elements.moderationThreshold.textContent = view.moderationThreshold;
+  elements.correctionCount.textContent = formatCount(view.correctionCount);
+  elements.methodologyVersion.textContent = `v${view.methodologyVersion}`;
+  elements.unavailableSourceCount.textContent = formatCount(view.unavailableSources.length);
+  elements.unavailableSourceList.replaceChildren(
+    ...view.unavailableSources.map((source) =>
+      textElement(
+        "li",
+        `${source.id} (${source.jurisdictions.join(", ")}): ${source.gap}.`,
+      ),
+    ),
+  );
+  elements.transparencyStatus.textContent = `Coverage generated ${formatDate(view.generatedAt)} UTC · source registry reviewed ${formatDateOnly(view.registryReviewedAt)}.`;
+}
+
+async function loadTransparency(elements) {
+  try {
+    const response = await fetch(buildTransparencyURL(), {
+      headers: { Accept: "application/json" },
+    });
+    const snapshot = await response.json();
+    if (!response.ok) {
+      throw new Error("Public corpus coverage is unavailable.");
+    }
+    renderTransparency(snapshot, elements);
+  } catch (error) {
+    elements.transparencyStatus.dataset.state = "error";
+    elements.transparencyStatus.textContent =
+      error instanceof Error
+        ? `${error.message} Read the repository transparency document for the last committed snapshot.`
+        : "Public corpus coverage is unavailable. Read the repository transparency document.";
+  }
+}
+
 function safeSourceLink(source) {
   const locator = source.locator ?? source.url;
   if (!locator) {
@@ -551,9 +662,23 @@ function init() {
     campaignDetailTitle: document.querySelector("#campaign-detail-title"),
     campaignDetailSummary: document.querySelector("#campaign-detail-summary"),
     campaignDetailBody: document.querySelector("#campaign-detail-body"),
+    transparencyStatus: document.querySelector("#transparency-status"),
+    coverageNoMatch: document.querySelector("#coverage-no-match"),
+    metricJurisdictions: document.querySelector("#metric-jurisdictions"),
+    metricRiskSources: document.querySelector("#metric-risk-sources"),
+    metricCampaigns: document.querySelector("#metric-campaigns"),
+    metricPortfolios: document.querySelector("#metric-portfolios"),
+    sourceCoverageCount: document.querySelector("#source-coverage-count"),
+    sourceCoverageList: document.querySelector("#source-coverage-list"),
+    moderationThreshold: document.querySelector("#moderation-threshold"),
+    correctionCount: document.querySelector("#correction-count"),
+    methodologyVersion: document.querySelector("#methodology-version"),
+    unavailableSourceCount: document.querySelector("#unavailable-source-count"),
+    unavailableSourceList: document.querySelector("#unavailable-source-list"),
   };
 
   const campaignsPromise = loadCampaignCatalogue(elements);
+  loadTransparency(elements);
 
   for (const button of document.querySelectorAll(".example-button")) {
     button.addEventListener("click", () => {

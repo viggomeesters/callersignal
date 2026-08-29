@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-08-29T06:29:27.378Z",
+  "captured_at": "2026-08-29T06:43:10.350Z",
   "fixture_as_of": "2026-08-29T06:20:00Z",
   "fixture_policy": "reserved synthetic browser proof only",
   "results": [
@@ -17,6 +17,30 @@
       "resultTitleMatchesReservedFixture": null,
       "focusedElement": "BODY",
       "detailTitle": null,
+      "coverageMetrics": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "coverage",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": null,
+      "riskHeadline": null,
+      "visibleRiskIcons": 0,
+      "resultTitleMatchesReservedFixture": null,
+      "focusedElement": "BODY",
+      "detailTitle": null,
+      "coverageMetrics": [
+        "3",
+        "0",
+        "0",
+        "0"
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -34,6 +58,7 @@
       "resultTitleMatchesReservedFixture": true,
       "focusedElement": "result-title",
       "detailTitle": null,
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -51,6 +76,7 @@
       "resultTitleMatchesReservedFixture": true,
       "focusedElement": "result-title",
       "detailTitle": null,
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -68,6 +94,7 @@
       "resultTitleMatchesReservedFixture": true,
       "focusedElement": "result-title",
       "detailTitle": null,
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -85,6 +112,7 @@
       "resultTitleMatchesReservedFixture": null,
       "focusedElement": "campaign-detail-title",
       "detailTitle": "Reserved fixture impersonation pattern",
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -102,6 +130,30 @@
       "resultTitleMatchesReservedFixture": null,
       "focusedElement": "BODY",
       "detailTitle": null,
+      "coverageMetrics": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "coverage",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": null,
+      "riskHeadline": null,
+      "visibleRiskIcons": 0,
+      "resultTitleMatchesReservedFixture": null,
+      "focusedElement": "BODY",
+      "detailTitle": null,
+      "coverageMetrics": [
+        "3",
+        "0",
+        "0",
+        "0"
+      ],
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -119,6 +171,7 @@
       "resultTitleMatchesReservedFixture": true,
       "focusedElement": "result-title",
       "detailTitle": null,
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -136,6 +189,7 @@
       "resultTitleMatchesReservedFixture": true,
       "focusedElement": "result-title",
       "detailTitle": null,
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -153,6 +207,7 @@
       "resultTitleMatchesReservedFixture": true,
       "focusedElement": "result-title",
       "detailTitle": null,
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     },
@@ -170,6 +225,7 @@
       "resultTitleMatchesReservedFixture": null,
       "focusedElement": "campaign-detail-title",
       "detailTitle": "Reserved fixture impersonation pattern",
+      "coverageMetrics": null,
       "temporaryCopy": false,
       "consoleErrors": []
     }

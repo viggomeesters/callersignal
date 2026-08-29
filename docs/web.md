@@ -36,19 +36,21 @@ The real same-origin page and API were exercised in headless Chrome on 29 August
 
 | Viewport | States inspected | Horizontal overflow | Clipped controls/text | Console warnings/errors |
 | --- | --- | ---: | ---: | ---: |
-| 375 × 812 | empty, unknown, elevated, official warning, campaign detail | 0 px | 0 | 0 |
-| 1440 × 1000 | empty, unknown, elevated, official warning, campaign detail | 0 px | 0 | 0 |
+| 375 × 812 | empty, coverage, unknown, elevated, official warning, campaign detail | 0 px | 0 | 0 |
+| 1440 × 1000 | empty, coverage, unknown, elevated, official warning, campaign detail | 0 px | 0 | 0 |
 
-Every risk result showed exactly one matching icon plus a text label, the reserved number as its title, source counts and recency, and the canonical action. The result heading received focus; the campaign-detail heading received focus on direct routes. Machine facts in [`web/proof/browser-proof.json`](../web/proof/browser-proof.json) record zero horizontal overflow, clipped visible controls/text, temporary copy, and console warnings/errors for all ten captures. Visual inspection confirmed readable state contrast, no overlap, stable squared geometry, compact mobile wrapping, and no raw report or lookup-popularity display.
+Every risk result showed exactly one matching icon plus a text label, the reserved number as its title, source counts and recency, and the canonical action. The result heading received focus; the campaign-detail heading received focus on direct routes. The coverage view showed the exact public snapshot of three enabled numbering jurisdictions, zero risk-capable sources, zero eligible campaigns, and zero verified portfolios. Machine facts in [`web/proof/browser-proof.json`](../web/proof/browser-proof.json) record zero horizontal overflow, clipped visible controls/text, temporary copy, and console warnings/errors for all twelve captures. Visual inspection confirmed readable state contrast, no overlap, stable squared geometry, compact mobile wrapping, and no raw report or lookup-popularity display.
 
 Visual evidence:
 
 - [desktop empty](../web/proof/desktop-1440-hero.jpg)
+- [desktop coverage](../web/proof/desktop-1440-coverage.jpg)
 - [desktop unknown](../web/proof/desktop-1440-unknown.jpg)
 - [desktop elevated](../web/proof/desktop-1440-elevated.jpg)
 - [desktop official warning](../web/proof/desktop-1440-official-warning.jpg)
 - [desktop campaign detail](../web/proof/desktop-1440-campaign-detail.jpg)
 - [mobile empty](../web/proof/mobile-375-hero.jpg)
+- [mobile coverage](../web/proof/mobile-375-coverage.jpg)
 - [mobile unknown](../web/proof/mobile-375-unknown.jpg)
 - [mobile elevated](../web/proof/mobile-375-elevated.jpg)
 - [mobile official warning](../web/proof/mobile-375-official-warning.jpg)
