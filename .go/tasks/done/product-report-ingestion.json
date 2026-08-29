@@ -1,0 +1,91 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-report-ingestion",
+  "project": "callersignal",
+  "status": "done",
+  "order": 600,
+  "summary": "Add privacy-aware call-report ingestion and moderation",
+  "description": "Accept explicit reports as unverified observations with correction, abuse, and spoofing safeguards.",
+  "depends_on": [
+    "product-caller-campaign-contract",
+    "product-evidence-ledger",
+    "product-lookup-orchestrator",
+    "product-source-rights-registry"
+  ],
+  "scope": {
+    "read": [
+      "schemas/call-report.schema.json",
+      "docs/data-safety.md"
+    ],
+    "modify": [
+      "src/callersignal/reports/**",
+      "tests/integration/test_reports.py",
+      "docs/moderation.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: Reports describe calls displaying a number and never assert subscriber guilt or identity by default.",
+    "R-2: Retention, correction, deletion, rate limiting, deduplication, and brigading controls are enforced."
+  ],
+  "verification": [
+    "uv run pytest tests/integration/test_reports.py -q"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T07:31:49+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-29T07:38:27+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved after privacy and abuse review: reports remain unverified displayed-number observations; structured-only intake, keyed minimization, dedupe, rate limiting, brigading threshold, correction, deletion, moderation, and retention controls are executable; public intake remains gated; full repository check is green."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T07:38:22+02:00",
+      "task_id": "product-report-ingestion",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/reports/__init__.py,src/callersignal/reports/service.py,tests/integration/test_reports.py,docs/moderation.md,.go/tasks/active/product-report-ingestion.json; verification=uv run pytest tests/integration/test_reports.py -q (10 passed) && make check (149 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking displayed-number semantics, no-free-text input, keyed actor minimization, duplicate ordering before rate limits, rate and brigading thresholds, moderation verification status, correction authorization, deletion receipts, automatic expiry, source-rights boundary, and disabled public activation",
+      "changed_files": [
+        "src/callersignal/reports/__init__.py",
+        "src/callersignal/reports/service.py",
+        "tests/integration/test_reports.py",
+        "docs/moderation.md",
+        ".go/tasks/active/product-report-ingestion.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/integration/test_reports.py -q (10 passed) && make check (149 Python and 5 web tests passed) && git diff --check (passed)",
+        "result": "uv run pytest tests/integration/test_reports.py -q (10 passed) && make check (149 Python and 5 web tests passed) && git diff --check (passed)"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved by focused self-review after checking displayed-number semantics, no-free-text input, keyed actor minimization, duplicate ordering before rate limits, rate and brigading thresholds, moderation verification status, correction authorization, deletion receipts, automatic expiry, source-rights boundary, and disabled public activation",
+        "skip_reason": null
+      }
+    }
+  ]
+}
