@@ -27,7 +27,10 @@ STATIC_FILES = {
 
 def app(environ, start_response):
     request_path = str(environ.get("PATH_INFO", "/"))
-    if request_path == "/v1/lookup" or request_path.startswith("/v1/campaigns"):
+    if (
+        request_path in {"/v1/lookup", "/v1/coverage"}
+        or request_path.startswith("/v1/campaigns")
+    ):
         return lookup_application(environ, start_response)
     if request_path == "/campaigns" or request_path.startswith("/campaigns/"):
         request_path = "/"

@@ -75,9 +75,10 @@ def tool_definitions() -> list[dict[str, Any]]:
             "get_source_coverage",
             "Get public corpus and source coverage",
             (
-                "Return the committed transparency snapshot: exact enabled jurisdictions, "
-                "risk-capable coverage, last successful ingest, freshness, gaps, eligible "
-                "campaign counts, moderation status, and correction counts."
+                "Return the shared public coverage projection: full official ACM catalogue "
+                "counts and freshness, indexed and advertised caller-report routes, enabled "
+                "reputation feeds, unavailable reasons, and corpus publication boundaries. "
+                "Source count is not a trust or safety score."
             ),
             _EMPTY_OBJECT_SCHEMA,
         ),
@@ -154,10 +155,7 @@ def call_public_tool(
         error = _require_no_arguments(arguments)
         if error:
             return error
-        snapshot = json.loads(
-            (_ROOT / "web/assets/transparency.json").read_text(encoding="utf-8")
-        )
-        return _tool_success(snapshot)
+        return _http_tool_result(http_application, "/v1/coverage")
     if name == "get_methodology":
         error = _require_no_arguments(arguments)
         if error:

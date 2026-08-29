@@ -322,22 +322,54 @@
 
         <dl class="corpus-scorecard" aria-label="Public corpus facts">
           <div>
-            <dt>Numbering jurisdictions</dt>
-            <dd id="metric-jurisdictions"></dd>
+            <dt>ACM ranges imported</dt>
+            <dd id="metric-acm-ranges"></dd>
           </div>
           <div>
-            <dt>Risk-capable sources</dt>
-            <dd id="metric-risk-sources"></dd>
+            <dt>Lookup-compatible ranges</dt>
+            <dd id="metric-acm-matchable"></dd>
           </div>
           <div>
-            <dt>Eligible campaigns</dt>
-            <dd id="metric-campaigns"></dd>
+            <dt>Caller-report services indexed</dt>
+            <dd id="metric-indexed-services"></dd>
           </div>
           <div>
-            <dt>Verified portfolios</dt>
-            <dd id="metric-portfolios"></dd>
+            <dt>Reputation feeds enabled</dt>
+            <dd id="metric-enabled-reputation"></dd>
           </div>
         </dl>
+
+        <div class="coverage-truth-grid">
+          <article class="coverage-ledger" data-availability="available" aria-labelledby="official-catalog-title">
+            <header>
+              <p class="availability-label">Available · official context</p>
+              <h3 id="official-catalog-title">The complete Dutch ACM catalogue</h3>
+            </header>
+            <p id="catalog-lead" class="ledger-lead"></p>
+            <dl class="ledger-facts">
+              <div><dt>Freshness</dt><dd id="catalog-freshness"></dd></div>
+              <div><dt>Destination categories</dt><dd id="catalog-destinations"></dd></div>
+              <div><dt>Newest source change</dt><dd id="catalog-newest-change"></dd></div>
+              <div><dt>Source digest</dt><dd id="catalog-digest"></dd></div>
+            </dl>
+            <ul id="catalog-status-list" class="register-status-list" aria-label="ACM register status coverage"></ul>
+            <p class="ledger-boundary">This is number-plan context. It does not identify a caller, subscriber, or safe call.</p>
+          </article>
+
+          <article class="coverage-ledger" data-availability="unavailable" aria-labelledby="reputation-coverage-title">
+            <header>
+              <p class="availability-label">Not activated · reputation</p>
+              <h3 id="reputation-coverage-title">No caller-reputation feed yet</h3>
+            </header>
+            <p id="reputation-lead" class="ledger-lead"></p>
+            <ul id="reputation-reason-list" class="reputation-reason-list"></ul>
+            <details class="source-decision-details">
+              <summary id="reputation-source-summary">Inspect source decisions</summary>
+              <ul id="reputation-service-list" class="reputation-service-list"></ul>
+            </details>
+            <p id="reputation-notice" class="ledger-boundary"></p>
+          </article>
+        </div>
 
         <div class="coverage-layout">
           <section aria-labelledby="source-coverage-title">
@@ -358,9 +390,11 @@
               <div><dt>Community threshold</dt><dd id="moderation-threshold"></dd></div>
               <div><dt>Corrections published</dt><dd id="correction-count"></dd></div>
               <div><dt>Methodology</dt><dd id="methodology-version"></dd></div>
-              <div><dt>Unavailable sources</dt><dd id="unavailable-source-count"></dd></div>
+              <div><dt>Numbering jurisdictions</dt><dd id="metric-jurisdictions"></dd></div>
+              <div><dt>Risk-capable sources</dt><dd id="metric-risk-sources"></dd></div>
+              <div><dt>Eligible campaigns</dt><dd id="metric-campaigns"></dd></div>
+              <div><dt>Verified portfolios</dt><dd id="metric-portfolios"></dd></div>
             </dl>
-            <ul id="unavailable-source-list" class="unavailable-source-list"></ul>
             <p>
               Lookup demand, raw reports, reporter identities, and watch subscribers are
               deliberately absent. Popularity never becomes reputation evidence.

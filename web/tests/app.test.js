@@ -251,6 +251,47 @@ test("transparency view model preserves honest zero-state corpus boundaries", ()
     registry_reviewed_at: "2026-08-28",
     coverage: {
       risk_capable_source_count: 0,
+      number_catalog: {
+        status: "available",
+        imported_range_count: 74984,
+        matchable_range_count: 73409,
+        destination_category_count: 44,
+        freshness: "current",
+        retrieved_at: "2026-08-29T11:23:00Z",
+        source_newest_mutation_at: "2026-08-28T11:21:06Z",
+        source_sha256: "sha256:fixture-digest",
+        register_statuses: [
+          { status: "assigned", source_status: "Toegekend", range_count: 73221 },
+          { status: "cooling_off", source_status: "Afkoelen", range_count: 1740 },
+          { status: "blocked", source_status: "Geblokkeerd", range_count: 23 },
+        ],
+        limitations: ["Number-plan context does not prove call safety."],
+      },
+      reputation_sources: {
+        indexed_service_count: 15,
+        licensable_service_count: 4,
+        enabled_source_count: 0,
+        unavailable_service_count: 15,
+        unavailable_reasons: [
+          {
+            reason: "commercial_agreement_and_credentials_required",
+            service_count: 4,
+          },
+          { reason: "publisher_permission_required", service_count: 11 },
+        ],
+        services: [
+          {
+            service_id: "tellows",
+            name: "tellows",
+            jurisdictions: [],
+            integration_channel: "licensed_api",
+            status: "unavailable",
+            reason: "commercial_agreement_and_credentials_required",
+            blocking_gates: ["commercial_terms", "credentials"],
+          },
+        ],
+        notice: "Source counts describe coverage only; they are not trust or safety scores.",
+      },
       jurisdictions: [
         { jurisdiction: "GB", enabled_sources: ["ofcom_protected_numbers"] },
         { jurisdiction: "NL", enabled_sources: ["acm_number_register"] },
@@ -292,15 +333,25 @@ test("transparency view model preserves honest zero-state corpus boundaries", ()
     },
   };
 
-  assert.equal(buildTransparencyURL(), "/assets/transparency.json");
+  assert.equal(buildTransparencyURL(), "/v1/coverage");
   const view = toTransparencyViewModel(snapshot);
 
   assert.deepEqual(view.metrics, {
+    importedRanges: 74984,
+    matchableRanges: 73409,
+    indexedServices: 15,
+    enabledReputationSources: 0,
+  });
+  assert.deepEqual(view.corpusMetrics, {
     jurisdictions: 3,
     riskSources: 0,
     campaigns: 0,
     portfolios: 0,
   });
+  assert.equal(view.catalog.statuses[2].label, "blocked");
+  assert.equal(view.reputation.licensable, 4);
+  assert.equal(view.reputation.services[0].reason, "commercial agreement and credentials required");
+  assert.match(view.reputation.notice, /not trust or safety scores/);
   assert.equal(view.sources[0].scope, "Numbering context only");
   assert.equal(view.unavailableSources[0].gap, "reuse permission required");
   assert.equal(

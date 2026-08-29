@@ -300,7 +300,7 @@ Depends on `product-acm-production-read-model` and `product-authorized-reputatio
 
 Acceptance: coverage reports ACM counts, categories, digest and freshness plus indexed, licensable, enabled, and unavailable reputation-source counts; it reveals no raw inventory or private data and never presents source count as trust; desktop and mobile browser proof pass.
 
-Verify: `uv run pytest tests/integration tests/e2e/test_web.py -q`, `npm --prefix web test`, and `make check`.
+Verify: `uv run pytest tests/integration tests/e2e/test_web.py -q`, `npm --prefix web test`, `make check`, and desktop/mobile browser proof of the available official versus unavailable reputation ledger.
 
 ### `product-data-expansion-release`
 

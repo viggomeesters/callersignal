@@ -201,6 +201,12 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
         (ROOT / "web/assets/transparency.json").read_text(encoding="utf-8")
     )
     registry = json.loads((ROOT / "sources/registry.json").read_text(encoding="utf-8"))
+    acm_manifest = json.loads(
+        (ROOT / "sources/acm-bulk-manifest.json").read_text(encoding="utf-8")
+    )
+    caller_report_index = json.loads(
+        (ROOT / "sources/caller-report-services.json").read_text(encoding="utf-8")
+    )
     ingest_status = {}
     for fixture_path in sorted((ROOT / "fixtures").glob("*/*.json")):
         fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
@@ -208,6 +214,10 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
             "status": "success",
             "last_successful_ingest": fixture["source"]["retrieved_at"],
         }
+    ingest_status["acm_number_register"] = {
+        "status": "success",
+        "last_successful_ingest": acm_manifest["artifact"]["retrieved_at"],
+    }
 
     rebuilt = build_transparency_snapshot(
         source_registry=registry,
@@ -222,11 +232,35 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
         },
         methodology_version="1.0.0",
         generated_at=datetime.fromisoformat(committed["generated_at"].replace("Z", "+00:00")),
+        acm_manifest=acm_manifest,
+        caller_report_index=caller_report_index,
     )
 
     assert committed == rebuilt
     assert committed["coverage"]["risk_capable_source_count"] == 0
+    catalog = committed["coverage"]["number_catalog"]
+    assert catalog["status"] == "available"
+    assert catalog["imported_range_count"] == 74_984
+    assert catalog["matchable_range_count"] == 73_409
+    assert catalog["destination_category_count"] == 44
+    assert catalog["source_sha256"].startswith("sha256:")
+    assert sum(item["range_count"] for item in catalog["register_statuses"]) == 74_984
+    reputation = committed["coverage"]["reputation_sources"]
+    assert reputation["indexed_service_count"] == 15
+    assert reputation["licensable_service_count"] == 4
+    assert reputation["enabled_source_count"] == 0
+    assert reputation["unavailable_service_count"] == 15
+    assert {item["reason"] for item in reputation["unavailable_reasons"]} == {
+        "commercial_agreement_and_credentials_required",
+        "publisher_permission_required",
+    }
+    assert len(reputation["services"]) == 15
     assert committed["corpus"]["eligible_campaigns"] == 0
     assert committed["interpretation"]["no_matching_evidence"].startswith(
         "No matching evidence"
     )
+    serialized = json.dumps(committed)
+    assert "destination_counts" not in serialized
+    assert "range_holder" not in serialized
+    assert "phone_number" not in serialized
+    assert "report_text" not in serialized

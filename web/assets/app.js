@@ -33,7 +33,7 @@ export function buildCampaignURL(campaignId) {
 }
 
 export function buildTransparencyURL() {
-  return "/assets/transparency.json";
+  return "/v1/coverage";
 }
 
 export function toViewModel(result) {
@@ -119,6 +119,8 @@ export function toCampaignViewModel(record) {
 export function toTransparencyViewModel(snapshot) {
   const corpus = snapshot.corpus;
   const coverage = snapshot.coverage;
+  const catalog = coverage.number_catalog;
+  const reputation = coverage.reputation_sources;
   const correctionCount =
     corpus.corrections.campaigns + corpus.corrections.organization_portfolios;
   return {
@@ -127,12 +129,54 @@ export function toTransparencyViewModel(snapshot) {
     methodologyVersion: snapshot.methodology_version,
     noMatchMeaning: snapshot.interpretation.no_matching_evidence,
     metrics: {
+      importedRanges: catalog.imported_range_count,
+      matchableRanges: catalog.matchable_range_count,
+      indexedServices: reputation.indexed_service_count,
+      enabledReputationSources: reputation.enabled_source_count,
+    },
+    corpusMetrics: {
       jurisdictions: coverage.jurisdictions.filter(
         (item) => item.enabled_sources.length > 0,
       ).length,
       riskSources: coverage.risk_capable_source_count,
       campaigns: corpus.eligible_campaigns,
       portfolios: corpus.verified_organization_portfolios,
+    },
+    catalog: {
+      status: humanize(catalog.status),
+      importedRanges: catalog.imported_range_count,
+      matchableRanges: catalog.matchable_range_count,
+      destinationCategories: catalog.destination_category_count,
+      freshness: humanize(catalog.freshness),
+      retrievedAt: catalog.retrieved_at,
+      newestChange: catalog.source_newest_mutation_at,
+      digest: catalog.source_sha256,
+      statuses: catalog.register_statuses.map((item) => ({
+        label: humanize(item.status),
+        nativeLabel: item.source_status,
+        count: item.range_count,
+      })),
+      limitations: catalog.limitations,
+    },
+    reputation: {
+      indexed: reputation.indexed_service_count,
+      licensable: reputation.licensable_service_count,
+      enabled: reputation.enabled_source_count,
+      unavailable: reputation.unavailable_service_count,
+      reasons: reputation.unavailable_reasons.map((item) => ({
+        label: humanize(item.reason),
+        count: item.service_count,
+      })),
+      services: reputation.services.map((service) => ({
+        id: service.service_id,
+        name: service.name,
+        jurisdictions: service.jurisdictions,
+        channel: humanize(service.integration_channel),
+        status: humanize(service.status),
+        reason: humanize(service.reason),
+        blockingGates: service.blocking_gates.map(humanize),
+      })),
+      notice: reputation.notice,
     },
     sources: coverage.sources.map((source) => ({
       id: source.source_id,
@@ -426,11 +470,68 @@ async function loadCampaignCatalogue(elements) {
 
 function renderTransparency(snapshot, elements) {
   const view = toTransparencyViewModel(snapshot);
-  elements.metricJurisdictions.textContent = formatCount(view.metrics.jurisdictions);
-  elements.metricRiskSources.textContent = formatCount(view.metrics.riskSources);
-  elements.metricCampaigns.textContent = formatCount(view.metrics.campaigns);
-  elements.metricPortfolios.textContent = formatCount(view.metrics.portfolios);
+  elements.metricAcmRanges.textContent = formatCount(view.metrics.importedRanges);
+  elements.metricAcmMatchable.textContent = formatCount(view.metrics.matchableRanges);
+  elements.metricIndexedServices.textContent = formatCount(view.metrics.indexedServices);
+  elements.metricEnabledReputation.textContent = formatCount(
+    view.metrics.enabledReputationSources,
+  );
+  elements.metricJurisdictions.textContent = formatCount(
+    view.corpusMetrics.jurisdictions,
+  );
+  elements.metricRiskSources.textContent = formatCount(view.corpusMetrics.riskSources);
+  elements.metricCampaigns.textContent = formatCount(view.corpusMetrics.campaigns);
+  elements.metricPortfolios.textContent = formatCount(view.corpusMetrics.portfolios);
   elements.coverageNoMatch.textContent = view.noMatchMeaning;
+  elements.catalogLead.textContent = `${formatCount(view.catalog.importedRanges)} imported ranges, ${formatCount(view.catalog.matchableRanges)} available for canonical lookups.`;
+  elements.catalogFreshness.textContent = `${view.catalog.freshness}, retrieved ${formatDate(view.catalog.retrievedAt)} UTC`;
+  elements.catalogDestinations.textContent = formatCount(
+    view.catalog.destinationCategories,
+  );
+  elements.catalogNewestChange.textContent = `${formatDate(view.catalog.newestChange)} UTC`;
+  elements.catalogDigest.textContent = view.catalog.digest;
+  elements.catalogStatusList.replaceChildren(
+    ...view.catalog.statuses.map((status) => {
+      const item = document.createElement("li");
+      item.append(
+        textElement("strong", formatCount(status.count)),
+        textElement("span", `${status.label} · ACM: ${status.nativeLabel}`),
+      );
+      return item;
+    }),
+  );
+  elements.reputationLead.textContent = `${formatCount(view.reputation.indexed)} services indexed, ${formatCount(view.reputation.licensable)} advertise a licensing route, ${formatCount(view.reputation.enabled)} are enabled.`;
+  elements.reputationReasonList.replaceChildren(
+    ...view.reputation.reasons.map((reason) => {
+      const item = document.createElement("li");
+      item.append(
+        textElement("strong", formatCount(reason.count)),
+        textElement("span", reason.label),
+      );
+      return item;
+    }),
+  );
+  elements.reputationSourceSummary.textContent = `Inspect ${formatCount(view.reputation.services.length)} source decisions`;
+  elements.reputationServiceList.replaceChildren(
+    ...view.reputation.services.map((service) => {
+      const item = document.createElement("li");
+      const jurisdictions =
+        service.jurisdictions.length > 0 ? service.jurisdictions.join(", ") : "International";
+      const blockers =
+        service.blockingGates.length > 0
+          ? ` Blocked by ${service.blockingGates.join(", ")}.`
+          : "";
+      item.append(
+        textElement("strong", service.name),
+        textElement(
+          "span",
+          `${jurisdictions} · ${service.channel} · ${service.reason}.${blockers}`,
+        ),
+      );
+      return item;
+    }),
+  );
+  elements.reputationNotice.textContent = view.reputation.notice;
   elements.sourceCoverageCount.textContent = `${formatCount(view.sources.length)} enabled ${view.sources.length === 1 ? "source" : "sources"}`;
 
   const sourceRows = view.sources.map((source) => {
@@ -456,15 +557,6 @@ function renderTransparency(snapshot, elements) {
   elements.moderationThreshold.textContent = view.moderationThreshold;
   elements.correctionCount.textContent = formatCount(view.correctionCount);
   elements.methodologyVersion.textContent = `v${view.methodologyVersion}`;
-  elements.unavailableSourceCount.textContent = formatCount(view.unavailableSources.length);
-  elements.unavailableSourceList.replaceChildren(
-    ...view.unavailableSources.map((source) =>
-      textElement(
-        "li",
-        `${source.id} (${source.jurisdictions.join(", ")}): ${source.gap}.`,
-      ),
-    ),
-  );
   elements.transparencyStatus.textContent = `Coverage generated ${formatDate(view.generatedAt)} UTC · source registry reviewed ${formatDateOnly(view.registryReviewedAt)}.`;
 }
 
@@ -664,17 +756,30 @@ function init() {
     campaignDetailBody: document.querySelector("#campaign-detail-body"),
     transparencyStatus: document.querySelector("#transparency-status"),
     coverageNoMatch: document.querySelector("#coverage-no-match"),
+    metricAcmRanges: document.querySelector("#metric-acm-ranges"),
+    metricAcmMatchable: document.querySelector("#metric-acm-matchable"),
+    metricIndexedServices: document.querySelector("#metric-indexed-services"),
+    metricEnabledReputation: document.querySelector("#metric-enabled-reputation"),
     metricJurisdictions: document.querySelector("#metric-jurisdictions"),
     metricRiskSources: document.querySelector("#metric-risk-sources"),
     metricCampaigns: document.querySelector("#metric-campaigns"),
     metricPortfolios: document.querySelector("#metric-portfolios"),
+    catalogLead: document.querySelector("#catalog-lead"),
+    catalogFreshness: document.querySelector("#catalog-freshness"),
+    catalogDestinations: document.querySelector("#catalog-destinations"),
+    catalogNewestChange: document.querySelector("#catalog-newest-change"),
+    catalogDigest: document.querySelector("#catalog-digest"),
+    catalogStatusList: document.querySelector("#catalog-status-list"),
+    reputationLead: document.querySelector("#reputation-lead"),
+    reputationReasonList: document.querySelector("#reputation-reason-list"),
+    reputationSourceSummary: document.querySelector("#reputation-source-summary"),
+    reputationServiceList: document.querySelector("#reputation-service-list"),
+    reputationNotice: document.querySelector("#reputation-notice"),
     sourceCoverageCount: document.querySelector("#source-coverage-count"),
     sourceCoverageList: document.querySelector("#source-coverage-list"),
     moderationThreshold: document.querySelector("#moderation-threshold"),
     correctionCount: document.querySelector("#correction-count"),
     methodologyVersion: document.querySelector("#methodology-version"),
-    unavailableSourceCount: document.querySelector("#unavailable-source-count"),
-    unavailableSourceList: document.querySelector("#unavailable-source-list"),
   };
 
   const campaignsPromise = loadCampaignCatalogue(elements);

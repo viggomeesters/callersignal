@@ -21,6 +21,10 @@
       "destination": "/api/campaigns?campaign_id=:campaign_id"
     },
     {
+      "source": "/v1/coverage",
+      "destination": "/api/coverage"
+    },
+    {
       "source": "/healthz",
       "destination": "/api/healthz"
     },

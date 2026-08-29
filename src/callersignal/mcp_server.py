@@ -11,6 +11,7 @@ from typing import Any, TextIO
 
 from callersignal.lookup import LookupService
 from callersignal.numbering import OriginRegionRequiredError
+from callersignal.transparency import load_public_coverage_snapshot
 
 PROTOCOL_VERSION = "2025-11-25"
 SUPPORTED_PROTOCOL_VERSIONS = {PROTOCOL_VERSION, "2025-06-18"}
@@ -60,6 +61,31 @@ def tool_definition() -> dict[str, Any]:
     }
 
 
+def source_coverage_tool_definition() -> dict[str, Any]:
+    """Return the read-only cross-surface source coverage contract."""
+    return {
+        "name": "get_source_coverage",
+        "title": "Get public source coverage",
+        "description": (
+            "Return the same public coverage projection as HTTP, CLI, hosted MCP, and the "
+            "website: official ACM catalogue counts and freshness plus indexed, advertised "
+            "licensing, enabled, and unavailable reputation-source counts. Source volume is "
+            "not a trust or safety score."
+        ),
+        "inputSchema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {},
+        },
+        "outputSchema": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+        },
+        "annotations": {"readOnlyHint": True, "openWorldHint": False},
+    }
+
+
 def call_lookup_tool(
     arguments: Mapping[str, Any],
     *,
@@ -93,10 +119,32 @@ def call_lookup_tool(
     }
 
 
+def call_source_coverage_tool(
+    arguments: Mapping[str, Any],
+    *,
+    source_coverage: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Return the committed public projection without accepting lookup data."""
+    if arguments:
+        return _tool_error("Source coverage accepts no arguments.")
+    snapshot = (
+        dict(source_coverage)
+        if source_coverage is not None
+        else load_public_coverage_snapshot()
+    )
+    serialized = json.dumps(snapshot, sort_keys=True, ensure_ascii=False)
+    return {
+        "content": [{"type": "text", "text": serialized}],
+        "structuredContent": snapshot,
+        "isError": False,
+    }
+
+
 def handle_request(
     message: Mapping[str, Any],
     *,
     lookup_service: LookupService | None = None,
+    source_coverage: Mapping[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     """Handle one valid JSON-RPC request or notification."""
     if "id" not in message:
@@ -130,20 +178,29 @@ def handle_request(
     if method == "ping":
         return _success(request_id, {})
     if method == "tools/list":
-        return _success(request_id, {"tools": [tool_definition()]})
+        return _success(
+            request_id,
+            {"tools": [tool_definition(), source_coverage_tool_definition()]},
+        )
     if method == "tools/call":
         params = message.get("params", {})
         if not isinstance(params, Mapping):
             return _success(request_id, _tool_error("Tool parameters must be an object."))
-        if params.get("name") != "lookup_phone_number":
+        tool_name = params.get("name")
+        if tool_name not in {"lookup_phone_number", "get_source_coverage"}:
             return _success(request_id, _tool_error("Unknown tool name."))
         arguments = params.get("arguments", {})
         if not isinstance(arguments, Mapping):
             return _success(request_id, _tool_error("Tool arguments must be an object."))
-        return _success(
-            request_id,
-            call_lookup_tool(arguments, lookup_service=lookup_service),
-        )
+        if tool_name == "get_source_coverage":
+            return _success(
+                request_id,
+                call_source_coverage_tool(
+                    arguments,
+                    source_coverage=source_coverage,
+                ),
+            )
+        return _success(request_id, call_lookup_tool(arguments, lookup_service=lookup_service))
     return _error(request_id, -32601, "Method not found")
 
 
@@ -152,6 +209,7 @@ def serve_stdio(
     input_stream: TextIO = sys.stdin,
     output_stream: TextIO = sys.stdout,
     lookup_service: LookupService | None = None,
+    source_coverage: Mapping[str, Any] | None = None,
 ) -> None:
     """Serve newline-delimited MCP JSON-RPC messages until stdin closes."""
     initialized = False
@@ -182,7 +240,11 @@ def serve_stdio(
             if "id" in message:
                 _write(output_stream, _error(message["id"], -32002, "Server not initialized"))
             continue
-        response = handle_request(message, lookup_service=lookup_service)
+        response = handle_request(
+            message,
+            lookup_service=lookup_service,
+            source_coverage=source_coverage,
+        )
         if response is not None:
             _write(output_stream, response)
 

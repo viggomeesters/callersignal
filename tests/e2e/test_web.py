@@ -159,13 +159,17 @@ def test_page_has_semantic_lookup_form_status_and_metadata() -> None:
         "campaign-detail",
         "coverage",
         "coverage-no-match",
-        "metric-jurisdictions",
-        "metric-risk-sources",
-        "metric-campaigns",
-        "metric-portfolios",
+        "metric-acm-ranges",
+        "metric-acm-matchable",
+        "metric-indexed-services",
+        "metric-enabled-reputation",
+        "official-catalog-title",
+        "catalog-status-list",
+        "reputation-coverage-title",
+        "reputation-reason-list",
+        "reputation-service-list",
         "source-coverage-list",
         "moderation-threshold",
-        "unavailable-source-list",
     } <= facts.ids
     assert "Report this call" in html
     assert "Watch this number" in html
@@ -233,6 +237,11 @@ def test_committed_transparency_asset_exposes_coverage_not_vanity_totals() -> No
     assert snapshot["kind"] == "corpus_transparency"
     assert snapshot["coverage"]["enabled_source_count"] == 3
     assert snapshot["coverage"]["risk_capable_source_count"] == 0
+    assert snapshot["coverage"]["number_catalog"]["imported_range_count"] == 74_984
+    assert snapshot["coverage"]["number_catalog"]["matchable_range_count"] == 73_409
+    assert snapshot["coverage"]["reputation_sources"]["indexed_service_count"] == 15
+    assert snapshot["coverage"]["reputation_sources"]["licensable_service_count"] == 4
+    assert snapshot["coverage"]["reputation_sources"]["enabled_source_count"] == 0
     assert snapshot["corpus"]["eligible_campaigns"] == 0
     assert snapshot["moderation"]["status"] == "not_approved"
     assert snapshot["interpretation"]["lookup_popularity_used_for_reputation"] is False
@@ -429,6 +438,36 @@ def test_vercel_health_entrypoint_delegates_to_canonical_health_result() -> None
     }
 
 
+def test_vercel_coverage_entrypoint_delegates_to_canonical_projection() -> None:
+    entrypoint = ROOT / "api" / "coverage.py"
+    spec = importlib.util.spec_from_file_location("callersignal_web_coverage", entrypoint)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    captured: dict = {}
+
+    def start_response(status, headers):
+        captured["status"] = status
+        captured["headers"] = dict(headers)
+
+    body = b"".join(
+        module.app(
+            {
+                "REQUEST_METHOD": "GET",
+                "PATH_INFO": "/api/coverage",
+                "QUERY_STRING": "",
+            },
+            start_response,
+        )
+    )
+    coverage = json.loads(body)
+
+    assert captured["status"] == "200 OK"
+    assert coverage == json.loads(
+        (WEB / "assets/transparency.json").read_text(encoding="utf-8")
+    )
+
+
 def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> None:
     config = json.loads((ROOT / "vercel.json").read_text(encoding="utf-8"))
     package = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))
@@ -440,6 +479,7 @@ def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> No
         "/v1/lookup": "/api/index",
         "/v1/campaigns": "/api/campaigns",
         "/v1/campaigns/:campaign_id": "/api/campaigns?campaign_id=:campaign_id",
+        "/v1/coverage": "/api/coverage",
         "/healthz": "/api/healthz",
         "/mcp": "/api/mcp",
         "/.well-known/oauth-protected-resource": (

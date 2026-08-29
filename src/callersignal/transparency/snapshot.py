@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import json
+import re
 from collections.abc import Mapping, Sequence
+from copy import deepcopy
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 _PASSED_GATES = {"passed", "not_applicable"}
@@ -15,6 +19,13 @@ _REQUIRED_GATES = {
     "privacy",
     "takedown",
     "provenance",
+}
+_ROOT = Path(__file__).resolve().parents[3]
+_DEFAULT_PUBLIC_SNAPSHOT = _ROOT / "web/assets/transparency.json"
+_ACM_STATUS = {
+    "Toegekend": "assigned",
+    "Afkoelen": "cooling_off",
+    "Geblokkeerd": "blocked",
 }
 
 
@@ -28,6 +39,8 @@ def build_transparency_snapshot(
     moderation: Mapping[str, Any],
     methodology_version: str,
     generated_at: datetime,
+    acm_manifest: Mapping[str, Any] | None = None,
+    caller_report_index: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Return a deterministic, public-safe transparency projection.
 
@@ -63,6 +76,15 @@ def build_transparency_snapshot(
 
     unavailable_sources = _unavailable_sources(sources, source_coverage)
     jurisdictions = _jurisdiction_coverage(sources, source_coverage)
+    number_catalog = _number_catalog_coverage(
+        acm_manifest,
+        sources=sources,
+        generated_at=generated_at,
+    )
+    reputation_sources = _reputation_source_coverage(
+        caller_report_index,
+        sources=sources,
+    )
     campaign_corrections = sum(
         item.get("correction", {}).get("status") in {"corrected", "retracted"}
         for item in eligible_campaigns
@@ -97,6 +119,8 @@ def build_transparency_snapshot(
             "sources": source_coverage,
             "jurisdictions": jurisdictions,
             "unavailable_sources": unavailable_sources,
+            "number_catalog": number_catalog,
+            "reputation_sources": reputation_sources,
         },
         "corpus": {
             "eligible_campaigns": len(eligible_campaigns),
@@ -127,6 +151,237 @@ def build_transparency_snapshot(
             ],
         },
     }
+
+
+def load_public_coverage_snapshot(
+    path: Path = _DEFAULT_PUBLIC_SNAPSHOT,
+) -> dict[str, Any]:
+    """Load the committed privacy-safe projection shared by every public surface."""
+    try:
+        snapshot = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as error:
+        raise ValueError("Public source coverage is unavailable") from error
+    coverage = snapshot.get("coverage")
+    if (
+        snapshot.get("schema_version") != "1.0.0"
+        or snapshot.get("kind") != "corpus_transparency"
+        or not isinstance(coverage, Mapping)
+        or not isinstance(coverage.get("number_catalog"), Mapping)
+        or not isinstance(coverage.get("reputation_sources"), Mapping)
+    ):
+        raise ValueError("Public source coverage has an unsupported contract")
+    return deepcopy(snapshot)
+
+
+def _number_catalog_coverage(
+    manifest: Mapping[str, Any] | None,
+    *,
+    sources: Sequence[Mapping[str, Any]],
+    generated_at: datetime,
+) -> dict[str, Any]:
+    unavailable = {
+        "source_id": "acm_number_register",
+        "status": "unavailable",
+        "imported_range_count": None,
+        "matchable_range_count": None,
+        "register_statuses": [],
+        "destination_category_count": None,
+        "source_sha256": None,
+        "retrieved_at": None,
+        "source_newest_mutation_at": None,
+        "freshness": "unavailable",
+        "gaps": ["catalog_manifest_unavailable"],
+        "limitations": [
+            "Catalogue counts describe official number ranges, not callers or call safety."
+        ],
+    }
+    if not isinstance(manifest, Mapping):
+        return unavailable
+    source = manifest.get("source")
+    artifact = manifest.get("artifact")
+    expected = manifest.get("catalog_expectations")
+    if not all(isinstance(item, Mapping) for item in (source, artifact, expected)):
+        return unavailable
+    if source.get("source_id") != "acm_number_register":
+        return unavailable
+    digest = artifact.get("sha256")
+    retrieved_at = _parse_timestamp(artifact.get("retrieved_at"))
+    row_count = expected.get("row_count")
+    matchable_count = expected.get("matchable_row_count")
+    destination_count = expected.get("destination_category_count")
+    statuses = expected.get("status_counts")
+    newest_mutation = _parse_acm_mutation(expected.get("newest_mutation"))
+    if (
+        not isinstance(digest, str)
+        or re.fullmatch(r"[0-9a-f]{64}", digest) is None
+        or retrieved_at is None
+        or isinstance(row_count, bool)
+        or not isinstance(row_count, int)
+        or row_count <= 0
+        or isinstance(matchable_count, bool)
+        or not isinstance(matchable_count, int)
+        or not 0 <= matchable_count <= row_count
+        or isinstance(destination_count, bool)
+        or not isinstance(destination_count, int)
+        or destination_count <= 0
+        or not isinstance(statuses, Mapping)
+        or set(statuses) != set(_ACM_STATUS)
+        or any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in statuses.values()
+        )
+        or sum(statuses.values()) != row_count
+        or newest_mutation is None
+    ):
+        return unavailable
+    registry_source = next(
+        (item for item in sources if item.get("source_id") == "acm_number_register"),
+        {},
+    )
+    maximum_age = registry_source.get("intake", {}).get("freshness_max_age_seconds")
+    freshness = (
+        "current"
+        if isinstance(maximum_age, int)
+        and maximum_age > 0
+        and (generated_at - retrieved_at).total_seconds() <= maximum_age
+        else "stale"
+    )
+    gaps = [] if freshness == "current" else ["catalog_manifest_stale"]
+    return {
+        "source_id": "acm_number_register",
+        "status": "available",
+        "imported_range_count": row_count,
+        "matchable_range_count": matchable_count,
+        "register_statuses": [
+            {
+                "status": normalized,
+                "source_status": native,
+                "range_count": statuses[native],
+            }
+            for native, normalized in _ACM_STATUS.items()
+        ],
+        "destination_category_count": destination_count,
+        "source_sha256": f"sha256:{digest}",
+        "retrieved_at": _timestamp(retrieved_at),
+        "source_newest_mutation_at": _timestamp(newest_mutation),
+        "freshness": freshness,
+        "gaps": gaps,
+        "limitations": [
+            "Counts describe official number ranges, not subscribers, callers, or providers.",
+            "A catalogue match does not prove call origin, reputation, or safety.",
+        ],
+    }
+
+
+def _reputation_source_coverage(
+    service_index: Mapping[str, Any] | None,
+    *,
+    sources: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    if not isinstance(service_index, Mapping):
+        return {
+            "index_reviewed_at": None,
+            "indexed_service_count": 0,
+            "licensable_service_count": 0,
+            "enabled_source_count": 0,
+            "unavailable_service_count": 0,
+            "unavailable_reasons": [],
+            "services": [],
+            "gaps": ["caller_report_index_unavailable"],
+            "notice": "Source coverage is unavailable and cannot support a safety claim.",
+        }
+    services = [
+        item for item in service_index.get("services", ()) if isinstance(item, Mapping)
+    ]
+    registered = {
+        str(item.get("source_id")): item
+        for item in sources
+        if isinstance(item.get("source_id"), str)
+    }
+    rows = []
+    reason_counts: dict[str, int] = {}
+    licensable = 0
+    enabled = 0
+    for service in services:
+        service_id = str(service.get("service_id") or "")
+        rights = service.get("rights", {})
+        integration = service.get("integration", {})
+        activation = service.get("activation", {})
+        reuse_status = rights.get("reuse_status")
+        if reuse_status in {"licensed_access_available", "enabled"}:
+            licensable += 1
+        registry_source = registered.get(service_id, {})
+        is_enabled = (
+            reuse_status == "enabled"
+            and integration.get("status") == "enabled"
+            and activation.get("decision") == "enabled"
+            and not activation.get("blocking_gates")
+            and _source_is_enabled(registry_source)
+            and registry_source.get("risk_capable") is True
+        )
+        if is_enabled:
+            status = "enabled"
+            reason = "all_activation_gates_passed"
+            enabled += 1
+        elif reuse_status == "licensed_access_available":
+            status = "unavailable"
+            reason = "commercial_agreement_and_credentials_required"
+        elif reuse_status == "permission_required":
+            status = "unavailable"
+            reason = "publisher_permission_required"
+        elif reuse_status == "prohibited":
+            status = "unavailable"
+            reason = "reuse_prohibited"
+        else:
+            status = "unavailable"
+            reason = "activation_requirements_incomplete"
+        if status == "unavailable":
+            reason_counts[reason] = reason_counts.get(reason, 0) + 1
+        jurisdictions = service.get("jurisdictions", [])
+        rows.append(
+            {
+                "service_id": service_id,
+                "name": service.get("name", service_id),
+                "jurisdictions": sorted(
+                    item for item in jurisdictions if isinstance(item, str)
+                ),
+                "integration_channel": integration.get("channel", "none"),
+                "status": status,
+                "reason": reason,
+                "blocking_gates": sorted(
+                    item
+                    for item in activation.get("blocking_gates", [])
+                    if isinstance(item, str)
+                ),
+            }
+        )
+    rows.sort(key=lambda item: item["service_id"])
+    return {
+        "index_reviewed_at": service_index.get("reviewed_at"),
+        "indexed_service_count": len(rows),
+        "licensable_service_count": licensable,
+        "enabled_source_count": enabled,
+        "unavailable_service_count": len(rows) - enabled,
+        "unavailable_reasons": [
+            {"reason": reason, "service_count": count}
+            for reason, count in sorted(reason_counts.items())
+        ],
+        "services": rows,
+        "gaps": [] if rows else ["caller_report_index_empty"],
+        "notice": (
+            "Source counts describe coverage only; they are not trust, popularity, "
+            "reputation, or safety scores."
+        ),
+    }
+
+
+def _parse_acm_mutation(value: Any) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%d %H:%M:%S").replace(tzinfo=UTC)
+    except ValueError:
+        return None
 
 
 def _source_is_enabled(source: Mapping[str, Any]) -> bool:

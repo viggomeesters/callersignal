@@ -4,10 +4,17 @@ CallerSignal publishes a committed, reproducible snapshot of what its public cor
 
 ## Current public snapshot
 
-Snapshot time: **29 August 2026, 08:35 UTC**. Source registry review date: **28 August 2026**. Methodology version: **1.0.0**.
+Snapshot time: **29 August 2026, 12:00 UTC**. Source registry review date: **29 August 2026**. Methodology version: **1.0.0**.
 
 | Public measure | Value | Meaning |
 | --- | ---: | --- |
+| ACM ranges imported | 74,984 | Every row in the checksum-pinned official register archive |
+| ACM lookup-compatible ranges | 73,409 | Rows with a validated canonical NL interval |
+| ACM register-status coverage | 73,221 assigned; 1,740 cooling off; 23 blocked | Neutral source statuses, not reputation labels |
+| ACM destination categories | 44 | Distinct official destination labels, without publishing the labels or holder inventory |
+| Caller-report services indexed | 15 | Dated rights and integration discovery, not ingested number records |
+| Advertised licensing routes | 4 | Commercial routes worth evaluating; no CallerSignal agreement is implied |
+| Enabled reputation feeds | 0 | No external reputation source currently passes every activation gate |
 | Jurisdictions with enabled source coverage | 3 | NL, GB, and US have enabled numbering-context sources |
 | Enabled risk-capable sources | 0 | No enabled source can currently support a public risk verdict |
 | Eligible public campaigns | 0 | No campaign passes the public evidence and source-rights threshold |
@@ -21,11 +28,13 @@ The zeroes are product facts, not placeholders. Lookup popularity, raw report vo
 
 | Source | Jurisdiction | Evidence scope | Last successful ingest | Freshness |
 | --- | --- | --- | --- | --- |
-| ACM public telephone number register | NL | Numbering context only | 27 August 2026, 07:30 UTC | Current |
+| ACM public telephone number register | NL | Complete generated numbering catalogue | 29 August 2026, 11:23 UTC | Current |
 | Ofcom long-term protected number ranges | GB | Numbering context only | 27 August 2026, 07:45 UTC | Current |
 | NANPA public numbering references | US | Numbering context only | 27 August 2026, 08:00 UTC | Current |
 
 All three jurisdictions therefore carry the explicit gap `no_risk_capable_source`. The registry also names `wieheeftmijgebeld_nl` as unavailable with `reuse_permission_required`: CallerSignal does not ingest that source without permission. “Available on the public web” is not a licence to copy or republish a database.
+
+The caller-report discovery index has eleven services requiring publisher permission and four services advertising a licensing or partnership route. All fifteen are unavailable to the runtime. Their individual integration channel, jurisdiction scope, reason, and blocking gates are public in the snapshot. The four advertised routes still require a completed commercial agreement, credentials, privacy approval, takedown ownership, and provenance controls. Counts describe coverage only; they are not trust, popularity, reputation, or safety scores.
 
 ## What “no matching evidence” means
 
@@ -35,7 +44,7 @@ This is why a lookup backed only by the three current numbering sources resolves
 
 ## Derivation and publication gates
 
-`callersignal.transparency.build_transparency_snapshot` accepts only explicit source registry, ingest, campaign, verified-portfolio, community-aggregate, moderation, methodology, and timestamp inputs. There is deliberately no lookup-demand input.
+`callersignal.transparency.build_transparency_snapshot` accepts only explicit source registry, ACM manifest, caller-report discovery index, ingest, campaign, verified-portfolio, community-aggregate, moderation, methodology, and timestamp inputs. There is deliberately no lookup-demand input. The ACM build refuses to replace a catalogue when its row, matchable-range, status, destination-category, or newest-mutation totals differ from the pinned manifest expectations.
 
 A public count includes only:
 
@@ -51,11 +60,12 @@ Community publication is currently `not_approved`, so the public aggregate thres
 From the repository root:
 
 ```console
+uv run python scripts/build_transparency_snapshot.py --generated-at 2026-08-29T12:00:00Z
 uv run pytest tests/integration/test_transparency.py -q
 npm --prefix web test
 make check
 ```
 
-The integration test rebuilds the committed snapshot from [`sources/registry.json`](../sources/registry.json) and the reserved public fixtures, then requires exact equality. Web tests verify the public zero state and confirm that private activity and vanity totals are absent. Browser proof is recorded in [`web/proof/browser-proof.json`](../web/proof/browser-proof.json), with dedicated desktop and mobile coverage captures.
+The generator reads [`sources/registry.json`](../sources/registry.json), [`sources/acm-bulk-manifest.json`](../sources/acm-bulk-manifest.json), [`sources/caller-report-services.json`](../sources/caller-report-services.json), and the reserved public fixtures. The integration test rebuilds the committed snapshot and requires exact equality. HTTP `GET /v1/coverage`, CLI `coverage --json`, stdio and hosted MCP `get_source_coverage`, and the website all return or render that same object. Web tests confirm that raw inventory, holder names, reports, requester activity, and vanity totals remain absent. Browser proof is recorded in [`web/proof/browser-proof.json`](../web/proof/browser-proof.json), with dedicated desktop and mobile coverage captures.
 
 To change a public total, change the underlying eligible records or source gates, regenerate the projection deterministically, update this document, and pass the same checks. Never edit the number merely to improve how the project appears.

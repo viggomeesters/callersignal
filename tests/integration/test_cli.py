@@ -90,3 +90,30 @@ def test_national_input_without_region_fails_with_actionable_guidance(capsys) ->
 
     assert exc_info.value.code == 2
     assert "requires an origin region" in capsys.readouterr().err
+
+
+def test_coverage_json_is_the_committed_projection(capsys) -> None:
+    exit_code = main(["coverage", "--json"])
+    result = json.loads(capsys.readouterr().out)
+    committed = json.loads(
+        (ROOT / "web/assets/transparency.json").read_text(encoding="utf-8")
+    )
+
+    assert exit_code == 0
+    assert result == committed
+
+
+def test_coverage_human_output_separates_available_context_from_missing_reputation(
+    capsys,
+) -> None:
+    exit_code = main(["coverage"])
+    output = capsys.readouterr().out
+
+    assert exit_code == 0
+    assert "Official NL number catalogue: available" in output
+    assert "74,984 imported ranges" in output
+    assert "73,409 lookup-compatible ranges" in output
+    assert "15 caller-report services indexed" in output
+    assert "4 advertised licensing routes" in output
+    assert "0 reputation feeds enabled" in output
+    assert "Coverage counts are not trust or safety scores." in output

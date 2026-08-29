@@ -220,6 +220,31 @@ def test_manifest_rejects_non_https_source_locations(tmp_path: Path) -> None:
         )
 
 
+def test_pinned_catalog_expectations_fail_closed_before_replacement(
+    tmp_path: Path,
+) -> None:
+    archive_path = tmp_path / "source.zip"
+    archive_bytes = _write_archive(archive_path)
+    manifest_path = tmp_path / "manifest.json"
+    _write_manifest(manifest_path, archive_bytes)
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["catalog_expectations"] = {
+        "row_count": 2,
+        "matchable_row_count": 1,
+        "status_counts": {"Geblokkeerd": 2},
+        "destination_category_count": 1,
+        "newest_mutation": None,
+    }
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    output_path = tmp_path / "catalog.sqlite3"
+    output_path.write_bytes(b"previous valid catalogue")
+
+    with pytest.raises(CatalogBuildError, match="expectations"):
+        build_acm_catalog(manifest_path, output_path, archive_path=archive_path)
+
+    assert output_path.read_bytes() == b"previous valid catalogue"
+
+
 def test_download_uses_https_only_curl_fallback_without_bypassing_digest(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

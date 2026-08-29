@@ -32,6 +32,8 @@ A successful response is the unchanged versioned object defined by [`lookup-resu
 
 The canonical phone-risk result is `assessment.risk`, with one of `official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`. It includes supporting IDs and a stable recommended action. `assessment.confidence` describes the confidence of source evidence, not caller safety. Each source check exposes `risk_capable`; numbering-plan sources are intentionally false. See the [risk assessment methodology](methodology.md) for exact thresholds and negative invariants.
 
+`GET /v1/coverage` accepts no query parameters and returns the committed `corpus_transparency` projection also used by CLI, MCP, and the website. It exposes privacy-safe ACM catalogue counts, register-status and destination coverage, digest and freshness, caller-report index and licensing-route counts, enabled reputation-feed count, and explicit unavailable reasons. It contains no raw number inventory, range holder, report, requester data, credential, or lookup demand. Source count is explicitly not a trust or safety score.
+
 Malformed transport input uses a small versioned `http_error` object. The adapter returns `400` for invalid query semantics, `404` for unknown routes, `405` for non-GET methods, `429` when an injected request gate denies admission, `503` when that gate fails, and a generic `500` when an unexpected lookup failure escapes. Error messages never echo the submitted number.
 
 `GET /healthz` reports only process readiness. Every response is JSON, sets `Cache-Control: no-store`, and prevents MIME sniffing. Cross-origin access is intentionally not enabled; the public site consumes the API on the same origin.
@@ -47,4 +49,4 @@ Telemetry runs after the response has been constructed, cannot feed data back in
 
 ## Deployment boundary
 
-The exported `application` object is a standard WSGI callable. Production hosting should add only a thin platform entrypoint, same-origin routing, and an independently reviewed rate-limit implementation. It must not duplicate lookup logic, log raw query strings, or turn lookup demand into evidence or reputation.
+The exported `application` object is a standard WSGI callable. Production hosting should add only thin platform entrypoints, same-origin routing, and an independently reviewed rate-limit implementation. `api/coverage.py` maps Vercel to the canonical coverage route; it does not rebuild or broaden the public projection. Hosting must not duplicate lookup logic, log raw query strings, or turn lookup demand into evidence or reputation.

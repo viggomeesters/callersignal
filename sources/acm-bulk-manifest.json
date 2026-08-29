@@ -36,5 +36,16 @@
       "twn_kvkvestigingsnummer"
     ],
     "retrieved_at": "2026-08-29T11:23:00Z"
+  },
+  "catalog_expectations": {
+    "row_count": 74984,
+    "matchable_row_count": 73409,
+    "status_counts": {
+      "Afkoelen": 1740,
+      "Geblokkeerd": 23,
+      "Toegekend": 73221
+    },
+    "destination_category_count": 44,
+    "newest_mutation": "2026-08-28 11:21:06"
   }
 }

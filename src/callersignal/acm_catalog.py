@@ -261,11 +261,39 @@ def build_acm_catalog(
                 output_path=output_path,
                 source_sha256=source_sha256,
             )
+            _validate_catalog_expectations(manifest, summary)
             os.replace(temporary_db, output_path)
         except Exception:
             temporary_db.unlink(missing_ok=True)
             raise
     return summary
+
+
+def _validate_catalog_expectations(
+    manifest: dict[str, Any],
+    summary: CatalogBuildSummary,
+) -> None:
+    expected = manifest.get("catalog_expectations")
+    if expected is None:
+        return
+    required = {
+        "row_count",
+        "matchable_row_count",
+        "status_counts",
+        "destination_category_count",
+        "newest_mutation",
+    }
+    if not isinstance(expected, dict) or set(expected) != required:
+        raise CatalogBuildError("ACM catalog expectations are incomplete")
+    actual = {
+        "row_count": summary.row_count,
+        "matchable_row_count": summary.matchable_row_count,
+        "status_counts": summary.status_counts,
+        "destination_category_count": len(summary.destination_counts),
+        "newest_mutation": summary.newest_mutation,
+    }
+    if actual != expected:
+        raise CatalogBuildError("ACM catalog output differs from pinned expectations")
 
 
 def _load_manifest(path: Path) -> dict[str, Any]:

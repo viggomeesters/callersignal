@@ -12,6 +12,7 @@ from urllib.parse import parse_qs
 
 from callersignal.lookup import LookupService
 from callersignal.numbering import OriginRegionRequiredError
+from callersignal.transparency import load_public_coverage_snapshot
 
 StartResponse = Callable[[str, list[tuple[str, str]]], Any]
 RequestGate = Callable[[], bool]
@@ -62,11 +63,13 @@ class LookupHTTPApplication:
         telemetry: TelemetrySink | None,
         request_gate: RequestGate,
         public_campaigns: Iterable[Mapping[str, Any]],
+        source_coverage: Mapping[str, Any],
     ) -> None:
         self._lookup_service = lookup_service
         self._telemetry = telemetry
         self._request_gate = request_gate
         self._public_campaigns = _project_public_campaigns(public_campaigns)
+        self._source_coverage = deepcopy(dict(source_coverage))
 
     def __call__(
         self,
@@ -99,6 +102,21 @@ class LookupHTTPApplication:
             )
         if path == "/v1/campaigns" or path.startswith("/v1/campaigns/"):
             return self._campaign_response(method, path, start_response)
+        if path == "/v1/coverage":
+            if method != "GET":
+                return self._send(
+                    start_response,
+                    _error_response(
+                        405,
+                        "method_not_allowed",
+                        "Only GET is supported.",
+                        headers=(("Allow", "GET"),),
+                    ),
+                )
+            return self._send(
+                start_response,
+                _json_response(200, self._source_coverage),
+            )
         if path != "/v1/lookup":
             return self._send(
                 start_response,
@@ -263,6 +281,7 @@ def create_app(
     telemetry: TelemetrySink | None = None,
     request_gate: RequestGate | None = None,
     public_campaigns: Iterable[Mapping[str, Any]] = (),
+    source_coverage: Mapping[str, Any] | None = None,
 ) -> LookupHTTPApplication:
     """Create the WSGI app with optional privacy-safe operational ports."""
     return LookupHTTPApplication(
@@ -270,6 +289,11 @@ def create_app(
         telemetry=telemetry,
         request_gate=request_gate or (lambda: True),
         public_campaigns=public_campaigns,
+        source_coverage=(
+            source_coverage
+            if source_coverage is not None
+            else load_public_coverage_snapshot()
+        ),
     )
 
 

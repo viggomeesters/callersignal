@@ -31,6 +31,18 @@ The emitted object validates against [`lookup-result.schema.json`](../schemas/lo
 
 In JSON, `assessment.confidence` refers only to the strength of the available source observations. Use `assessment.risk` for risk presentation and retain its headline, reason codes, recommended action, and explicit uncertainty.
 
+## Source coverage
+
+Use the agent-friendly human readout to separate available official context from unavailable reputation coverage:
+
+```bash
+PYTHONPATH=src uv run python -m callersignal.cli coverage
+```
+
+It reports the full ACM imported and lookup-compatible range counts, destination and status coverage, freshness, indexed caller-report services, advertised licensing routes, enabled feeds, and grouped unavailable reasons. It ends with the invariant that coverage counts are not trust or safety scores.
+
+`coverage --json` emits the exact committed `corpus_transparency` object returned by HTTP `GET /v1/coverage`, stdio and hosted MCP `get_source_coverage`, and rendered by the website. It accepts no number, requester field, or source credential.
+
 ## Exit behavior
 
 - Successful lookups, including explicit unknown or unavailable outcomes, exit with status `0` because the lookup contract was produced.

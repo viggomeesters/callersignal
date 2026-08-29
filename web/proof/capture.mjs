@@ -231,7 +231,7 @@ async function capture(browser, viewport, scenario) {
   }
   if (scenario.coverage) {
     await page.waitForFunction(
-      () => document.querySelector("#metric-jurisdictions")?.textContent.trim() === "3",
+      () => document.querySelector("#metric-acm-ranges")?.textContent.trim() === "74,984",
     );
     await page.locator("#coverage").evaluate((element) => {
       element.scrollIntoView({ behavior: "instant", block: "start" });
@@ -244,6 +244,27 @@ async function capture(browser, viewport, scenario) {
   }
 
   const facts = await page.evaluate(({ state, detail, coverage }) => {
+    const layoutWidth = document.documentElement.clientWidth;
+    const parseColor = (value) => {
+      const hex = value.trim().match(/^#([0-9a-f]{6})$/i);
+      if (hex) {
+        return [0, 2, 4].map((offset) => Number.parseInt(hex[1].slice(offset, offset + 2), 16));
+      }
+      return (value.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+    };
+    const luminance = (value) => {
+      const channels = parseColor(value).map((channel) => {
+        const normalized = channel / 255;
+        return normalized <= 0.03928
+          ? normalized / 12.92
+          : ((normalized + 0.055) / 1.055) ** 2.4;
+      });
+      return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+    };
+    const contrast = (foreground, background) => {
+      const levels = [luminance(foreground), luminance(background)].sort((a, b) => b - a);
+      return Number(((levels[0] + 0.05) / (levels[1] + 0.05)).toFixed(2));
+    };
     const visible = (element) => {
       const style = getComputedStyle(element);
       const rect = element.getBoundingClientRect();
@@ -253,13 +274,74 @@ async function capture(browser, viewport, scenario) {
       .filter(visible)
       .filter((element) => {
         const rect = element.getBoundingClientRect();
-        return rect.left < -1 || rect.right > window.innerWidth + 1;
+        return rect.left < -1 || rect.right > layoutWidth + 1;
       })
-      .map((element) => element.id || element.textContent.trim().slice(0, 60));
+      .map((element) => ({
+        tag: element.tagName.toLowerCase(),
+        id: element.id || null,
+        className: typeof element.className === "string" ? element.className : null,
+        text: element.textContent.trim().slice(0, 60),
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+      }));
+    const overflowElements = [...document.querySelectorAll("body *")]
+      .filter(visible)
+      .filter((element) => {
+        const rect = element.getBoundingClientRect();
+        return rect.left < -1 || rect.right > layoutWidth + 1;
+      })
+      .map((element) => ({
+        tag: element.tagName.toLowerCase(),
+        id: element.id || null,
+        className: typeof element.className === "string" ? element.className : null,
+        left: Math.round(element.getBoundingClientRect().left),
+        right: Math.round(element.getBoundingClientRect().right),
+      }));
+    const contentOverflow = [
+      ...document.querySelectorAll("button, a, summary, h1, h2, h3, p, dt, dd, strong, span"),
+    ]
+      .filter(visible)
+      .filter((element) => {
+        const style = getComputedStyle(element);
+        return (
+          element.scrollWidth > element.clientWidth + 1 &&
+          style.overflowX !== "auto" &&
+          style.overflowX !== "scroll"
+        );
+      })
+      .map((element) => ({
+        tag: element.tagName.toLowerCase(),
+        id: element.id || null,
+        className: typeof element.className === "string" ? element.className : null,
+        text: element.textContent.trim().slice(0, 60),
+        clientWidth: element.clientWidth,
+        scrollWidth: element.scrollWidth,
+      }));
+    const initialScrollWidth = document.documentElement.scrollWidth;
+    const overflowContributors = initialScrollWidth > layoutWidth
+      ? [...document.querySelectorAll("body *")]
+          .filter(visible)
+          .filter((element) => {
+            const previous = element.style.display;
+            element.style.display = "none";
+            const reduced = document.documentElement.scrollWidth < initialScrollWidth;
+            element.style.display = previous;
+            return reduced;
+          })
+          .slice(-12)
+          .map((element) => ({
+            tag: element.tagName.toLowerCase(),
+            id: element.id || null,
+            className: typeof element.className === "string" ? element.className : null,
+          }))
+      : [];
     return {
-      viewport: { width: window.innerWidth, height: window.innerHeight },
+      viewport: { width: window.innerWidth, height: window.innerHeight, layoutWidth },
       horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
       clipped,
+      overflowElements,
+      contentOverflow,
+      overflowContributors,
       riskState: state,
       riskHeadline: state ? document.querySelector("#risk-headline")?.textContent : null,
       visibleRiskIcons: state
@@ -272,11 +354,30 @@ async function capture(browser, viewport, scenario) {
       detailTitle: detail ? document.querySelector("#campaign-detail-title")?.textContent : null,
       coverageMetrics: coverage
         ? [
-            "#metric-jurisdictions",
-            "#metric-risk-sources",
-            "#metric-campaigns",
-            "#metric-portfolios",
+            "#metric-acm-ranges",
+            "#metric-acm-matchable",
+            "#metric-indexed-services",
+            "#metric-enabled-reputation",
           ].map((selector) => document.querySelector(selector)?.textContent)
+        : null,
+      coverageStates: coverage
+        ? {
+            official: document.querySelector("[data-availability='available'] .availability-label")?.textContent,
+            reputation: document.querySelector("[data-availability='unavailable'] .availability-label")?.textContent,
+            sourceDecisions: document.querySelectorAll("#reputation-service-list li").length,
+          }
+        : null,
+      coverageContrast: coverage
+        ? {
+            official: contrast(
+              getComputedStyle(document.querySelector("[data-availability='available'] .availability-label")).color,
+              getComputedStyle(document.documentElement).getPropertyValue("--available-soft"),
+            ),
+            reputation: contrast(
+              getComputedStyle(document.querySelector("[data-availability='unavailable'] .availability-label")).color,
+              getComputedStyle(document.documentElement).getPropertyValue("--unavailable-soft"),
+            ),
+          }
         : null,
       exampleButtons: [...document.querySelectorAll(".example-button")].map((button) => ({
         label: button.textContent.trim(),
@@ -290,6 +391,8 @@ async function capture(browser, viewport, scenario) {
   if (
     facts.horizontalOverflow !== 0 ||
     facts.clipped.length > 0 ||
+    facts.overflowElements.length > 0 ||
+    facts.contentOverflow.length > 0 ||
     facts.consoleErrors.length > 0 ||
     facts.temporaryCopy ||
     (scenario.state && facts.visibleRiskIcons !== 1) ||
@@ -301,16 +404,24 @@ async function capture(browser, viewport, scenario) {
         button.number === "0906-8844" &&
         button.region === "NL",
     ) ||
-    (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["3", "0", "0", "0"]))
+    (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["74,984", "73,409", "15", "0"])) ||
+    (scenario.coverage && facts.coverageStates.official !== "Available · official context") ||
+    (scenario.coverage && facts.coverageStates.reputation !== "Not activated · reputation") ||
+    (scenario.coverage && facts.coverageStates.sourceDecisions !== 15) ||
+    (scenario.coverage && Math.min(...Object.values(facts.coverageContrast)) < 4.5)
   ) {
     throw new Error(`${scenario.name} failed visual facts: ${JSON.stringify(facts)}`);
   }
-  await page.screenshot({
+  const screenshotOptions = {
     path: new URL(`./${scenario.filename}`, output).pathname,
     type: "jpeg",
     quality: 88,
-    fullPage: false,
-  });
+  };
+  if (scenario.coverage) {
+    await page.locator(".coverage-truth-grid").screenshot(screenshotOptions);
+  } else {
+    await page.screenshot({ ...screenshotOptions, fullPage: false });
+  }
   await context.close();
   return { scenario: scenario.name, ...facts };
 }

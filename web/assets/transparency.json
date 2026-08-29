@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "kind": "corpus_transparency",
-  "generated_at": "2026-08-29T08:35:00Z",
+  "generated_at": "2026-08-29T12:00:00Z",
   "methodology_version": "1.0.0",
   "registry_reviewed_at": "2026-08-29",
   "coverage": {
@@ -11,10 +11,12 @@
       {
         "source_id": "acm_number_register",
         "name": "ACM public telephone number register",
-        "jurisdictions": ["NL"],
+        "jurisdictions": [
+          "NL"
+        ],
         "risk_capable": false,
         "runtime_status": "success",
-        "last_successful_ingest": "2026-08-27T07:30:00Z",
+        "last_successful_ingest": "2026-08-29T11:23:00Z",
         "freshness": "current",
         "freshness_max_age_seconds": 2592000,
         "gaps": []
@@ -22,7 +24,9 @@
       {
         "source_id": "nanpa_public_numbering",
         "name": "NANPA public numbering references",
-        "jurisdictions": ["US"],
+        "jurisdictions": [
+          "US"
+        ],
         "risk_capable": false,
         "runtime_status": "success",
         "last_successful_ingest": "2026-08-27T08:00:00Z",
@@ -33,7 +37,9 @@
       {
         "source_id": "ofcom_protected_numbers",
         "name": "Ofcom long-term protected number ranges",
-        "jurisdictions": ["GB"],
+        "jurisdictions": [
+          "GB"
+        ],
         "risk_capable": false,
         "runtime_status": "success",
         "last_successful_ingest": "2026-08-27T07:45:00Z",
@@ -45,37 +51,354 @@
     "jurisdictions": [
       {
         "jurisdiction": "GB",
-        "enabled_sources": ["ofcom_protected_numbers"],
+        "enabled_sources": [
+          "ofcom_protected_numbers"
+        ],
         "risk_capable_sources": [],
         "last_successful_ingest": "2026-08-27T07:45:00Z",
         "freshness": "current",
-        "gaps": ["no_risk_capable_source"]
+        "gaps": [
+          "no_risk_capable_source"
+        ]
       },
       {
         "jurisdiction": "NL",
-        "enabled_sources": ["acm_number_register"],
+        "enabled_sources": [
+          "acm_number_register"
+        ],
         "risk_capable_sources": [],
-        "last_successful_ingest": "2026-08-27T07:30:00Z",
+        "last_successful_ingest": "2026-08-29T11:23:00Z",
         "freshness": "current",
-        "gaps": ["no_risk_capable_source"]
+        "gaps": [
+          "no_risk_capable_source"
+        ]
       },
       {
         "jurisdiction": "US",
-        "enabled_sources": ["nanpa_public_numbering"],
+        "enabled_sources": [
+          "nanpa_public_numbering"
+        ],
         "risk_capable_sources": [],
         "last_successful_ingest": "2026-08-27T08:00:00Z",
         "freshness": "current",
-        "gaps": ["no_risk_capable_source"]
+        "gaps": [
+          "no_risk_capable_source"
+        ]
       }
     ],
     "unavailable_sources": [
       {
         "source_id": "wieheeftmijgebeld_nl",
-        "jurisdictions": ["NL"],
+        "jurisdictions": [
+          "NL"
+        ],
         "status": "permission_required",
         "gap": "reuse_permission_required"
       }
-    ]
+    ],
+    "number_catalog": {
+      "source_id": "acm_number_register",
+      "status": "available",
+      "imported_range_count": 74984,
+      "matchable_range_count": 73409,
+      "register_statuses": [
+        {
+          "status": "assigned",
+          "source_status": "Toegekend",
+          "range_count": 73221
+        },
+        {
+          "status": "cooling_off",
+          "source_status": "Afkoelen",
+          "range_count": 1740
+        },
+        {
+          "status": "blocked",
+          "source_status": "Geblokkeerd",
+          "range_count": 23
+        }
+      ],
+      "destination_category_count": 44,
+      "source_sha256": "sha256:372478fa8f23eb49e9152074f2b4c09c321a1871dce404135777ba51ae163da0",
+      "retrieved_at": "2026-08-29T11:23:00Z",
+      "source_newest_mutation_at": "2026-08-28T11:21:06Z",
+      "freshness": "current",
+      "gaps": [],
+      "limitations": [
+        "Counts describe official number ranges, not subscribers, callers, or providers.",
+        "A catalogue match does not prove call origin, reputation, or safety."
+      ]
+    },
+    "reputation_sources": {
+      "index_reviewed_at": "2026-08-29",
+      "indexed_service_count": 15,
+      "licensable_service_count": 4,
+      "enabled_source_count": 0,
+      "unavailable_service_count": 15,
+      "unavailable_reasons": [
+        {
+          "reason": "commercial_agreement_and_credentials_required",
+          "service_count": 4
+        },
+        {
+          "reason": "publisher_permission_required",
+          "service_count": 11
+        }
+      ],
+      "services": [
+        {
+          "service_id": "hiya",
+          "name": "Hiya",
+          "jurisdictions": [],
+          "integration_channel": "partner_feed",
+          "status": "unavailable",
+          "reason": "commercial_agreement_and_credentials_required",
+          "blocking_gates": [
+            "commercial_terms",
+            "credentials",
+            "privacy",
+            "provenance",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "nomorobo",
+          "name": "Nomorobo",
+          "jurisdictions": [
+            "CA",
+            "US"
+          ],
+          "integration_channel": "licensed_api",
+          "status": "unavailable",
+          "reason": "commercial_agreement_and_credentials_required",
+          "blocking_gates": [
+            "commercial_terms",
+            "credentials",
+            "privacy",
+            "provenance",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "onbekendnummer_nl",
+          "name": "Onbekendnummer.nl",
+          "jurisdictions": [
+            "NL"
+          ],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "robokiller",
+          "name": "RoboKiller Lookup",
+          "jurisdictions": [
+            "CA",
+            "US"
+          ],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "should_i_answer",
+          "name": "Should I Answer?",
+          "jurisdictions": [],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "suscall",
+          "name": "SUSCall",
+          "jurisdictions": [],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "tellows",
+          "name": "tellows",
+          "jurisdictions": [],
+          "integration_channel": "licensed_api",
+          "status": "unavailable",
+          "reason": "commercial_agreement_and_credentials_required",
+          "blocking_gates": [
+            "commercial_terms",
+            "credentials",
+            "privacy",
+            "provenance",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "truecaller",
+          "name": "Truecaller",
+          "jurisdictions": [],
+          "integration_channel": "none",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "credentials",
+            "privacy",
+            "product_fit",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "who_called_uk",
+          "name": "Who Called UK",
+          "jurisdictions": [
+            "GB"
+          ],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "who_called_us",
+          "name": "Who Called US",
+          "jurisdictions": [
+            "US"
+          ],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "who_calls_me",
+          "name": "WhoCallsMe",
+          "jurisdictions": [],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "whocall_me",
+          "name": "WhoCall.Me",
+          "jurisdictions": [],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "whoscall",
+          "name": "Whoscall",
+          "jurisdictions": [],
+          "integration_channel": "partner_feed",
+          "status": "unavailable",
+          "reason": "commercial_agreement_and_credentials_required",
+          "blocking_gates": [
+            "commercial_terms",
+            "credentials",
+            "privacy",
+            "provenance",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "wieheeftgebeld_nl",
+          "name": "Wieheeftgebeld.nl",
+          "jurisdictions": [
+            "NL"
+          ],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        },
+        {
+          "service_id": "wieheeftmijgebeld_nl",
+          "name": "Wieheeftmijgebeld.nl",
+          "jurisdictions": [
+            "NL"
+          ],
+          "integration_channel": "web_page",
+          "status": "unavailable",
+          "reason": "publisher_permission_required",
+          "blocking_gates": [
+            "copyright",
+            "database_rights",
+            "privacy",
+            "provenance",
+            "reuse_permission",
+            "takedown"
+          ]
+        }
+      ],
+      "gaps": [],
+      "notice": "Source counts describe coverage only; they are not trust, popularity, reputation, or safety scores."
+    }
   },
   "corpus": {
     "eligible_campaigns": 0,

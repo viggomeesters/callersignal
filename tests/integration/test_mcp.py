@@ -12,7 +12,13 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from callersignal.cli import main as cli_main
 from callersignal.lookup import LookupService
-from callersignal.mcp_server import call_lookup_tool, serve_stdio, tool_definition
+from callersignal.mcp_server import (
+    call_lookup_tool,
+    call_source_coverage_tool,
+    serve_stdio,
+    source_coverage_tool_definition,
+    tool_definition,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 NOW = datetime(2026, 8, 27, 9, 0, tzinfo=UTC)
@@ -38,6 +44,22 @@ def test_tool_declares_origin_semantics_versioned_output_and_read_only_hints() -
         "readOnlyHint": True,
         "openWorldHint": False,
     }
+    coverage = source_coverage_tool_definition()
+    assert coverage["name"] == "get_source_coverage"
+    assert coverage["inputSchema"]["additionalProperties"] is False
+    assert coverage["annotations"] == tool["annotations"]
+
+
+def test_stdio_coverage_tool_returns_the_committed_projection() -> None:
+    result = call_source_coverage_tool({})
+    committed = json.loads(
+        (ROOT / "web/assets/transparency.json").read_text(encoding="utf-8")
+    )
+
+    assert result["isError"] is False
+    assert result["structuredContent"] == committed
+    assert json.loads(result["content"][0]["text"]) == committed
+    assert call_source_coverage_tool({"number": "forbidden"})["isError"] is True
 
 
 def test_structured_content_and_cli_json_are_the_same_shared_result(capsys) -> None:
@@ -111,6 +133,12 @@ def test_stdio_lifecycle_lists_and_calls_the_tool() -> None:
                 "arguments": {"number": international},
             },
         },
+        {
+            "jsonrpc": "2.0",
+            "id": 4,
+            "method": "tools/call",
+            "params": {"name": "get_source_coverage", "arguments": {}},
+        },
     ]
     environment = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
     completed = subprocess.run(
@@ -126,13 +154,19 @@ def test_stdio_lifecycle_lists_and_calls_the_tool() -> None:
     responses = [json.loads(line) for line in completed.stdout.splitlines()]
 
     assert completed.stderr == ""
-    assert [item["id"] for item in responses] == [1, 2, 3]
+    assert [item["id"] for item in responses] == [1, 2, 3, 4]
     assert responses[0]["result"]["protocolVersion"] == "2025-11-25"
     assert responses[0]["result"]["capabilities"] == {"tools": {"listChanged": False}}
-    assert responses[1]["result"]["tools"][0]["name"] == "lookup_phone_number"
+    assert [item["name"] for item in responses[1]["result"]["tools"]] == [
+        "lookup_phone_number",
+        "get_source_coverage",
+    ]
     structured = responses[2]["result"]["structuredContent"]
     assert structured["phone_number"]["canonical"]["e164"] == international
     Draft202012Validator(
         responses[1]["result"]["tools"][0]["outputSchema"],
         format_checker=FormatChecker(),
     ).validate(structured)
+    assert responses[3]["result"]["structuredContent"]["coverage"][
+        "number_catalog"
+    ]["imported_range_count"] == 74_984

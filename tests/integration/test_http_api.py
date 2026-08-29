@@ -177,3 +177,24 @@ def test_health_method_and_unknown_query_boundaries_are_explicit() -> None:
     assert method_error["error"]["code"] == "method_not_allowed"
     assert query_status == "400 Bad Request"
     assert query_error["error"]["code"] == "invalid_query"
+
+
+def test_source_coverage_route_returns_the_committed_cross_surface_projection() -> None:
+    app = create_app(lookup_service=deterministic_service())
+
+    status, headers, coverage = request(app, path="/v1/coverage")
+    post_status, post_headers, post_error = request(
+        app, method="POST", path="/v1/coverage"
+    )
+
+    committed = json.loads(
+        (ROOT / "web/assets/transparency.json").read_text(encoding="utf-8")
+    )
+    assert status == "200 OK"
+    assert headers["Cache-Control"] == "no-store"
+    assert coverage == committed
+    assert coverage["coverage"]["number_catalog"]["imported_range_count"] == 74_984
+    assert coverage["coverage"]["reputation_sources"]["enabled_source_count"] == 0
+    assert post_status == "405 Method Not Allowed"
+    assert post_headers["Allow"] == "GET"
+    assert post_error["error"]["code"] == "method_not_allowed"

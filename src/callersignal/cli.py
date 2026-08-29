@@ -4,11 +4,12 @@ from __future__ import annotations
 
 import argparse
 import json
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from callersignal.lookup import LookupService
 from callersignal.numbering import OriginRegionRequiredError
+from callersignal.transparency import load_public_coverage_snapshot
 
 _COUNTRY_NAMES = {"NL": "Netherlands", "GB": "United Kingdom", "US": "United States"}
 _CALLING_CODE_COUNTRY = {"31": "NL", "44": "GB", "1": "US"}
@@ -32,6 +33,15 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Emit the versioned lookup-result JSON contract.",
     )
+    coverage = commands.add_parser(
+        "coverage",
+        help="Show official catalogue and reputation-source coverage.",
+    )
+    coverage.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit the shared public corpus-transparency JSON contract.",
+    )
     return parser
 
 
@@ -39,10 +49,22 @@ def main(
     argv: Sequence[str] | None = None,
     *,
     lookup_service: LookupService | None = None,
+    source_coverage: Mapping[str, Any] | None = None,
 ) -> int:
     """Execute one CLI command and return its process exit code."""
     parser = build_parser()
     args = parser.parse_args(argv)
+    if args.command == "coverage":
+        snapshot = (
+            dict(source_coverage)
+            if source_coverage is not None
+            else load_public_coverage_snapshot()
+        )
+        if args.json:
+            print(json.dumps(snapshot, sort_keys=True, ensure_ascii=False))
+        else:
+            print(_human_coverage(snapshot))
+        return 0
     service = lookup_service or LookupService()
     try:
         result = service.lookup(args.number, origin_region=args.region)
@@ -96,6 +118,38 @@ def _human_result(result: dict[str, Any]) -> str:
         lines.append("Unknowns: none reported by the checked source")
     lines.extend(("", assessment["residual_risk"]))
     return "\n".join(lines)
+
+
+def _human_coverage(snapshot: Mapping[str, Any]) -> str:
+    coverage = snapshot["coverage"]
+    catalog = coverage["number_catalog"]
+    reputation = coverage["reputation_sources"]
+    status_counts = ", ".join(
+        f"{item['status'].replace('_', ' ')} {item['range_count']:,}"
+        for item in catalog["register_statuses"]
+    )
+    reasons = ", ".join(
+        f"{item['reason'].replace('_', ' ')} ({item['service_count']})"
+        for item in reputation["unavailable_reasons"]
+    )
+    return "\n".join(
+        (
+            f"Official NL number catalogue: {catalog['status']}",
+            f"- {catalog['imported_range_count']:,} imported ranges",
+            f"- {catalog['matchable_range_count']:,} lookup-compatible ranges",
+            f"- {catalog['destination_category_count']:,} destination categories",
+            f"- Register status coverage: {status_counts}",
+            f"- Freshness: {catalog['freshness']} as of {catalog['retrieved_at']}",
+            "",
+            "Caller-reputation coverage: unavailable",
+            f"- {reputation['indexed_service_count']:,} caller-report services indexed",
+            f"- {reputation['licensable_service_count']:,} advertised licensing routes",
+            f"- {reputation['enabled_source_count']:,} reputation feeds enabled",
+            f"- Unavailable reasons: {reasons}",
+            "",
+            "Coverage counts are not trust or safety scores.",
+        )
+    )
 
 
 if __name__ == "__main__":
