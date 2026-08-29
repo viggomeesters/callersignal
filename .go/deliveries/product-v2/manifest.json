@@ -1,0 +1,194 @@
+{
+  "schema": "go-workflow.delivery.v1",
+  "delivery_id": "product-v2",
+  "project": {
+    "id": "callersignal",
+    "name": "CallerSignal"
+  },
+  "assignment": {
+    "kind": "epic",
+    "id": "product",
+    "title": "Product Delivery"
+  },
+  "release": {
+    "version": 2,
+    "status": "released",
+    "created_at": "2026-08-29T13:35:26+02:00",
+    "supersedes": "product-v1"
+  },
+  "disclosure": {
+    "class": "restricted",
+    "scan_status": "blocked"
+  },
+  "sections": {
+    "summary": "Delivery voor Product Delivery.",
+    "delivered_scope": [
+      "Define versioned phone-number, evidence, and assessment schemas",
+      "Implement international phone-number normalization",
+      "Implement an append-only evidence ledger",
+      "Define the country-adapter protocol and conformance suite",
+      "Implement the Netherlands official-numbering adapter",
+      "Implement the United Kingdom official-numbering adapter",
+      "Implement the United States official-numbering adapter",
+      "Adopt the hybrid reputation vision and safety gates",
+      "Define four calibrated risk states in the shared result contract",
+      "Create a machine-validated source-rights registry and intake gate",
+      "Add privacy-aware call-report ingestion and moderation",
+      "Compute explainable reputation signals from moderated evidence",
+      "Index international caller-report services and reuse routes",
+      "Build the source-backed lookup orchestrator",
+      "Expose read-only lookup through the CLI",
+      "Expose structured lookup through an MCP server",
+      "Expose the read-only lookup HTTP API",
+      "Build the public read-only lookup experience",
+      "Render an HIBP-inspired risk result without false safety claims",
+      "Add production observability, abuse controls, and privacy operations",
+      "Validate and publish the first functional CallerSignal release",
+      "Add a public-safe Netherlands lookup example",
+      "Define caller campaigns as the durable risk-intelligence object",
+      "Create privacy-operable persistence and outbox boundaries",
+      "Add verified private watch subscriptions and change notifications",
+      "Verify organisations and publish bounded official-number portfolios",
+      "Build the consumer campaign timeline and action experience",
+      "Publish honest corpus, coverage, and methodology transparency",
+      "Expose CallerSignal through a discoverable hosted MCP service"
+    ],
+    "excluded_scope": [
+      "Geen aanvullende uitgesloten scope vastgelegd."
+    ],
+    "evidence": [
+      {
+        "label": "Define versioned phone-number, evidence, and assessment schemas",
+        "summary": "changed_files=schemas/phone-number.schema.json,schemas/source-evidence.schema.json,schemas/lookup-result.schema.json,schemas/call-report.schema.json,tests/contracts/test_domain_contracts.py; verification=jq empty schemas/phone-number.schema.json schemas/source-evidence.schema.json schemas/lookup-result.schema.json schemas/call-report.schema.json && uv run pytest tests/contracts -q && uv run ruff check tests/contracts && make check && ./go validate . && git diff --check rc=0; critic=passed domain-model review confirmed separate kinds for number facts, source evidence, community reports, and computed assessments; public lookup rejects restricted identity claims and lookup counts; every assessment requires confidence, reasons, provenance, freshness, and spoofing residual risk"
+      },
+      {
+        "label": "Implement international phone-number normalization",
+        "summary": "changed_files=src/callersignal/numbering.py,tests/unit/test_numbering.py,pyproject.toml,uv.lock; verification=uv run pytest tests/unit/test_numbering.py -q && uv run ruff check src tests && make check && ./go validate . && git diff --check rc=0; critic=passed TDD covered explicit-region NL and GB input, independent international US input, malformed and ambiguous input, possible-but-unvalidated numbering, non-geographic service numbers, short codes, and JSON-schema conformance without inferring identity or reachability"
+      },
+      {
+        "label": "Implement an append-only evidence ledger",
+        "summary": "changed_files=src/callersignal/evidence/__init__.py,src/callersignal/evidence/ledger.py,tests/unit/test_evidence_ledger.py; verification=uv run pytest tests/unit/test_evidence_ledger.py -q && uv run ruff check src tests && make check && ./go validate . && git diff --check rc=0; critic=passed append-only JSONL records are UTC timestamped, source attributed, SHA-256 content addressed, idempotent, detached from caller mutations, tamper-detecting, and replayable into derived state without update or delete paths"
+      },
+      {
+        "label": "Define the country-adapter protocol and conformance suite",
+        "summary": "changed_files=src/callersignal/adapters/base.py,tests/contract/test_country_adapters.py,docs/country-adapters.md; verification=uv run pytest tests/contract/test_country_adapters.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 source declarations require country coverage, authority, URL, reuse basis, license, permitted claims, freshness, typed-gap failure behavior, and portability limitations; R-2 unavailable and missing evidence return typed gaps, stale observations must be marked stale, restricted identity evidence is rejected, and adapters expose no assessment or safety verdict; domain review reconciled stale-evidence visibility with fail-closed status and deliberately skipped ADR because this implements existing contracts"
+      },
+      {
+        "label": "Implement the Netherlands official-numbering adapter",
+        "summary": "changed_files=src/callersignal/adapters/nl.py,tests/adapters/test_nl.py,fixtures/nl/acm_number_register.json; verification=uv run pytest tests/adapters/test_nl.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 the pinned fixture records official ACM source, CC0 reuse basis, retrieval time, download digest, record digest, range, status, and holder; matched and stale output validates against source-evidence.schema.json. R-2 range holder and blocked regulatory status remain separate source observations with explicit current-provider, subscriber, caller, portability, and spoofing limitations; absent and unsupported evidence fail with typed gaps"
+      },
+      {
+        "label": "Implement the United Kingdom official-numbering adapter",
+        "summary": "changed_files=src/callersignal/adapters/gb.py,tests/adapters/test_gb.py,fixtures/gb/ofcom_protected_numbers.json; verification=uv run pytest tests/adapters/test_gb.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 pinned Ofcom protected-range CSV provenance includes official URLs, reuse terms, retrieval timestamp, file digest, record digest, range bounds, and schema-valid freshness. R-2 only the explicit drama range matches as reserved_status; other +44 inputs return no_authoritative_data, foreign inputs are unsupported, stale evidence remains marked stale, and no provider, identity, assessment, or safety claim is emitted"
+      },
+      {
+        "label": "Implement the United States official-numbering adapter",
+        "summary": "changed_files=src/callersignal/adapters/us.py,tests/adapters/test_us.py,fixtures/us/nanpa_public_numbering.json; verification=uv run pytest tests/adapters/test_us.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 the public-safe fixture pins NANPA NPA and 555 references plus FCC regulatory context with retrieval timestamps, file/snapshot/report digests, record/fact digests, and schema-valid freshness. R-2 NPA assignable, assigned, and in-service status is scoped to numbering_plan while fictional_use is scoped to the exact reserved line range; limitations prohibit exact-number assignment, provider, subscriber, caller, or safety inference; unpinned, foreign, and stale paths fail closed"
+      },
+      {
+        "label": "Adopt the hybrid reputation vision and safety gates",
+        "summary": "changed_files=.go/vision.json,.go/hierarchy.json,.go/tasks/open/product-risk-assessment-contract.json,.go/tasks/open/product-risk-result-ux.json,.go/tasks/open/product-source-rights-registry.json,.go/tasks/open/product-report-ingestion.json,.go/tasks/open/product-first-release.json,docs/vision.json,docs/agent-spec.md,docs/implementation-plan.md,docs/public-readiness.md,README.md,scripts/validate_repository.py,tests/test_repository_contract.py,tests/test_repository_structure.py,.go/tasks/active/product-reputation-direction.json; verification=uv run pytest tests/test_repository_contract.py tests/test_repository_structure.py -q (15 passed) rc=0 | ./go validate . rc=0 | make check (108 Python and 3 web tests, docs, assets, public safety) rc=0 | git diff --check rc=0; critic=Verdict A after fixing the numbering-only false reassurance path: no blockers remain, no_risk_evidence now requires a current eligible risk-capable source and numbering-only is insufficient_evidence"
+      },
+      {
+        "label": "Define four calibrated risk states in the shared result contract",
+        "summary": "changed_files=schemas/lookup-result.schema.json,src/callersignal/assessment.py,src/callersignal/lookup.py,tests/unit/test_assessment.py,tests/integration/test_lookup.py,tests/contracts/test_domain_contracts.py,docs/methodology.md,docs/http-api.md,docs/mcp.md,docs/cli.md,.go/tasks/active/product-risk-assessment-contract.json; verification=uv run pytest tests/unit/test_assessment.py tests/integration/test_lookup.py tests/integration/test_cli.py tests/integration/test_mcp.py tests/integration/test_http_api.py -q (34 passed) && make check (120 Python and 3 web tests; docs/assets/public-safety green) && ./go validate . && git diff --check rc=0; critic=approved after adversarial review repaired an authorization bypass so official and corroborated evidence now count only when their matching source check is explicitly risk-capable; negative tests cover unverified, same-source, stale, failed, contradictory, unsupported, and reuse-restricted inputs, and no-match remains explicitly not proof of safety"
+      },
+      {
+        "label": "Create a machine-validated source-rights registry and intake gate",
+        "summary": "changed_files=schemas/source-registry.schema.json,sources/registry.json,tests/contracts/test_source_registry.py,docs/source-rights.md,docs/data-safety.md,docs/country-adapters.md,.go/tasks/active/product-source-rights-registry.json; verification=uv run pytest tests/contracts/test_source_registry.py -q (10 passed) && make check (130 Python and 5 web tests; docs/assets/public-safety green) && git diff --check && ./go validate . && exact-number history scan rc=0; critic=approved after closing executable-disabled and official-numbering-risk-capable schema bypasses, proving robots access cannot substitute for rights, and confirming no copied reports, phone records, placeholders, private input numbers, or secrets; self-reflect=no durable agent/process improvement needed, no skill/memory/config change"
+      },
+      {
+        "label": "Add privacy-aware call-report ingestion and moderation",
+        "summary": "changed_files=src/callersignal/reports/__init__.py,src/callersignal/reports/service.py,tests/integration/test_reports.py,docs/moderation.md,.go/tasks/active/product-report-ingestion.json; verification=uv run pytest tests/integration/test_reports.py -q (10 passed) && make check (149 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking displayed-number semantics, no-free-text input, keyed actor minimization, duplicate ordering before rate limits, rate and brigading thresholds, moderation verification status, correction authorization, deletion receipts, automatic expiry, source-rights boundary, and disabled public activation"
+      },
+      {
+        "label": "Compute explainable reputation signals from moderated evidence",
+        "summary": "changed_files=.go/tasks/active/product-reputation-aggregation.json,schemas/lookup-result.schema.json,src/callersignal/assessment.py,src/callersignal/campaigns/model.py,tests/contracts/test_domain_contracts.py,tests/integration/test_lookup.py,tests/unit/test_assessment.py,tests/unit/test_campaigns.py,docs/methodology.md; verification=uv run pytest tests/unit/test_assessment.py tests/unit/test_campaigns.py -q (15 passed) && make check (153 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after verifying all four self-contained risk explanations, source diversity, freshness, residual uncertainty, official precedence, independent corroboration, verified community eligibility, stale/conflict failure, popularity exclusion, cross-contract schema validation, and caller-identity limitations"
+      },
+      {
+        "label": "Index international caller-report services and reuse routes",
+        "summary": "changed_files=sources/caller-report-services.json,schemas/caller-report-service-index.schema.json,docs/source-rights.md,docs/implementation-plan.md,tests/contracts/test_caller_report_service_index.py,tests/test_repository_structure.py,scripts/validate_repository.py,.go/hierarchy.json,.go/runs/events.jsonl,.go/tasks/open/*.json; tdd_red_1=focused caller-report index contract failed with missing schema and index files; tdd_green_1=6 focused source-index contract tests passed; tdd_red_2=repository graph tests failed on stale 34/28 counts and seven undocumented product tasks; tdd_green_2=24 source, rights, graph, and repository structure tests passed; verification=make check passed 206 Python tests and 8 web tests plus Go, docs, assets, and public-safety gates; research=15 dated Dutch and international services indexed, four advertised licensed API or feed routes, zero integrations enabled; privacy=no phone records, copied report text, ratings, names, lookup counts, or credentials stored; critic=approved machine-enforced distinction between discovery, robots observations, commercial availability, documented permission, and enabled ingestion; Self-reflect: no durable agent/process improvement needed; no skill/memory/config change."
+      },
+      {
+        "label": "Build the source-backed lookup orchestrator",
+        "summary": "changed_files=src/callersignal/lookup.py,tests/integration/test_lookup.py; verification=uv run pytest tests/integration/test_lookup.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 one deterministic service records normalized interpretation, source checks, evidence IDs, typed gaps, source reasons, assessment provenance, freshness, conclusions, and spoofing residual risk across NL, GB, and US. R-2 broad adapter exceptions are converted to source-specific error gaps without leaking exception text or emitting identity, safety, or reachability conclusions; no-match and stale states fail closed; evidence persistence is opt-in rather than lookup-history by default"
+      },
+      {
+        "label": "Expose read-only lookup through the CLI",
+        "summary": "changed_files=src/callersignal/cli.py,tests/integration/test_cli.py,docs/cli.md; verification=uv run pytest tests/integration/test_cli.py -q && make check && git diff --check && ./go validate . rc=0; critic=approved R-1 argparse exposes callersignal lookup semantics through the repository module, requires --region for national input, accepts plus-prefixed international input without a region, and renders country/local/international context with evidence, unknowns, confidence, and spoofing risk. R-2 JSON is a direct serialization of LookupService with no CLI-only fields and validates against the shared result schema; docs state current module invocation without claiming distribution packaging"
+      },
+      {
+        "label": "Expose structured lookup through an MCP server",
+        "summary": "changed_files=src/callersignal/mcp_server.py,tests/integration/test_mcp.py,docs/mcp.md; verification=uv run pytest tests/integration/test_mcp.py -q (6 passed), make check (94 passed; docs/assets/public-safety green), ./go validate . (ok), git diff --check (clean); critic=stdio emits only JSON-RPC, malformed non-object input is rejected without crash, origin ambiguity is a typed tool error, structuredContent equals CLI JSON and validates against advertised schema, no persistence or independent lookup path"
+      },
+      {
+        "label": "Expose the read-only lookup HTTP API",
+        "summary": "changed_files=src/callersignal/http_api.py,tests/integration/test_http_api.py,docs/http-api.md; verification=uv run pytest tests/integration/test_http_api.py -q (6 passed), make check (100 passed; docs/assets/public-safety green), ./go validate . (ok), git diff --check (clean); critic=HTTP 200 body is the unchanged LookupService result and validates against the canonical schema, WSGI layer has no lookup logic, national origin ambiguity fails safely, telemetry has exactly four aggregate fields with no number/IP/region/result and telemetry failure cannot alter the response, admission hook receives no lookup data"
+      },
+      {
+        "label": "Build the public read-only lookup experience",
+        "summary": "changed_files=api/healthz.py,vercel.json,tests/e2e/test_web.py,README.md,CHANGELOG.md,docs/architecture.md,docs/web.md,docs/public-readiness.md,tests/test_repository_structure.py,.go/tasks/active/product-public-web-lookup.json; tdd_red_1=route test failed because /healthz rewrite was missing; tdd_green_1=focused route test 1 passed; tdd_red_2=health entrypoint test failed FileNotFoundError; tdd_green_2=focused health and route tests 2 passed; verification=uv run pytest tests/e2e -q (6 passed) rc=0; npm --prefix web test (3 passed) rc=0; make check (106 Python, 3 web, workflow/docs/assets/public-safety green) rc=0; repo-complete public web-app url-required status=JA missing_hard_count=0 exit_code=0 with project URL/consistency/live all OK; ./go validate . rc=0; git diff --check rc=0; deployment=authenticated viggos-projects-eac4720a/callersignal production dpl_GZVMmev5cHVMWV2Jogjpy8CmMEyT Ready at https://callersignal.vercel.app; live homepage/health/lookup returned 200 and national missing-origin returned 400; security=CSP,HSTS,referrer,permissions,nosniff,frame-denial present; browser=reserved US lookup rendered 2 evidence cards, focused result-title, 0 overflow, 0 console warnings/errors; metadata=GitHub homepage read back stable alias; critic=production uses canonical HTTP service, health exposes no requester data, local .vercel state remains ignored, GitHub auto-deploy is explicitly unconnected and manual release procedure documented"
+      },
+      {
+        "label": "Render an HIBP-inspired risk result without false safety claims",
+        "summary": "changed_files=web/index.html,web/assets/app.js,web/assets/styles.css,web/tests/app.test.js,tests/e2e/test_web.py,docs/web.md,README.md,web/proof/desktop-risk-result-1440.jpg,web/proof/mobile-risk-result-375.jpg,.go/tasks/active/product-risk-result-ux.json; verification=npm --prefix web test (5 passed) && uv run pytest tests/e2e/test_web.py -q (6 passed) && make check (120 Python and 5 web tests; docs/assets/public-safety green) && ./go validate . && git diff --check rc=0; live_verification=Vercel deployment dpl_C2AynN94S1GLXHVgny7DLdVkfVcG status Ready aliases callersignal.vercel.app, curl homepage/API 200 with assessment.risk.state=insufficient_evidence and Cache-Control no-store, browser 375/390/768/1024/1440 overflow=0 console warnings/errors=0; critic=approved after replacing the no-risk checkmark with a search-minus icon to avoid implying safety, removing the dominant confidence percentage/bar, confirming four text-and-icon states, WCAG contrast >=8.68:1, no clipping/overlap/placeholders, and production visual readback"
+      },
+      {
+        "label": "Add production observability, abuse controls, and privacy operations",
+        "summary": "changed_files=src/callersignal/operations/__init__.py,src/callersignal/operations/metrics.py,src/callersignal/operations/runbooks.py,tests/operations/test_metrics.py,tests/operations/test_runbooks.py,docs/operations.md,.go/tasks/active/product-operational-safety.json; verification=uv run pytest tests/operations -q (8 passed) && make check (184 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking bounded route/source/outcome/status/latency dimensions, absence of number/requester/cardinality inputs, metadata rejection, coverage-gap meaning, sanitized case/evidence handles, strict step order for five runbooks, stop conditions, roles, source disablement, correction rebuild, deletion processors/backups, and abuse non-reputation invariant"
+      },
+      {
+        "label": "Validate and publish the first functional CallerSignal release",
+        "summary": "changed_files=CHANGELOG.md,README.md,SUPPORT.md,docs/architecture.md,docs/implementation-plan.md,docs/mcp.md,docs/public-readiness.md,docs/public-readiness-review.md,package-lock.json,package.json,pyproject.toml,src/callersignal/mcp_server.py,src/callersignal/remote_mcp/application.py,tests/test_repository_structure.py,uv.lock,web/package-lock.json,web/package.json; verification=make check passed 198 Python tests and 8 web tests rc=0; verification=repo-complete public validate returned JA with 0 hard blockers rc=0; critic=approved release versions are consistent and notes state supported evidence/actions, unsupported identity/safety claims, known gaps, source-rights boundaries, and upgrade instructions"
+      },
+      {
+        "label": "Add a public-safe Netherlands lookup example",
+        "summary": "changed_files=CHANGELOG.md,docs/implementation-plan.md,docs/web.md,scripts/validate_repository.py,tests/e2e/test_web.py,tests/test_repository_structure.py,web/index.html,web/proof/capture.mjs,web/proof/browser-proof.json,web/proof/desktop-1440-elevated.jpg,web/proof/desktop-1440-hero.jpg,web/proof/desktop-1440-official-warning.jpg,web/proof/mobile-375-campaign-detail.jpg,web/proof/mobile-375-coverage.jpg,web/proof/mobile-375-elevated.jpg,web/proof/mobile-375-hero.jpg,web/proof/mobile-375-official-warning.jpg,web/proof/mobile-375-unknown.jpg,.go/project.json,.go/hierarchy.json,.go/updates/*.json; tdd_red_1=Dutch example test expected 3 buttons but found 2; tdd_green_1=focused test passed after adding exact 0906-8844/NL control; tdd_red_2=self-contained icon test failed before declaration and fresh browser logged favicon 404; tdd_green_2=focused icon test passed and browser console cleared; verification=make check passed 200 Python and 8 web tests plus workflow/docs/assets/public-safety rc=0; verification=repo-complete public validate JA missing_hard_count=0 rc=0; browser=12 desktop/mobile states, three exact examples each, overflow=0, clipping=0, console_errors=0, temporary_copy=false, hero screenshots visually approved; privacy=0906-8844 is the existing pinned CC0 ACM blocked-number record, no invented 06 subscriber value; critic=approved canonical shared lookup path, accessible native control, calibrated blocked-status wording, exact origin_region NL, and no browser-only safety/identity verdict; Self-reflect: process miss found — stack freshness used a stale branch CLI after fetching v0.3.14. Selfimprove applied to skills/go/SKILL.md and skills/selfimprove-axe/learning-log.md; exact tagged-CLI dry-run resolved v0.3.14 and returned up_to_date=true, diff check passed."
+      },
+      {
+        "label": "Define caller campaigns as the durable risk-intelligence object",
+        "summary": "changed_files=.go/vision.json,schemas/caller-campaign.schema.json,src/callersignal/campaigns/__init__.py,src/callersignal/campaigns/model.py,tests/contracts/test_caller_campaign.py,tests/test_repository_contract.py,docs/campaigns.md,docs/vision.json,docs/agent-spec.md,.go/tasks/active/product-caller-campaign-contract.json; verification=uv run pytest tests/contracts/test_caller_campaign.py tests/test_repository_contract.py -q (17 passed) && make check (139 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking identity semantics, source independence, stale/ineligible/contradictory evidence, bounded patterns, temporal invariants, deterministic order, reserved fixtures, schema validity, and public-safety wording"
+      },
+      {
+        "label": "Create privacy-operable persistence and outbox boundaries",
+        "summary": "changed_files=src/callersignal/storage/__init__.py,src/callersignal/storage/model.py,src/callersignal/storage/ports.py,src/callersignal/storage/provider.py,src/callersignal/storage/local.py,tests/storage/test_local_store.py,tests/storage/test_provider_contract.py,docs/data-architecture.md,docs/privacy.md,.go/tasks/active/product-production-data-foundation.json; verification=uv run pytest tests/storage -q (12 passed) && make check (165 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking all aggregate kinds, rollback, privacy recursion, duplicate and version conflicts, expiry at read and purge boundaries, minimized audit receipts, outbox aggregate/idempotency rules, provider secret references, legal-review stop status, encryption/backups, and Vercel mutation disablement"
+      },
+      {
+        "label": "Add verified private watch subscriptions and change notifications",
+        "summary": "changed_files=schemas/watch-subscription.schema.json,src/callersignal/watch/__init__.py,src/callersignal/watch/service.py,tests/integration/test_watch.py,docs/watch.md,.go/tasks/active/product-private-watch-subscriptions.json; verification=uv run pytest tests/integration/test_watch.py -q (6 passed) && make check (171 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking generic response parity, no raw contact/number persistence, consent and verification state invariants, constant-time challenge comparison, attempt lock/expiry/replay, material fingerprint scope, atomic/idempotent outbox, caveated copy, provider failure, verified-contact lifecycle actions, and disabled public mutations"
+      },
+      {
+        "label": "Verify organisations and publish bounded official-number portfolios",
+        "summary": "changed_files=.go/tasks/active/product-verified-organization-portfolios.json,schemas/organization-portfolio.schema.json,src/callersignal/storage/model.py,src/callersignal/organizations/__init__.py,src/callersignal/organizations/service.py,tests/integration/test_organizations.py,docs/organizations.md; verification=uv run pytest tests/integration/test_organizations.py -q (4 passed) && make check (176 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking challenge domain control, no pre-verification publication, private administrator refs, bounded numbers, origin/spoofing claim limits, attempt/expiry/replay, conflict consumption and appeal, impersonation suspension, audit versioning, expiry, deletion, and disabled public mutation"
+      },
+      {
+        "label": "Build the consumer campaign timeline and action experience",
+        "summary": "{\"summary\":\"changed_files=.gitignore,api/campaigns.py,scripts/validate_repository.py,src/callersignal/http_api.py,tests/e2e/site_server.py,tests/e2e/test_web.py,vercel.json,web/index.html,web/assets/app.js,web/assets/styles.css,web/tests/app.test.js,docs/web.md,web/proof/capture.mjs,web/proof/browser-proof.json,ten viewport screenshots,.go/tasks/active/product-public-campaign-experience.json; verification=npm --prefix web test (7 passed), uv run pytest tests/e2e/test_web.py -q (8 passed), make check (186 Python and 7 web tests passed), git diff --check (passed), browser proof (10 states, zero overflow/clipping/console errors); critic=approved after privacy projection, publication threshold, malformed input, responsive accessibility, contrast, clipping, placeholder, source-coverage, identity-claim, and unavailable-action review\",\"changed_files\":[\".gitignore\",\"api/campaigns.py\",\"scripts/validate_repository.py\",\"src/callersignal/http_api.py\",\"tests/e2e/site_server.py\",\"tests/e2e/test_web.py\",\"vercel.json\",\"web/index.html\",\"web/assets/app.js\",\"web/assets/styles.css\",\"web/tests/app.test.js\",\"docs/web.md\",\"web/proof/capture.mjs\",\"web/proof/browser-proof.json\",\"web/proof/desktop-1440-hero.jpg\",\"web/proof/desktop-1440-unknown.jpg\",\"web/proof/desktop-1440-elevated.jpg\",\"web/proof/desktop-1440-official-warning.jpg\",\"web/proof/desktop-1440-campaign-detail.jpg\",\"web/proof/mobile-375-hero.jpg\",\"web/proof/mobile-375-unknown.jpg\",\"web/proof/mobile-375-elevated.jpg\",\"web/proof/mobile-375-official-warning.jpg\",\"web/proof/mobile-375-campaign-detail.jpg\",\".go/tasks/active/product-public-campaign-experience.json\"],\"no_diff\":false,\"verification\":{\"command\":\"npm --prefix web test (7 passed) && uv run pytest tests/e2e/test_web.py -q (8 passed) && make check (186 Python and 7 web tests passed) && git diff --check (passed) && node web/proof/capture.mjs (10 states, zero overflow/clipping/console errors)\",\"result\":\"all commands rc=0\"},\"review\":{\"outcome\":\"approved after focused self-review of public projection allowlists, fail-closed eligibility, exact source coverage, private-field non-disclosure, spoofing language, calibrated state semantics, unavailable report/watch controls, responsive layout, focus, contrast, clipping, and all ten browser states\",\"skip_reason\":null}}"
+      },
+      {
+        "label": "Publish honest corpus, coverage, and methodology transparency",
+        "summary": "changed_files=README.md,docs/transparency.md,docs/web.md,src/callersignal/transparency/__init__.py,src/callersignal/transparency/snapshot.py,tests/integration/test_transparency.py,tests/e2e/site_server.py,tests/e2e/test_web.py,web/index.html,web/assets/app.js,web/assets/styles.css,web/assets/transparency.json,web/tests/app.test.js,web/proof/capture.mjs,web/proof/browser-proof.json,web/proof/desktop-1440-coverage.jpg,web/proof/mobile-375-coverage.jpg,.go/tasks/active/product-corpus-transparency.json; verification=uv run pytest tests/integration/test_transparency.py tests/e2e/test_web.py -q (12 passed) && npm --prefix web test (8 passed) && node web/proof/capture.mjs (12 captures, zero overflow/clipping/console errors) && git diff --check (passed) && ./go validate . (passed) && make check (190 Python and 8 web tests passed) rc=0; critic=approved focused self-review of source-rights eligibility, metric derivation, no-demand reputation invariant, public/private exclusions, no-match semantics, responsive layout, contrast, clipping, placeholder copy, and all twelve browser states"
+      },
+      {
+        "label": "Expose CallerSignal through a discoverable hosted MCP service",
+        "summary": "changed_files=.go/tasks/active/product-hosted-mcp-service.json,api/mcp.py,src/callersignal/remote_mcp/__init__.py,src/callersignal/remote_mcp/__main__.py,src/callersignal/remote_mcp/application.py,src/callersignal/remote_mcp/tools.py,tests/integration/test_remote_mcp.py,tests/e2e/test_web.py,docs/mcp.md,vercel.json; verification=uv run pytest tests/integration/test_remote_mcp.py -q (7 passed) && local curl smoke (discovery,nine tools,coverage,protected 401 passed) && make check (197 Python and 8 web tests passed) && git diff --check (passed) && ./go validate . (passed) && live Vercel alias proof deployment dpl_8t4545JvbgcDtbCqZKiRw9bsVfHm (Ready, health 200, discovery/init/tools/lookup/campaign/coverage passed, protected 401, hostile Origin 403, GET 405, no-store passed) rc=0; critic=approved focused self-review of Streamable HTTP compatibility, current and legacy discovery, Origin/body/protocol boundaries, canonical service delegation, tool annotations, protected scope and consent metadata, arbitrary-token rejection, no fake OAuth issuer, privacy-safe errors, no-store headers, observability exclusions, and live alias behavior"
+      }
+    ],
+    "limitations": [
+      "Alleen bewijs dat in .go is vastgelegd wordt in deze levering vertegenwoordigd."
+    ],
+    "next_steps": [
+      "Build a reproducible privacy-minimized ACM bulk importer",
+      "Define neutral licensed reputation status observations",
+      "Ingest authorized caller-reputation status feeds",
+      "Serve the full ACM range catalog in production lookups",
+      "Expose source and ingest coverage across API MCP and web",
+      "Ship ACM-scale coverage and authorized reputation ingestion"
+    ]
+  },
+  "provenance": {
+    "source": ".go",
+    "source_sha256": "9a53821354d1fc103a2b0d53ffccf83ca63281651766128e8327331e0b40de59",
+    "html_sha256": "7e86b32b708834daebb81858dd2940d8307e66673dbfcc285b5e243e0832495c"
+  }
+}

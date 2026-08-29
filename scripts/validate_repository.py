@@ -17,6 +17,7 @@ EXCLUDED_PARTS = {
     "__pycache__",
     "node_modules",
 }
+EXCLUDED_NAMES = {".DS_Store"}
 ALLOWED_PUBLIC_SAFE_NUMBERS = {
     "202-555-0147",  # NANPA fictional-use range.
     "07700 900185",  # Ofcom protected drama range.
@@ -33,7 +34,11 @@ def fail(message: str) -> None:
 def repository_text_files() -> list[Path]:
     files = []
     for path in ROOT.rglob("*"):
-        if not path.is_file() or any(part in EXCLUDED_PARTS for part in path.parts):
+        if (
+            not path.is_file()
+            or path.name in EXCLUDED_NAMES
+            or any(part in EXCLUDED_PARTS for part in path.parts)
+        ):
             continue
         if path.suffix.lower() in TEXT_SUFFIXES or path.name in {"Makefile", "LICENSE", "go"}:
             files.append(path)
@@ -90,11 +95,11 @@ def load_tasks() -> dict[str, dict]:
 
 def check_task_graph() -> None:
     tasks = load_tasks()
-    if len(tasks) != 34:
-        fail(f"expected 34 repository tasks, found {len(tasks)}")
+    if len(tasks) != 41:
+        fail(f"expected 41 repository tasks, found {len(tasks)}")
     product = {task_id for task_id in tasks if task_id.startswith("product-")}
     foundation = {task_id for task_id in tasks if task_id.startswith("foundation-")}
-    if len(product) != 28 or len(foundation) != 5:
+    if len(product) != 35 or len(foundation) != 5:
         fail(f"unexpected task split: {len(foundation)} foundation, {len(product)} product")
 
     visiting: set[str] = set()

@@ -2,7 +2,7 @@
 
 ## Planning contract
 
-The repository foundation shipped at v0.1.0. CallerSignal v0.2.0 completed twenty-seven dependency-ordered product tasks: shared lookup and risk contracts, NL/GB/US adapters, CLI, stdio and hosted MCP, HTTP, web, caller campaigns, controlled report and storage foundations, private watches, verified organisation declarations, operational safety, public transparency, and release proof. Current `main` adds one reviewed post-release product task for a public-safe Dutch example. The reviewed `.go` JSON files are authoritative; this document remains the human-readable dependency and verification map for maintenance and extension work.
+The repository foundation shipped at v0.1.0. CallerSignal v0.2.0 completed twenty-seven dependency-ordered product tasks: shared lookup and risk contracts, NL/GB/US adapters, CLI, stdio and hosted MCP, HTTP, web, caller campaigns, controlled report and storage foundations, private watches, verified organisation declarations, operational safety, public transparency, and release proof. Current `main` contains one completed public-safe Dutch example and seven reviewed data-expansion tasks. The reviewed `.go` JSON files are authoritative; this document remains the human-readable dependency and verification map for maintenance and extension work.
 
 Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
@@ -252,6 +252,64 @@ Acceptance: the native accessible example control is visible with the existing U
 
 Verify: `uv run pytest tests/e2e/test_web.py -q`, `npm --prefix web test`, and `make check`.
 
+## Phase 10 — Rights-aware data expansion
+
+### `product-caller-source-catalog`
+
+Depends on `product-first-release`. Publish a dated machine-readable discovery index of Dutch and international caller-report services, their capabilities, automation controls, reuse posture, commercial integration routes, and activation gaps without copying their number records.
+
+Acceptance: every service found by the documented discovery queries has terms and robots references, a rights decision, and a next action; public visibility and robots controls never grant ingestion rights; no report text or phone-number records enter the repository.
+
+Verify: `uv run pytest tests/contracts/test_caller_report_service_index.py tests/contracts/test_source_registry.py -q` and `make check`.
+
+### `product-acm-bulk-import`
+
+Depends on `product-caller-source-catalog`. Build a reproducible importer for the complete checksum-pinned official ACM CSV download and project it into a holder-free SQLite range catalogue.
+
+Acceptance: archive, checksum, schema, rows, ranges, and duplicate identifiers fail closed; provenance, freshness, digests, status counts, and destination counts are retained; generated downloads and databases remain outside Git.
+
+Verify: `uv run pytest tests/unit/test_acm_catalog.py -q` and `make check`.
+
+### `product-reputation-status-contract`
+
+Depends on `product-caller-source-catalog`. Define source-neutral aggregate spam, phishing, scam, telemarketing, robocall, nuisance, and current-no-match observations under the existing calibrated four-state assessment contract.
+
+Acceptance: every admitted status retains its native value, basis, freshness, confidence, and provenance; `safe` is never a stored verdict; unsupported, stale, conflicting, or unverified evidence fails closed.
+
+Verify: `uv run pytest tests/contracts/test_domain_contracts.py tests/unit/test_assessment.py tests/integration/test_lookup.py -q` and `make check`.
+
+### `product-acm-production-read-model`
+
+Depends on `product-acm-bulk-import`. Use the generated ACM catalogue in canonical NL lookups and build it during Vercel production deployment while retaining the public-safe fixture fallback.
+
+Acceptance: matching uses canonical E.164 intervals and emits only number type and regulatory status with record provenance; missing, stale, invalid, or unavailable catalogues fail closed; no holder, subscriber, provider, caller, or safety claim is inferred.
+
+Verify: `uv run pytest tests/adapters/test_nl.py tests/integration/test_lookup.py tests/e2e/test_web.py -q` and `make check`.
+
+### `product-authorized-reputation-ingestion`
+
+Depends on `product-caller-source-catalog` and `product-reputation-status-contract`. Add bounded, rate-limited ingestion adapters that remain inert unless a source registry entry proves compatible extraction and republication rights, approved fields, credentials, privacy, takedown, and provenance.
+
+Acceptance: authorized feeds admit only permitted aggregate status fields; disabled sources perform zero report-page requests; narratives, names, lookup popularity, requester data, and source-native safety claims cannot enter processing.
+
+Verify: `uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q` and `make check`.
+
+### `product-source-coverage-surfaces`
+
+Depends on `product-acm-production-read-model` and `product-authorized-reputation-ingestion`. Expose one privacy-safe source-coverage projection through HTTP, CLI, stdio MCP, hosted MCP, transparency data, and the public website.
+
+Acceptance: coverage reports ACM counts, categories, digest and freshness plus indexed, licensable, enabled, and unavailable reputation-source counts; it reveals no raw inventory or private data and never presents source count as trust; desktop and mobile browser proof pass.
+
+Verify: `uv run pytest tests/integration tests/e2e/test_web.py -q`, `npm --prefix web test`, and `make check`.
+
+### `product-data-expansion-release`
+
+Depends on `product-acm-production-read-model`, `product-authorized-reputation-ingestion`, and `product-source-coverage-surfaces`. Release the complete rights-aware data-expansion slice after local, public-safety, repository, live browser, and protocol gates pass.
+
+Acceptance: the current official ACM catalogue is proven live with honest coverage; each ingested reputation source has compatible rights and operational privacy controls; no permission-required site is scraped; all canonical surfaces and repository-history safety checks pass.
+
+Verify: `make check` and strict public `repo-complete` validation.
+
 ## Dependency overview
 
 ```mermaid
@@ -320,6 +378,17 @@ flowchart TD
     TRANS --> REL
     RMCP --> REL
     REL --> NLEX[product-nl-public-safe-example]
+    REL --> CAT[product-caller-source-catalog]
+    CAT --> ACM[product-acm-bulk-import]
+    CAT --> STAT[product-reputation-status-contract]
+    ACM --> ACMR[product-acm-production-read-model]
+    CAT --> INGEST[product-authorized-reputation-ingestion]
+    STAT --> INGEST
+    ACMR --> SURF[product-source-coverage-surfaces]
+    INGEST --> SURF
+    ACMR --> EXPREL[product-data-expansion-release]
+    INGEST --> EXPREL
+    SURF --> EXPREL
 ```
 
 Use `./go next .` rather than selecting from the diagram by eye; the repo-local workflow is the source of task state and eligibility.

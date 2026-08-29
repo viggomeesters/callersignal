@@ -1,0 +1,68 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-source-coverage-surfaces",
+  "project": "callersignal",
+  "status": "open",
+  "order": 760,
+  "summary": "Expose source and ingest coverage across API MCP and web",
+  "description": "Publish current ACM catalog statistics and rights-aware reputation-source coverage through canonical HTTP, MCP, CLI, transparency, and web surfaces without exposing real number inventories or copied reports.",
+  "depends_on": [
+    "product-acm-production-read-model",
+    "product-authorized-reputation-ingestion"
+  ],
+  "scope": {
+    "read": [
+      "src/callersignal/transparency/snapshot.py",
+      "src/callersignal/remote_mcp/tools.py",
+      "src/callersignal/http_api.py",
+      "web/index.html"
+    ],
+    "modify": [
+      "src/callersignal/transparency/snapshot.py",
+      "src/callersignal/http_api.py",
+      "src/callersignal/remote_mcp/tools.py",
+      "src/callersignal/mcp_server.py",
+      "src/callersignal/cli.py",
+      "api/index.py",
+      "web/index.html",
+      "web/assets/app.js",
+      "web/assets/styles.css",
+      "web/assets/transparency.json",
+      "web/proof/capture.mjs",
+      "web/proof/browser-proof.json",
+      "web/proof/desktop-1440-coverage.jpg",
+      "web/proof/mobile-375-coverage.jpg",
+      "tests/integration/test_transparency.py",
+      "tests/integration/test_http_api.py",
+      "tests/integration/test_mcp.py",
+      "tests/integration/test_remote_mcp.py",
+      "tests/e2e/test_web.py",
+      "web/tests/app.test.js",
+      "docs/transparency.md",
+      "docs/mcp.md",
+      "docs/web.md",
+      "docs/implementation-plan.md"
+    ]
+  },
+  "acceptance": [
+    "API, CLI, stdio MCP, hosted MCP, and web expose one source-coverage projection with ACM imported range count, status and destination coverage, source digest/freshness, indexed service count, licensable feed count, enabled reputation source count, and explicit unavailable reasons.",
+    "Coverage reveals no raw number inventory, holder name, report text, reporter, lookup demand, credential, or private source data and never presents source count as trust or safety.",
+    "Desktop and 375px mobile browser proof is current, readable, unclipped, free of overflow and console errors, and visually distinguishes available official context from unavailable reputation coverage."
+  ],
+  "verification": [
+    "uv run pytest tests/integration tests/e2e/test_web.py -q",
+    "npm --prefix web test",
+    "make check"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

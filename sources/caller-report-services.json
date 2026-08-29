@@ -1,0 +1,552 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "caller_report_service_index",
+  "reviewed_at": "2026-08-29",
+  "discovery": {
+    "scope": "Dutch and international consumer services that expose caller-report, caller-reputation, spam-label, or business-verification capabilities.",
+    "queries": [
+      "Nederland wie heeft mij gebeld nummer zoeken ervaringen",
+      "international who called me phone number reports",
+      "caller reputation spam detection API partnership",
+      "reverse phone lookup community reports service"
+    ],
+    "inclusion_criteria": [
+      "The service exposes number lookup, community reports, aggregate reputation, category labels, or a relevant commercial data route.",
+      "An operator-controlled service page and an automation-control reference could be identified during review.",
+      "The service is distinct enough to represent a separate publisher or integration route."
+    ],
+    "limitations": [
+      "This is a dated discovery index, not a claim that every service worldwide has been found.",
+      "Search ranking, service availability, terms, robots controls, and commercial products can change after the review date.",
+      "Presence in this index grants no right to crawl, copy, transform, cache, classify, or republish source data.",
+      "No service is ingestible until rights, privacy, takedown, provenance, field, freshness, and credential gates all pass."
+    ]
+  },
+  "services": [
+    {
+      "service_id": "wieheeftmijgebeld_nl",
+      "name": "Wieheeftmijgebeld.nl",
+      "service_url": "https://wieheeftmijgebeld.nl/",
+      "coverage_scope": "national",
+      "jurisdictions": ["NL"],
+      "languages": ["nl"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://wieheeftmijgebeld.nl/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "public_paths_observed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://wieheeftmijgebeld.nl/copyright/",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "The publisher's copyright notice does not provide CallerSignal with a database-ingestion or republication grant.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Request written permission covering structured fields, caching, attribution, corrections, and public display."
+      }
+    },
+    {
+      "service_id": "onbekendnummer_nl",
+      "name": "Onbekendnummer.nl",
+      "service_url": "https://onbekendnummer.nl/",
+      "coverage_scope": "national",
+      "jurisdictions": ["NL"],
+      "languages": ["nl"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://onbekendnummer.nl/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "mixed_or_bot_specific",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://onbekendnummer.nl/disclaimer/",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "Public report pages and a site disclaimer were found, but no explicit grant for bulk extraction and republication was documented.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Ask the publisher for an API or a written data-sharing agreement with a minimal aggregate field set."
+      }
+    },
+    {
+      "service_id": "wieheeftgebeld_nl",
+      "name": "Wieheeftgebeld.nl",
+      "service_url": "https://www.wieheeftgebeld.nl/",
+      "coverage_scope": "national",
+      "jurisdictions": ["NL"],
+      "languages": ["nl"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://www.wieheeftgebeld.nl/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "mixed_or_bot_specific",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": null,
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "No operator-issued bulk reuse grant or licensed data route was found during the dated review.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Contact the operator and document whether aggregate labels may be cached and displayed with provenance."
+      }
+    },
+    {
+      "service_id": "tellows",
+      "name": "tellows",
+      "service_url": "https://www.tellows.com/",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["de", "en", "es", "fr", "it", "nl"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels", "licensed_api", "partner_feed"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://www.tellows.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "mixed_or_bot_specific",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://www.tellows.com/s/about-en/tellows-api-partnership-program",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "licensed_access_available",
+        "evidence": "The operator advertises Scorelist, Live, and Reputation API partnership products; CallerSignal has no agreement or credentials.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "licensed_api",
+        "requires_contract": true,
+        "requires_credentials": true,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "evaluate_license",
+        "blocking_gates": ["commercial_terms", "credentials", "privacy", "takedown", "provenance"],
+        "next_action": "Request pricing and written rights for aggregate score, category, count, freshness, caching, and public display."
+      }
+    },
+    {
+      "service_id": "should_i_answer",
+      "name": "Should I Answer?",
+      "service_url": "https://www.shouldianswer.com/",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["cs", "en", "es", "it", "pl"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://www.shouldianswer.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "mixed_or_bot_specific",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://www.shouldianswer.com/terms",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "Consumer service terms were found, but no explicit CallerSignal database reuse or republication permission was documented.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Request an authorized aggregate-data route and document territorial privacy and correction obligations."
+      }
+    },
+    {
+      "service_id": "who_called_uk",
+      "name": "Who Called UK",
+      "service_url": "https://who-called.co.uk/",
+      "coverage_scope": "national",
+      "jurisdictions": ["GB"],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://who-called.co.uk/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "unavailable",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://who-called.co.uk/Terms",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "The service exposes public reports, but no authorized bulk ingestion and republication route was established.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Obtain operator permission and a stable supported interface before designing an adapter."
+      }
+    },
+    {
+      "service_id": "who_called_us",
+      "name": "Who Called US",
+      "service_url": "https://who-called.us/",
+      "coverage_scope": "national",
+      "jurisdictions": ["US"],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://who-called.us/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "public_paths_observed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": null,
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "No operator-issued bulk reuse license or supported commercial integration route was found during review.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "privacy", "takedown", "provenance"],
+        "next_action": "Contact the operator for a supported aggregate-data agreement and correction process."
+      }
+    },
+    {
+      "service_id": "who_calls_me",
+      "name": "WhoCallsMe",
+      "service_url": "https://whocallsme.com/",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "community_reports", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://whocallsme.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "mixed_or_bot_specific",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": null,
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "Community pages were found, but no explicit right to bulk extract, derive, cache, or republish their data was found.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Request permission for aggregate-only use and an authoritative removal and dispute route."
+      }
+    },
+    {
+      "service_id": "robokiller",
+      "name": "RoboKiller Lookup",
+      "service_url": "https://lookup.robokiller.com/",
+      "coverage_scope": "national",
+      "jurisdictions": ["CA", "US"],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://lookup.robokiller.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "mixed_or_bot_specific",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://www.robokiller.com/terms",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "The lookup product is publicly visible, but no CallerSignal bulk data license or public republication grant was found.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "privacy", "takedown", "provenance"],
+        "next_action": "Ask for a supported licensing route covering aggregate classifications and public display."
+      }
+    },
+    {
+      "service_id": "nomorobo",
+      "name": "Nomorobo",
+      "service_url": "https://www.nomorobo.com/lookup/",
+      "coverage_scope": "national",
+      "jurisdictions": ["CA", "US"],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "aggregate_reputation", "category_labels", "licensed_api"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://www.nomorobo.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "public_paths_observed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://www.nomorobo.com/business/terms/",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "licensed_access_available",
+        "evidence": "Business terms describe API data under a master agreement and statement of work, with scraping and redistribution restrictions.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "licensed_api",
+        "requires_contract": true,
+        "requires_credentials": true,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "evaluate_license",
+        "blocking_gates": ["commercial_terms", "credentials", "privacy", "takedown", "provenance"],
+        "next_action": "Request a proposal whose statement of work explicitly permits CallerSignal lookup, caching, attribution, and display."
+      }
+    },
+    {
+      "service_id": "truecaller",
+      "name": "Truecaller",
+      "service_url": "https://www.truecaller.com/",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels", "verified_business"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://www.truecaller.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "lookup_paths_disallowed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://www.truecaller.com/terms-of-service",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "Current public developer material focuses on consent-based number verification; no current reputation-feed grant for CallerSignal is documented.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "none",
+        "requires_contract": true,
+        "requires_credentials": true,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["product_fit", "reuse_permission", "privacy", "takedown", "provenance", "credentials"],
+        "next_action": "Ask Truecaller whether a supported reputation data product permits this public lookup use case."
+      }
+    },
+    {
+      "service_id": "whoscall",
+      "name": "Whoscall",
+      "service_url": "https://web.whoscall.com/en",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["en", "ja", "ko", "th", "zh"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels", "verified_business", "partner_feed"],
+      "public_report_pages_present": false,
+      "automation": {
+        "robots_url": "https://web.whoscall.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "public_paths_observed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://web.whoscall.com/en/terms",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "licensed_access_available",
+        "evidence": "Gogolook publishes enterprise anti-fraud database integration routes, while the consumer terms do not grant CallerSignal access.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "partner_feed",
+        "requires_contract": true,
+        "requires_credentials": true,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "evaluate_license",
+        "blocking_gates": ["commercial_terms", "credentials", "privacy", "takedown", "provenance"],
+        "next_action": "Request enterprise data-feed terms for aggregate risk labels, supported countries, freshness, and end-user display."
+      }
+    },
+    {
+      "service_id": "suscall",
+      "name": "SUSCall",
+      "service_url": "https://suscall.com/",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://suscall.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "mixed_or_bot_specific",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": null,
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "The robots file reserves some machine uses and no separate bulk reuse license for CallerSignal was found.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Contact the operator for an explicit aggregate-data grant and supported automation route."
+      }
+    },
+    {
+      "service_id": "whocall_me",
+      "name": "WhoCall.Me",
+      "service_url": "https://whocall.me/",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["en"],
+      "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels"],
+      "public_report_pages_present": true,
+      "automation": {
+        "robots_url": "https://whocall.me/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "public_paths_observed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": null,
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "permission_required",
+        "evidence": "Public lookup pages were found, but no operator-issued license for bulk extraction, derived labels, or republication was found.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "web_page",
+        "requires_contract": true,
+        "requires_credentials": false,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "request_permission",
+        "blocking_gates": ["reuse_permission", "copyright", "database_rights", "privacy", "takedown", "provenance"],
+        "next_action": "Request written permission and an aggregate-only interface before implementing any access."
+      }
+    },
+    {
+      "service_id": "hiya",
+      "name": "Hiya",
+      "service_url": "https://www.hiya.com/products/protect",
+      "coverage_scope": "international",
+      "jurisdictions": [],
+      "languages": ["en"],
+      "capabilities": ["aggregate_reputation", "category_labels", "verified_business", "licensed_api", "partner_feed"],
+      "public_report_pages_present": false,
+      "automation": {
+        "robots_url": "https://www.hiya.com/robots.txt",
+        "reviewed_at": "2026-08-29",
+        "crawl_signal": "public_paths_observed",
+        "grant_effect": "none"
+      },
+      "rights": {
+        "terms_url": "https://developer.hiya.com/docs/getting-started/introduction",
+        "reviewed_at": "2026-08-29",
+        "reuse_status": "licensed_access_available",
+        "evidence": "Hiya documents partner APIs and reputation caches that require API keys and signed service terms; CallerSignal has neither.",
+        "permission_reference": null
+      },
+      "integration": {
+        "channel": "partner_feed",
+        "requires_contract": true,
+        "requires_credentials": true,
+        "status": "disabled",
+        "permitted_fields": []
+      },
+      "activation": {
+        "decision": "evaluate_license",
+        "blocking_gates": ["commercial_terms", "credentials", "privacy", "takedown", "provenance"],
+        "next_action": "Request Protect access and terms that expressly cover public lookup, caching, attribution, and end-user disclosures."
+      }
+    }
+  ]
+}

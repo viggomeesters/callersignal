@@ -18,6 +18,14 @@ The review used the following primary sources on 2026-08-28:
 
 The site can be reconsidered only after written permission or a suitable license explicitly covers CallerSignal's intended extraction, storage, transformation, display, territories, commercial context, attribution, update cadence, and termination behavior.
 
+## International caller-report discovery index
+
+[`sources/caller-report-services.json`](../sources/caller-report-services.json) records the dated discovery surface separately from the enabled source registry. The 2026-08-29 review found fifteen Dutch, national, and international services through four documented search themes. Each entry records service and robots URLs, report and status capabilities, a terms or no-terms finding, reuse posture, integration route, blocking gates, and the next activation action. The matching [JSON Schema](../schemas/caller-report-service-index.schema.json) prevents a disabled source from carrying permitted fields and prevents enablement without documented rights.
+
+Four operators currently advertise a plausible licensed route that warrants commercial evaluation: [tellows API partnerships](https://www.tellows.com/s/about-en/tellows-api-partnership-program), [Nomorobo business APIs](https://www.nomorobo.com/business/terms/), [Whoscall enterprise services](https://web.whoscall.com/en), and [Hiya partner APIs](https://developer.hiya.com/docs/getting-started/introduction). “Licensed access available” means only that an operator advertises a route. CallerSignal has no agreement, credentials, approved fields, or publication rights for these services, so every integration remains disabled.
+
+The remaining discovered services require explicit permission or product-fit confirmation. Public report pages and permissive crawl paths are useful discovery signals, but they do not settle copyright, database rights, privacy, caching, derived classifications, or republication. The index intentionally contains no phone-number inventory, report text, user names, ratings, or lookup counts. Its scope is reproducible but not globally exhaustive: new services and changed terms require a dated review and schema-valid update.
+
 ## Seven independent gates
 
 Every registry source has seven gate decisions. Passing one never implies another.

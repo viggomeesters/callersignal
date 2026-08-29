@@ -1,0 +1,109 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-caller-source-catalog",
+  "project": "callersignal",
+  "status": "done",
+  "order": 720,
+  "summary": "Index international caller-report services and reuse routes",
+  "description": "Publish a machine-readable, dated discovery index of consumer who-called services, their jurisdictions, report/status capabilities, API or feed options, robots and terms references, reuse posture, and activation gap without copying number records.",
+  "depends_on": [
+    "product-first-release"
+  ],
+  "scope": {
+    "read": [
+      "sources/registry.json",
+      "schemas/source-registry.schema.json",
+      "docs/source-rights.md"
+    ],
+    "modify": [
+      "sources/caller-report-services.json",
+      "schemas/caller-report-service-index.schema.json",
+      "docs/source-rights.md",
+      "docs/implementation-plan.md",
+      "tests/contracts/test_caller_report_service_index.py",
+      "tests/test_repository_structure.py",
+      "scripts/validate_repository.py"
+    ]
+  },
+  "acceptance": [
+    "A dated machine-readable index covers every service found by the documented NL and international discovery queries, including service URL, jurisdictions, report/status capability, API/feed availability, terms/robots references, reuse decision, and next activation action.",
+    "The index contains no report text or phone-number records and cannot mark a source ingestible from public visibility or robots alone.",
+    "Schema, documentation, task graph, and rights tests remain consistent and public-safe."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts/test_caller_report_service_index.py tests/contracts/test_source_registry.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T13:28:02+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-29T13:35:26+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved against the finished task: the dated index covers 15 Dutch and international caller-report services discovered through documented queries; every entry records capabilities, robots, terms or no-terms finding, reuse status, blocking gates, and next action; schema prohibits disabled sources from carrying permitted fields and prohibits enablement without documented rights; no number records or report content are stored; 206 Python tests, 8 web tests, Go validation, docs, assets, and public-safety gates passed.",
+      "transaction_id": "a40b4a6f2c104effbe211ee309d963b1",
+      "delivery": {
+        "delivery_id": "product-v2",
+        "html": ".go/deliveries/product-v2/index.html",
+        "manifest": ".go/deliveries/product-v2/manifest.json",
+        "source_sha256": "9a53821354d1fc103a2b0d53ffccf83ca63281651766128e8327331e0b40de59",
+        "html_sha256": "7e86b32b708834daebb81858dd2940d8307e66673dbfcc285b5e243e0832495c"
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T13:35:05+02:00",
+      "task_id": "product-caller-source-catalog",
+      "agent": "codex",
+      "summary": "changed_files=sources/caller-report-services.json,schemas/caller-report-service-index.schema.json,docs/source-rights.md,docs/implementation-plan.md,tests/contracts/test_caller_report_service_index.py,tests/test_repository_structure.py,scripts/validate_repository.py,.go/hierarchy.json,.go/runs/events.jsonl,.go/tasks/open/*.json; tdd_red_1=focused caller-report index contract failed with missing schema and index files; tdd_green_1=6 focused source-index contract tests passed; tdd_red_2=repository graph tests failed on stale 34/28 counts and seven undocumented product tasks; tdd_green_2=24 source, rights, graph, and repository structure tests passed; verification=make check passed 206 Python tests and 8 web tests plus Go, docs, assets, and public-safety gates; research=15 dated Dutch and international services indexed, four advertised licensed API or feed routes, zero integrations enabled; privacy=no phone records, copied report text, ratings, names, lookup counts, or credentials stored; critic=approved machine-enforced distinction between discovery, robots observations, commercial availability, documented permission, and enabled ingestion; Self-reflect: no durable agent/process improvement needed; no skill/memory/config change.",
+      "changed_files": [
+        "sources/caller-report-services.json",
+        "schemas/caller-report-service-index.schema.json",
+        "docs/source-rights.md",
+        "docs/implementation-plan.md",
+        "tests/contracts/test_caller_report_service_index.py",
+        "tests/test_repository_structure.py",
+        "scripts/validate_repository.py",
+        ".go/hierarchy.json",
+        ".go/runs/events.jsonl",
+        ".go/tasks/open/*.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "make check passed 206 Python tests and 8 web tests plus Go, docs, assets, and public-safety gates",
+        "result": "make check passed 206 Python tests and 8 web tests plus Go, docs, assets, and public-safety gates"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved machine-enforced distinction between discovery, robots observations, commercial availability, documented permission, and enabled ingestion",
+        "skip_reason": null
+      }
+    }
+  ]
+}

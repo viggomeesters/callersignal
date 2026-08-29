@@ -59,7 +59,11 @@
             "product-risk-assessment-contract",
             "product-source-rights-registry",
             "product-report-ingestion",
-            "product-reputation-aggregation"
+            "product-reputation-aggregation",
+            "product-caller-source-catalog",
+            "product-acm-bulk-import",
+            "product-reputation-status-contract",
+            "product-authorized-reputation-ingestion"
           ]
         },
         {
@@ -74,7 +78,10 @@
             "product-risk-result-ux",
             "product-operational-safety",
             "product-first-release",
-            "product-nl-public-safe-example"
+            "product-nl-public-safe-example",
+            "product-acm-production-read-model",
+            "product-source-coverage-surfaces",
+            "product-data-expansion-release"
           ]
         },
         {

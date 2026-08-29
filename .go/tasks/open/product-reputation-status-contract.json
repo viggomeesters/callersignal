@@ -1,0 +1,53 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "product-reputation-status-contract",
+  "project": "callersignal",
+  "status": "open",
+  "order": 735,
+  "summary": "Define neutral licensed reputation status observations",
+  "description": "Define a source-neutral contract that maps authorized aggregate source statuses such as spam or phishing into existing calibrated CallerSignal risk states while keeping safe, verified organisation, and insufficient-evidence semantics distinct.",
+  "depends_on": [
+    "product-caller-source-catalog"
+  ],
+  "scope": {
+    "read": [
+      "schemas/source-evidence.schema.json",
+      "schemas/lookup-result.schema.json",
+      "src/callersignal/assessment.py",
+      "src/callersignal/lookup.py",
+      "docs/methodology.md"
+    ],
+    "modify": [
+      "schemas/source-evidence.schema.json",
+      "schemas/lookup-result.schema.json",
+      "src/callersignal/adapters/base.py",
+      "src/callersignal/assessment.py",
+      "src/callersignal/lookup.py",
+      "tests/contracts/test_domain_contracts.py",
+      "tests/unit/test_assessment.py",
+      "tests/integration/test_lookup.py",
+      "docs/methodology.md",
+      "docs/implementation-plan.md"
+    ]
+  },
+  "acceptance": [
+    "Authorized source observations can express bounded aggregate categories including spam, phishing, scam, telemarketing, robocall, nuisance, and no-current-risk-match with source-native value, sample basis, freshness, confidence, and provenance.",
+    "Phishing or scam never identifies a caller or subscriber; safe is not a stored verdict; no-current-risk-match can only produce no_risk_evidence after a current eligible risk-capable source check; verified remains an organisation declaration rather than call-origin proof.",
+    "Unknown, conflicting, stale, single-unverified, and unsupported source values fail closed under the existing four-state risk contract."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts/test_domain_contracts.py tests/unit/test_assessment.py tests/integration/test_lookup.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

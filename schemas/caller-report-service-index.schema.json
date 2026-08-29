@@ -1,0 +1,283 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://callersignal.dev/schemas/caller-report-service-index.schema.json",
+  "title": "CallerSignal caller-report service discovery index",
+  "description": "A dated index of caller-report services and possible authorized integration routes. Discovery never grants ingestion rights.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "kind", "reviewed_at", "discovery", "services"],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "caller_report_service_index" },
+    "reviewed_at": { "type": "string", "format": "date" },
+    "discovery": { "$ref": "#/$defs/discovery" },
+    "services": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/service" }
+    }
+  },
+  "$defs": {
+    "token": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[_-][a-z0-9]+)*$"
+    },
+    "httpsUri": {
+      "type": "string",
+      "format": "uri",
+      "pattern": "^https://"
+    },
+    "nullableHttpsUri": {
+      "oneOf": [
+        { "$ref": "#/$defs/httpsUri" },
+        { "type": "null" }
+      ]
+    },
+    "nonEmptyStrings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 3 }
+    },
+    "discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "queries", "inclusion_criteria", "limitations"],
+      "properties": {
+        "scope": { "type": "string", "minLength": 30 },
+        "queries": { "$ref": "#/$defs/nonEmptyStrings" },
+        "inclusion_criteria": { "$ref": "#/$defs/nonEmptyStrings" },
+        "limitations": { "$ref": "#/$defs/nonEmptyStrings" }
+      }
+    },
+    "service": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "service_id",
+        "name",
+        "service_url",
+        "coverage_scope",
+        "jurisdictions",
+        "languages",
+        "capabilities",
+        "public_report_pages_present",
+        "automation",
+        "rights",
+        "integration",
+        "activation"
+      ],
+      "properties": {
+        "service_id": { "$ref": "#/$defs/token" },
+        "name": { "type": "string", "minLength": 3 },
+        "service_url": { "$ref": "#/$defs/httpsUri" },
+        "coverage_scope": { "enum": ["national", "international"] },
+        "jurisdictions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z]{2}$"
+          }
+        },
+        "languages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z]{2}(?:-[A-Z]{2})?$"
+          }
+        },
+        "capabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "number_lookup",
+              "community_reports",
+              "aggregate_reputation",
+              "category_labels",
+              "verified_business",
+              "licensed_api",
+              "partner_feed"
+            ]
+          }
+        },
+        "public_report_pages_present": { "type": "boolean" },
+        "automation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["robots_url", "reviewed_at", "crawl_signal", "grant_effect"],
+          "properties": {
+            "robots_url": { "$ref": "#/$defs/httpsUri" },
+            "reviewed_at": { "type": "string", "format": "date" },
+            "crawl_signal": {
+              "enum": [
+                "public_paths_observed",
+                "mixed_or_bot_specific",
+                "lookup_paths_disallowed",
+                "unavailable"
+              ]
+            },
+            "grant_effect": { "const": "none" }
+          }
+        },
+        "rights": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "terms_url",
+            "reviewed_at",
+            "reuse_status",
+            "evidence",
+            "permission_reference"
+          ],
+          "properties": {
+            "terms_url": { "$ref": "#/$defs/nullableHttpsUri" },
+            "reviewed_at": { "type": "string", "format": "date" },
+            "reuse_status": {
+              "enum": [
+                "enabled",
+                "licensed_access_available",
+                "permission_required",
+                "prohibited",
+                "not_suitable"
+              ]
+            },
+            "evidence": { "type": "string", "minLength": 30 },
+            "permission_reference": { "$ref": "#/$defs/nullableHttpsUri" }
+          }
+        },
+        "integration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "channel",
+            "requires_contract",
+            "requires_credentials",
+            "status",
+            "permitted_fields"
+          ],
+          "properties": {
+            "channel": { "enum": ["licensed_api", "partner_feed", "web_page", "none"] },
+            "requires_contract": { "type": "boolean" },
+            "requires_credentials": { "type": "boolean" },
+            "status": { "enum": ["enabled", "disabled"] },
+            "permitted_fields": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "aggregate_report_count",
+                  "category_label",
+                  "reputation_score",
+                  "last_reported_at",
+                  "verified_business"
+                ]
+              }
+            }
+          }
+        },
+        "activation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["decision", "blocking_gates", "next_action"],
+          "properties": {
+            "decision": {
+              "enum": ["enabled", "evaluate_license", "request_permission", "do_not_integrate"]
+            },
+            "blocking_gates": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "reuse_permission",
+                  "copyright",
+                  "database_rights",
+                  "privacy",
+                  "takedown",
+                  "provenance",
+                  "commercial_terms",
+                  "credentials",
+                  "product_fit"
+                ]
+              }
+            },
+            "next_action": { "type": "string", "minLength": 20 }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "integration": {
+                "properties": { "status": { "const": "enabled" } },
+                "required": ["status"]
+              }
+            },
+            "required": ["integration"]
+          },
+          "then": {
+            "properties": {
+              "rights": {
+                "properties": {
+                  "reuse_status": { "const": "enabled" },
+                  "permission_reference": { "$ref": "#/$defs/httpsUri" }
+                }
+              },
+              "integration": {
+                "properties": {
+                  "permitted_fields": { "minItems": 1 }
+                }
+              },
+              "activation": {
+                "properties": {
+                  "decision": { "const": "enabled" },
+                  "blocking_gates": { "maxItems": 0 }
+                }
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "integration": {
+                "properties": {
+                  "permitted_fields": { "maxItems": 0 }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "rights": {
+                "properties": {
+                  "reuse_status": { "const": "licensed_access_available" }
+                },
+                "required": ["reuse_status"]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "integration": {
+                "properties": {
+                  "channel": { "enum": ["licensed_api", "partner_feed"] },
+                  "requires_contract": { "const": true },
+                  "status": { "const": "disabled" }
+                }
+              },
+              "activation": {
+                "properties": { "decision": { "const": "evaluate_license" } }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
