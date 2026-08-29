@@ -12,6 +12,7 @@ class EntityKind(StrEnum):
     REPORT = "report"
     CAMPAIGN = "campaign"
     WATCH = "watch"
+    ORGANIZATION_PORTFOLIO = "organization_portfolio"
     VERIFICATION_CHALLENGE = "verification_challenge"
 
 

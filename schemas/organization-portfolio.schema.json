@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/viggomeesters/callersignal/main/schemas/organization-portfolio.schema.json",
+  "title": "CallerSignal Verified Organization Portfolio",
+  "description": "A bounded set of official contact routes declared by a challenge-verified organisation. Verification does not prove call origin.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "organization_id",
+    "display_name",
+    "domain",
+    "jurisdiction",
+    "status",
+    "verification",
+    "numbers",
+    "correction",
+    "updated_at",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "organization_portfolio" },
+    "organization_id": { "type": "string", "pattern": "^org_[a-f0-9]{24}$" },
+    "display_name": { "type": "string", "minLength": 3, "maxLength": 120 },
+    "domain": { "type": "string", "pattern": "^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z]{2,63}$" },
+    "jurisdiction": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "status": { "enum": ["verified", "suspended", "expired", "revoked"] },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "verified_at", "valid_until", "claim_scope"],
+      "properties": {
+        "method": { "const": "domain_email_challenge" },
+        "verified_at": { "type": "string", "format": "date-time" },
+        "valid_until": { "type": "string", "format": "date-time" },
+        "claim_scope": { "const": "organization_declared_official_contact_routes" }
+      }
+    },
+    "numbers": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 20,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["canonical_e164", "label", "status", "declared_at"],
+        "properties": {
+          "canonical_e164": { "type": "string", "pattern": "^\\+[1-9][0-9]{1,14}$" },
+          "label": { "type": "string", "minLength": 3, "maxLength": 80 },
+          "status": { "enum": ["active", "retired"] },
+          "declared_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "correction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "updated_at", "reason_codes"],
+      "properties": {
+        "status": { "enum": ["none", "under_review", "corrected", "appeal_resolved"] },
+        "updated_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "reason_codes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[a-z0-9]+(?:[_-][a-z0-9]+)*$" }
+        }
+      }
+    },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "limitations": {
+      "type": "array",
+      "minItems": 2,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 20, "maxLength": 500 },
+      "allOf": [
+        { "contains": { "type": "string", "pattern": "[Oo]rigin" } },
+        { "contains": { "type": "string", "pattern": "[Ss]poof" } }
+      ]
+    }
+  }
+}
