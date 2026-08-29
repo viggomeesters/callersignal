@@ -124,6 +124,7 @@ def _human_coverage(snapshot: Mapping[str, Any]) -> str:
     coverage = snapshot["coverage"]
     catalog = coverage["number_catalog"]
     reputation = coverage["reputation_sources"]
+    reputation_catalog = coverage["reputation_catalog"]
     status_counts = ", ".join(
         f"{item['status'].replace('_', ' ')} {item['range_count']:,}"
         for item in catalog["register_statuses"]
@@ -134,6 +135,10 @@ def _human_coverage(snapshot: Mapping[str, Any]) -> str:
     )
     enabled_reputation_sources = reputation["enabled_source_count"]
     reputation_feed_label = "feed" if enabled_reputation_sources == 1 else "feeds"
+    category_counts = ", ".join(
+        f"{item['category']} {item['observation_count']:,}"
+        for item in reputation_catalog["category_counts"]
+    )
     return "\n".join(
         (
             f"Official NL number catalogue: {catalog['status']}",
@@ -143,7 +148,27 @@ def _human_coverage(snapshot: Mapping[str, Any]) -> str:
             f"- Register status coverage: {status_counts}",
             f"- Freshness: {catalog['freshness']} as of {catalog['retrieved_at']}",
             "",
-            "Caller-reputation coverage: unavailable",
+            (
+                "Official US complaint aggregate: "
+                f"{reputation_catalog['status']} · "
+                f"{reputation_catalog['verification_status']}"
+            ),
+            (
+                f"- {reputation_catalog['unique_number_count']:,} keyed displayed numbers; "
+                f"{reputation_catalog['indexed_observation_count']:,} indexed observations"
+            ),
+            (
+                f"- Rolling window: {reputation_catalog['window_start']} through "
+                f"{reputation_catalog['window_end']}"
+            ),
+            f"- Categories: {category_counts}",
+            (
+                f"- Built {reputation_catalog['generated_at']} from source update "
+                f"{reputation_catalog['source_updated_at']}"
+            ),
+            "- Complaints are consumer-selected and unverified; counts are not corroboration.",
+            "",
+            "Caller-report source decisions:",
             f"- {reputation['indexed_service_count']:,} caller-report services indexed",
             f"- {reputation['licensable_service_count']:,} advertised licensing routes",
             (

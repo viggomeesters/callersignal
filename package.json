@@ -10,7 +10,8 @@
   "scripts": {
     "build:acm": "python3 scripts/build_acm_catalog.py --json",
     "build:fcc": "python3 scripts/build_fcc_catalog.py --json",
-    "build:vercel": "npm run build:acm && npm run build:fcc && node scripts/stage_vercel_static.mjs",
+    "build:transparency": "python3 scripts/build_transparency_snapshot.py",
+    "build:vercel": "npm run build:acm && npm run build:fcc && npm run build:transparency && node scripts/stage_vercel_static.mjs",
     "check": "npm --prefix web run check",
     "test": "npm --prefix web test"
   },

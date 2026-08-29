@@ -73,6 +73,27 @@ def portfolio(organization_id: str, *, status: str = "verified") -> dict:
     }
 
 
+def fcc_catalog() -> dict:
+    return {
+        "source_id": "fcc_unwanted_call_complaints",
+        "dataset_id": "vakf-fz8e",
+        "generated_at": "2026-08-29T08:20:00Z",
+        "source_updated_at": "2026-08-29T08:00:00Z",
+        "window_start": "2021-08-29",
+        "window_end": "2026-08-29",
+        "page_count": 2,
+        "grouped_row_count": 12,
+        "unique_number_count": 7,
+        "source_observation_count": 15,
+        "indexed_observation_count": 11,
+        "rejected_number_row_count": 2,
+        "rejected_observation_count": 4,
+        "category_counts": {"nuisance": 6, "robocall": 5},
+        "first_issue_date": "2021-08-29",
+        "last_issue_date": "2026-08-28",
+    }
+
+
 def test_snapshot_counts_only_enabled_eligible_and_thresholded_records() -> None:
     registry = {
         "reviewed_at": "2026-08-29",
@@ -196,6 +217,71 @@ def test_coverage_names_freshness_ingest_and_unavailable_gaps() -> None:
     assert snapshot["moderation"]["status"] == "not_approved"
 
 
+def test_fcc_catalog_coverage_is_exact_unverified_and_not_a_safety_score() -> None:
+    registry = {
+        "reviewed_at": "2026-08-29",
+        "sources": [
+            source("fcc_unwanted_call_complaints", "US", risk_capable=True)
+        ],
+    }
+    snapshot = build_transparency_snapshot(
+        source_registry=registry,
+        ingest_status={
+            "fcc_unwanted_call_complaints": {
+                "status": "success",
+                "last_successful_ingest": "2026-08-29T08:20:00Z",
+            }
+        },
+        campaigns=[],
+        verified_portfolios=[],
+        community_aggregates=[],
+        moderation={"status": "not_approved", "public_aggregate_minimum": None},
+        methodology_version="1.0.0",
+        generated_at=GENERATED_AT,
+        fcc_catalog=fcc_catalog(),
+    )
+
+    catalog = snapshot["coverage"]["reputation_catalog"]
+    assert catalog["status"] == "available"
+    assert catalog["verification_status"] == "unverified"
+    assert catalog["freshness"] == "current"
+    assert catalog["window_start"] == "2021-08-29"
+    assert catalog["window_end"] == "2026-08-29"
+    assert catalog["unique_number_count"] == 7
+    assert catalog["source_observation_count"] == 15
+    assert catalog["indexed_observation_count"] == 11
+    assert catalog["rejected_observation_count"] == 4
+    assert catalog["category_counts"] == [
+        {"category": "nuisance", "observation_count": 6},
+        {"category": "robocall", "observation_count": 5},
+    ]
+    assert any(
+        "not independent corroboration" in item for item in catalog["limitations"]
+    )
+    assert any("safe" in item for item in catalog["limitations"])
+
+
+def test_invalid_fcc_catalog_coverage_fails_closed() -> None:
+    invalid = fcc_catalog()
+    invalid["indexed_observation_count"] = 12
+    snapshot = build_transparency_snapshot(
+        source_registry={"reviewed_at": "2026-08-29", "sources": []},
+        ingest_status={},
+        campaigns=[],
+        verified_portfolios=[],
+        community_aggregates=[],
+        moderation={"status": "not_approved", "public_aggregate_minimum": None},
+        methodology_version="1.0.0",
+        generated_at=GENERATED_AT,
+        fcc_catalog=invalid,
+    )
+
+    assert snapshot["coverage"]["reputation_catalog"]["status"] == "unavailable"
+    assert snapshot["coverage"]["reputation_catalog"]["gaps"] == [
+        "catalog_metadata_invalid"
+    ]
+
+
 def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() -> None:
     committed = json.loads(
         (ROOT / "web/assets/transparency.json").read_text(encoding="utf-8")
@@ -207,6 +293,9 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
     caller_report_index = json.loads(
         (ROOT / "sources/caller-report-services.json").read_text(encoding="utf-8")
     )
+    fcc_release = json.loads(
+        (ROOT / "sources/fcc-catalog-release.json").read_text(encoding="utf-8")
+    )
     ingest_status = {}
     for fixture_path in sorted((ROOT / "fixtures").glob("*/*.json")):
         fixture = json.loads(fixture_path.read_text(encoding="utf-8"))
@@ -217,6 +306,10 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
     ingest_status["acm_number_register"] = {
         "status": "success",
         "last_successful_ingest": acm_manifest["artifact"]["retrieved_at"],
+    }
+    ingest_status["fcc_unwanted_call_complaints"] = {
+        "status": "success",
+        "last_successful_ingest": fcc_release["generated_at"],
     }
 
     rebuilt = build_transparency_snapshot(
@@ -234,6 +327,7 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
         generated_at=datetime.fromisoformat(committed["generated_at"].replace("Z", "+00:00")),
         acm_manifest=acm_manifest,
         caller_report_index=caller_report_index,
+        fcc_catalog=fcc_release,
     )
 
     assert committed == rebuilt
@@ -255,6 +349,16 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
         "publisher_permission_required",
     }
     assert len(reputation["services"]) == 16
+    reputation_catalog = committed["coverage"]["reputation_catalog"]
+    assert reputation_catalog["status"] == "available"
+    assert reputation_catalog["verification_status"] == "unverified"
+    assert reputation_catalog["unique_number_count"] == 236_156
+    assert reputation_catalog["indexed_observation_count"] == 258_137
+    assert reputation_catalog["source_observation_count"] == 461_955
+    assert reputation_catalog["category_counts"] == [
+        {"category": "nuisance", "observation_count": 143_147},
+        {"category": "robocall", "observation_count": 114_990},
+    ]
     assert committed["corpus"]["eligible_campaigns"] == 0
     assert committed["interpretation"]["no_matching_evidence"].startswith(
         "No matching evidence"

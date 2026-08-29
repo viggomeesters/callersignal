@@ -170,3 +170,6 @@ def test_stdio_lifecycle_lists_and_calls_the_tool() -> None:
     assert responses[3]["result"]["structuredContent"]["coverage"][
         "number_catalog"
     ]["imported_range_count"] == 74_984
+    assert responses[3]["result"]["structuredContent"]["coverage"][
+        "reputation_catalog"
+    ]["indexed_observation_count"] == 258_137

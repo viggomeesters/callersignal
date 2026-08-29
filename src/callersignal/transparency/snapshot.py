@@ -41,6 +41,7 @@ def build_transparency_snapshot(
     generated_at: datetime,
     acm_manifest: Mapping[str, Any] | None = None,
     caller_report_index: Mapping[str, Any] | None = None,
+    fcc_catalog: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Return a deterministic, public-safe transparency projection.
 
@@ -85,6 +86,11 @@ def build_transparency_snapshot(
         caller_report_index,
         sources=sources,
     )
+    reputation_catalog = _reputation_catalog_coverage(
+        fcc_catalog,
+        sources=sources,
+        generated_at=generated_at,
+    )
     campaign_corrections = sum(
         item.get("correction", {}).get("status") in {"corrected", "retracted"}
         for item in eligible_campaigns
@@ -121,6 +127,7 @@ def build_transparency_snapshot(
             "unavailable_sources": unavailable_sources,
             "number_catalog": number_catalog,
             "reputation_sources": reputation_sources,
+            "reputation_catalog": reputation_catalog,
         },
         "corpus": {
             "eligible_campaigns": len(eligible_campaigns),
@@ -168,6 +175,7 @@ def load_public_coverage_snapshot(
         or not isinstance(coverage, Mapping)
         or not isinstance(coverage.get("number_catalog"), Mapping)
         or not isinstance(coverage.get("reputation_sources"), Mapping)
+        or not isinstance(coverage.get("reputation_catalog"), Mapping)
     ):
         raise ValueError("Public source coverage has an unsupported contract")
     return deepcopy(snapshot)
@@ -372,6 +380,139 @@ def _reputation_source_coverage(
             "Source counts describe coverage only; they are not trust, popularity, "
             "reputation, or safety scores."
         ),
+    }
+
+
+def _reputation_catalog_coverage(
+    metadata: Mapping[str, Any] | None,
+    *,
+    sources: Sequence[Mapping[str, Any]],
+    generated_at: datetime,
+) -> dict[str, Any]:
+    limitations = [
+        "FCC complaint records contain consumer-selected, unverified allegations.",
+        "Counts describe observations in one source, not independent corroboration or harmfulness.",
+        "Caller ID can be spoofed; a match does not identify a caller or subscriber.",
+        "No match does not establish that a displayed number or call is safe.",
+    ]
+    unavailable = {
+        "source_id": "fcc_unwanted_call_complaints",
+        "dataset_id": "vakf-fz8e",
+        "status": "unavailable",
+        "verification_status": "unverified",
+        "generated_at": None,
+        "source_updated_at": None,
+        "window_start": None,
+        "window_end": None,
+        "page_count": None,
+        "grouped_row_count": None,
+        "unique_number_count": None,
+        "source_observation_count": None,
+        "indexed_observation_count": None,
+        "rejected_number_row_count": None,
+        "rejected_observation_count": None,
+        "category_counts": [],
+        "first_observed_at": None,
+        "last_observed_at": None,
+        "freshness": "unavailable",
+        "gaps": ["catalog_metadata_unavailable"],
+        "limitations": limitations,
+    }
+    if not isinstance(metadata, Mapping):
+        return unavailable
+    generated = _parse_timestamp(metadata.get("generated_at"))
+    source_updated = _parse_timestamp(metadata.get("source_updated_at"))
+    try:
+        window_start = datetime.strptime(str(metadata.get("window_start")), "%Y-%m-%d").date()
+        window_end = datetime.strptime(str(metadata.get("window_end")), "%Y-%m-%d").date()
+        first_observed = datetime.strptime(
+            str(metadata.get("first_issue_date")), "%Y-%m-%d"
+        ).date()
+        last_observed = datetime.strptime(
+            str(metadata.get("last_issue_date")), "%Y-%m-%d"
+        ).date()
+    except ValueError:
+        return {**unavailable, "gaps": ["catalog_metadata_invalid"]}
+    integer_fields = (
+        "page_count",
+        "grouped_row_count",
+        "unique_number_count",
+        "source_observation_count",
+        "indexed_observation_count",
+        "rejected_number_row_count",
+        "rejected_observation_count",
+    )
+    counts = {name: metadata.get(name) for name in integer_fields}
+    category_counts = metadata.get("category_counts")
+    if (
+        metadata.get("source_id") != "fcc_unwanted_call_complaints"
+        or metadata.get("dataset_id") != "vakf-fz8e"
+        or generated is None
+        or source_updated is None
+        or generated < source_updated
+        or generated > generated_at
+        or window_start > window_end
+        or not window_start <= first_observed <= last_observed <= window_end
+        or any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in counts.values()
+        )
+        or counts["page_count"] < 1
+        or counts["grouped_row_count"] < 1
+        or counts["unique_number_count"] < 1
+        or counts["rejected_number_row_count"] > counts["grouped_row_count"]
+        or counts["unique_number_count"]
+        > counts["grouped_row_count"] - counts["rejected_number_row_count"]
+        or counts["indexed_observation_count"] < 1
+        or counts["source_observation_count"]
+        != counts["indexed_observation_count"] + counts["rejected_observation_count"]
+        or not isinstance(category_counts, Mapping)
+        or set(category_counts) != {"nuisance", "robocall"}
+        or any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in category_counts.values()
+        )
+        or sum(category_counts.values()) != counts["indexed_observation_count"]
+    ):
+        return {**unavailable, "gaps": ["catalog_metadata_invalid"]}
+    registry_source = next(
+        (
+            item
+            for item in sources
+            if item.get("source_id") == "fcc_unwanted_call_complaints"
+        ),
+        {},
+    )
+    maximum_age = registry_source.get("intake", {}).get(
+        "freshness_max_age_seconds"
+    )
+    freshness_anchor = min(generated, source_updated)
+    freshness = (
+        "current"
+        if isinstance(maximum_age, int)
+        and maximum_age > 0
+        and (generated_at - freshness_anchor).total_seconds() <= maximum_age
+        else "stale"
+    )
+    return {
+        "source_id": "fcc_unwanted_call_complaints",
+        "dataset_id": "vakf-fz8e",
+        "status": "available",
+        "verification_status": "unverified",
+        "generated_at": _timestamp(generated),
+        "source_updated_at": _timestamp(source_updated),
+        "window_start": window_start.isoformat(),
+        "window_end": window_end.isoformat(),
+        **counts,
+        "category_counts": [
+            {"category": category, "observation_count": category_counts[category]}
+            for category in sorted(category_counts)
+        ],
+        "first_observed_at": first_observed.isoformat(),
+        "last_observed_at": last_observed.isoformat(),
+        "freshness": freshness,
+        "gaps": [] if freshness == "current" else ["catalog_metadata_stale"],
+        "limitations": limitations,
     }
 
 

@@ -326,12 +326,12 @@
             <dd id="metric-acm-ranges"></dd>
           </div>
           <div>
-            <dt>Lookup-compatible ranges</dt>
-            <dd id="metric-acm-matchable"></dd>
+            <dt>FCC keyed numbers</dt>
+            <dd id="metric-fcc-numbers"></dd>
           </div>
           <div>
-            <dt>Caller-report services indexed</dt>
-            <dd id="metric-indexed-services"></dd>
+            <dt>FCC indexed observations</dt>
+            <dd id="metric-fcc-observations"></dd>
           </div>
           <div>
             <dt>Reputation feeds enabled</dt>
@@ -356,10 +356,26 @@
             <p class="ledger-boundary">This is number-plan context. It does not identify a caller, subscriber, or safe call.</p>
           </article>
 
+          <article class="coverage-ledger" data-availability="reported" aria-labelledby="fcc-catalog-title">
+            <header>
+              <p class="availability-label">Live · unverified complaints</p>
+              <h3 id="fcc-catalog-title">The FCC complaint signal is active</h3>
+            </header>
+            <p id="fcc-catalog-lead" class="ledger-lead"></p>
+            <dl class="ledger-facts">
+              <div><dt>Rolling window</dt><dd id="fcc-catalog-window"></dd></div>
+              <div><dt>Built</dt><dd id="fcc-catalog-generated"></dd></div>
+              <div><dt>Source updated</dt><dd id="fcc-catalog-source-updated"></dd></div>
+              <div><dt>Freshness</dt><dd id="fcc-catalog-freshness"></dd></div>
+            </dl>
+            <ul id="fcc-category-list" class="fcc-category-list" aria-label="FCC complaint category coverage"></ul>
+            <p id="fcc-catalog-boundary" class="ledger-boundary"></p>
+          </article>
+
           <article class="coverage-ledger" data-availability="unavailable" aria-labelledby="reputation-coverage-title">
             <header>
-              <p class="availability-label">Not activated · reputation</p>
-              <h3 id="reputation-coverage-title">No caller-reputation feed yet</h3>
+              <p class="availability-label">Unavailable · commercial sources</p>
+              <h3 id="reputation-coverage-title">Licensed feeds still need agreements</h3>
             </header>
             <p id="reputation-lead" class="ledger-lead"></p>
             <ul id="reputation-reason-list" class="reputation-reason-list"></ul>

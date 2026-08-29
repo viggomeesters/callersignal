@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "fcc_unwanted_call_catalog_release",
+  "source_id": "fcc_unwanted_call_complaints",
+  "dataset_id": "vakf-fz8e",
+  "generated_at": "2026-08-29T14:00:09Z",
+  "source_updated_at": "2026-08-29T05:02:20Z",
+  "window_start": "2021-08-29",
+  "window_end": "2026-08-29",
+  "page_count": 49,
+  "grouped_row_count": 241200,
+  "unique_number_count": 236156,
+  "source_observation_count": 461955,
+  "indexed_observation_count": 258137,
+  "rejected_number_row_count": 2752,
+  "rejected_observation_count": 203818,
+  "category_counts": {
+    "nuisance": 143147,
+    "robocall": 114990
+  },
+  "first_issue_date": "2021-08-29",
+  "last_issue_date": "2026-08-28"
+}

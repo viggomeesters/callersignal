@@ -1,5 +1,5 @@
 {
-  "captured_at": "2026-08-29T12:57:12.821Z",
+  "captured_at": "2026-08-29T14:14:29.181Z",
   "fixture_as_of": "2026-08-29T06:20:00Z",
   "fixture_policy": "reserved synthetic browser proof only",
   "results": [
@@ -64,18 +64,20 @@
       "detailTitle": null,
       "coverageMetrics": [
         "74,984",
-        "73,409",
-        "15",
-        "0"
+        "236,156",
+        "258,137",
+        "1"
       ],
       "coverageStates": {
         "official": "Available · official context",
-        "reputation": "Not activated · reputation",
-        "sourceDecisions": 15
+        "fcc": "Live · unverified complaints",
+        "commercial": "Unavailable · commercial sources",
+        "sourceDecisions": 16
       },
       "coverageContrast": {
         "official": 8.68,
-        "reputation": 7.26
+        "fcc": 7.44,
+        "commercial": 7.26
       },
       "exampleButtons": [
         {
@@ -322,18 +324,20 @@
       "detailTitle": null,
       "coverageMetrics": [
         "74,984",
-        "73,409",
-        "15",
-        "0"
+        "236,156",
+        "258,137",
+        "1"
       ],
       "coverageStates": {
         "official": "Available · official context",
-        "reputation": "Not activated · reputation",
-        "sourceDecisions": 15
+        "fcc": "Live · unverified complaints",
+        "commercial": "Unavailable · commercial sources",
+        "sourceDecisions": 16
       },
       "coverageContrast": {
         "official": 8.68,
-        "reputation": 7.26
+        "fcc": 7.44,
+        "commercial": 7.26
       },
       "exampleButtons": [
         {

@@ -1,0 +1,147 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-fcc-coverage-surfaces",
+  "project": "callersignal",
+  "status": "done",
+  "order": 810,
+  "depends_on": [
+    "product-fcc-reputation-read-model"
+  ],
+  "summary": "Expose live FCC reputation coverage across every surface",
+  "description": "Update the shared transparency projection and web, HTTP, CLI, stdio MCP, and hosted MCP surfaces to distinguish one enabled unverified-complaint source from official numbering context and unavailable commercial feeds.",
+  "scope": {
+    "read": [
+      "src/callersignal/transparency/snapshot.py",
+      "web/assets/transparency.json",
+      "web/index.html",
+      "web/assets/app.js",
+      "web/assets/styles.css"
+    ],
+    "modify": [
+      "src/callersignal/transparency/snapshot.py",
+      "src/callersignal/fcc_catalog.py",
+      "src/callersignal/cli.py",
+      "scripts/build_transparency_snapshot.py",
+      "package.json",
+      "schemas/fcc-catalog-release.schema.json",
+      "sources/fcc-catalog-release.json",
+      "web/assets/transparency.json",
+      "web/index.html",
+      "web/assets/app.js",
+      "web/assets/styles.css",
+      "web/tests/app.test.js",
+      "web/proof/capture.mjs",
+      "web/proof/browser-proof.json",
+      "web/proof/desktop-1440-coverage.jpg",
+      "web/proof/desktop-1440-elevated.jpg",
+      "web/proof/desktop-1440-official-warning.jpg",
+      "web/proof/desktop-1440-unknown.jpg",
+      "web/proof/mobile-375-coverage.jpg",
+      "web/proof/mobile-375-elevated.jpg",
+      "web/proof/mobile-375-official-warning.jpg",
+      "web/proof/mobile-375-unknown.jpg",
+      "tests/integration/test_transparency.py",
+      "tests/integration/test_cli.py",
+      "tests/integration/test_http_api.py",
+      "tests/integration/test_mcp.py",
+      "tests/integration/test_remote_mcp.py",
+      "tests/contracts/test_fcc_source_contract.py",
+      "tests/e2e/test_web.py",
+      "docs/transparency.md",
+      "docs/web.md",
+      "docs/http-api.md",
+      "docs/cli.md",
+      "docs/mcp.md"
+    ]
+  },
+  "acceptance": [
+    "HTTP, CLI, stdio MCP, hosted MCP, transparency data, and web expose the same exact FCC aggregate coverage, rolling window, generated time, source update, unique-number count, observation count, category counts, and limitations.",
+    "The website clearly distinguishes official numbering context, one enabled unverified complaint source, and unavailable commercial feeds without turning counts into trust, harmfulness, verification, popularity, or safety.",
+    "Production-shaped desktop and 375px mobile proof is readable and has zero clipping, internal or page overflow, console errors, placeholder text, or insufficient semantic-label contrast."
+  ],
+  "verification": [
+    "uv run pytest tests/integration tests/e2e/test_web.py -q && npm --prefix web test && make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T16:04:14+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "review",
+  "review_history": [],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T16:18:59+02:00",
+      "task_id": "product-fcc-coverage-surfaces",
+      "agent": "codex",
+      "summary": "changed_files=package.json,scripts/build_transparency_snapshot.py,schemas/fcc-catalog-release.schema.json,sources/fcc-catalog-release.json,src/callersignal/cli.py,src/callersignal/fcc_catalog.py,src/callersignal/transparency/snapshot.py,web/assets/app.js,web/assets/styles.css,web/assets/transparency.json,web/index.html,web/tests/app.test.js,web/proof/capture.mjs,web/proof/browser-proof.json,web/proof/desktop-1440-coverage.jpg,web/proof/desktop-1440-elevated.jpg,web/proof/desktop-1440-official-warning.jpg,web/proof/desktop-1440-unknown.jpg,web/proof/mobile-375-coverage.jpg,web/proof/mobile-375-elevated.jpg,web/proof/mobile-375-official-warning.jpg,web/proof/mobile-375-unknown.jpg,tests/contracts/test_fcc_source_contract.py,tests/e2e/test_web.py,tests/integration/test_cli.py,tests/integration/test_http_api.py,tests/integration/test_mcp.py,tests/integration/test_remote_mcp.py,tests/integration/test_transparency.py,docs/cli.md,docs/http-api.md,docs/mcp.md,docs/transparency.md,docs/web.md,.go/tasks/active/product-fcc-coverage-surfaces.json; verification=make check (291 Python and 8 web tests passed), browser proof (12 scenarios; desktop 1440x1000 and mobile 375x812; zero clipping, horizontal/internal overflow, console errors, and placeholders; semantic-label contrast 8.68:1,7.44:1,7.26:1), visual inspection of both coverage captures passed, git diff --check passed, ./go validate . passed, public snapshot inventory/secret-field scan passed; critic=approved after checking authenticated live-metadata build routing, deterministic pinned fallback, exact observation accounting, unverified semantics, source/date/category/rejection coverage parity across HTTP CLI stdio MCP hosted MCP and web, mobile count fit, three-state semantic distinction, no-match-not-safe copy, and absence of raw or keyed number inventory; Self-reflect: Public coverage is trustworthy only when runtime status, exact scale, time window, exclusions, and semantic limitations are generated once and rendered unchanged across every interface.",
+      "changed_files": [
+        "package.json",
+        "scripts/build_transparency_snapshot.py",
+        "schemas/fcc-catalog-release.schema.json",
+        "sources/fcc-catalog-release.json",
+        "src/callersignal/cli.py",
+        "src/callersignal/fcc_catalog.py",
+        "src/callersignal/transparency/snapshot.py",
+        "web/assets/app.js",
+        "web/assets/styles.css",
+        "web/assets/transparency.json",
+        "web/index.html",
+        "web/tests/app.test.js",
+        "web/proof/capture.mjs",
+        "web/proof/browser-proof.json",
+        "web/proof/desktop-1440-coverage.jpg",
+        "web/proof/desktop-1440-elevated.jpg",
+        "web/proof/desktop-1440-official-warning.jpg",
+        "web/proof/desktop-1440-unknown.jpg",
+        "web/proof/mobile-375-coverage.jpg",
+        "web/proof/mobile-375-elevated.jpg",
+        "web/proof/mobile-375-official-warning.jpg",
+        "web/proof/mobile-375-unknown.jpg",
+        "tests/contracts/test_fcc_source_contract.py",
+        "tests/e2e/test_web.py",
+        "tests/integration/test_cli.py",
+        "tests/integration/test_http_api.py",
+        "tests/integration/test_mcp.py",
+        "tests/integration/test_remote_mcp.py",
+        "tests/integration/test_transparency.py",
+        "docs/cli.md",
+        "docs/http-api.md",
+        "docs/mcp.md",
+        "docs/transparency.md",
+        "docs/web.md",
+        ".go/tasks/active/product-fcc-coverage-surfaces.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "make check (291 Python and 8 web tests passed), browser proof (12 scenarios",
+        "result": "make check (291 Python and 8 web tests passed), browser proof (12 scenarios"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after checking authenticated live-metadata build routing, deterministic pinned fallback, exact observation accounting, unverified semantics, source/date/category/rejection coverage parity across HTTP CLI stdio MCP hosted MCP and web, mobile count fit, three-state semantic distinction, no-match-not-safe copy, and absence of raw or keyed number inventory",
+        "skip_reason": null
+      }
+    }
+  ]
+}

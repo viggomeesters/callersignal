@@ -121,6 +121,7 @@ export function toTransparencyViewModel(snapshot) {
   const coverage = snapshot.coverage;
   const catalog = coverage.number_catalog;
   const reputation = coverage.reputation_sources;
+  const reputationCatalog = coverage.reputation_catalog;
   const correctionCount =
     corpus.corrections.campaigns + corpus.corrections.organization_portfolios;
   return {
@@ -131,7 +132,8 @@ export function toTransparencyViewModel(snapshot) {
     metrics: {
       importedRanges: catalog.imported_range_count,
       matchableRanges: catalog.matchable_range_count,
-      indexedServices: reputation.indexed_service_count,
+      fccUniqueNumbers: reputationCatalog.unique_number_count,
+      fccIndexedObservations: reputationCatalog.indexed_observation_count,
       enabledReputationSources: reputation.enabled_source_count,
     },
     corpusMetrics: {
@@ -177,6 +179,24 @@ export function toTransparencyViewModel(snapshot) {
         blockingGates: service.blocking_gates.map(humanize),
       })),
       notice: reputation.notice,
+    },
+    reputationCatalog: {
+      status: humanize(reputationCatalog.status),
+      verificationStatus: humanize(reputationCatalog.verification_status),
+      generatedAt: reputationCatalog.generated_at,
+      sourceUpdatedAt: reputationCatalog.source_updated_at,
+      windowStart: reputationCatalog.window_start,
+      windowEnd: reputationCatalog.window_end,
+      uniqueNumbers: reputationCatalog.unique_number_count,
+      sourceObservations: reputationCatalog.source_observation_count,
+      indexedObservations: reputationCatalog.indexed_observation_count,
+      rejectedObservations: reputationCatalog.rejected_observation_count,
+      freshness: humanize(reputationCatalog.freshness),
+      categories: reputationCatalog.category_counts.map((item) => ({
+        label: humanize(item.category),
+        count: item.observation_count,
+      })),
+      limitations: reputationCatalog.limitations,
     },
     sources: coverage.sources.map((source) => ({
       id: source.source_id,
@@ -471,8 +491,10 @@ async function loadCampaignCatalogue(elements) {
 function renderTransparency(snapshot, elements) {
   const view = toTransparencyViewModel(snapshot);
   elements.metricAcmRanges.textContent = formatCount(view.metrics.importedRanges);
-  elements.metricAcmMatchable.textContent = formatCount(view.metrics.matchableRanges);
-  elements.metricIndexedServices.textContent = formatCount(view.metrics.indexedServices);
+  elements.metricFccNumbers.textContent = formatCount(view.metrics.fccUniqueNumbers);
+  elements.metricFccObservations.textContent = formatCount(
+    view.metrics.fccIndexedObservations,
+  );
   elements.metricEnabledReputation.textContent = formatCount(
     view.metrics.enabledReputationSources,
   );
@@ -500,6 +522,22 @@ function renderTransparency(snapshot, elements) {
       return item;
     }),
   );
+  elements.fccCatalogLead.textContent = `${formatCount(view.reputationCatalog.indexedObservations)} observations across ${formatCount(view.reputationCatalog.uniqueNumbers)} keyed displayed numbers; ${formatCount(view.reputationCatalog.rejectedObservations)} source observations were excluded by the number boundary.`;
+  elements.fccCatalogWindow.textContent = `${view.reputationCatalog.windowStart} through ${view.reputationCatalog.windowEnd}`;
+  elements.fccCatalogGenerated.textContent = `${formatDate(view.reputationCatalog.generatedAt)} UTC`;
+  elements.fccCatalogSourceUpdated.textContent = `${formatDate(view.reputationCatalog.sourceUpdatedAt)} UTC`;
+  elements.fccCatalogFreshness.textContent = view.reputationCatalog.freshness;
+  elements.fccCategoryList.replaceChildren(
+    ...view.reputationCatalog.categories.map((category) => {
+      const item = document.createElement("li");
+      item.append(
+        textElement("strong", formatCount(category.count)),
+        textElement("span", category.label),
+      );
+      return item;
+    }),
+  );
+  elements.fccCatalogBoundary.textContent = view.reputationCatalog.limitations.join(" ");
   elements.reputationLead.textContent = `${formatCount(view.reputation.indexed)} services indexed, ${formatCount(view.reputation.licensable)} advertise a licensing route, ${formatCount(view.reputation.enabled)} are enabled.`;
   elements.reputationReasonList.replaceChildren(
     ...view.reputation.reasons.map((reason) => {
@@ -757,8 +795,8 @@ function init() {
     transparencyStatus: document.querySelector("#transparency-status"),
     coverageNoMatch: document.querySelector("#coverage-no-match"),
     metricAcmRanges: document.querySelector("#metric-acm-ranges"),
-    metricAcmMatchable: document.querySelector("#metric-acm-matchable"),
-    metricIndexedServices: document.querySelector("#metric-indexed-services"),
+    metricFccNumbers: document.querySelector("#metric-fcc-numbers"),
+    metricFccObservations: document.querySelector("#metric-fcc-observations"),
     metricEnabledReputation: document.querySelector("#metric-enabled-reputation"),
     metricJurisdictions: document.querySelector("#metric-jurisdictions"),
     metricRiskSources: document.querySelector("#metric-risk-sources"),
@@ -770,6 +808,13 @@ function init() {
     catalogNewestChange: document.querySelector("#catalog-newest-change"),
     catalogDigest: document.querySelector("#catalog-digest"),
     catalogStatusList: document.querySelector("#catalog-status-list"),
+    fccCatalogLead: document.querySelector("#fcc-catalog-lead"),
+    fccCatalogWindow: document.querySelector("#fcc-catalog-window"),
+    fccCatalogGenerated: document.querySelector("#fcc-catalog-generated"),
+    fccCatalogSourceUpdated: document.querySelector("#fcc-catalog-source-updated"),
+    fccCatalogFreshness: document.querySelector("#fcc-catalog-freshness"),
+    fccCategoryList: document.querySelector("#fcc-category-list"),
+    fccCatalogBoundary: document.querySelector("#fcc-catalog-boundary"),
     reputationLead: document.querySelector("#reputation-lead"),
     reputationReasonList: document.querySelector("#reputation-reason-list"),
     reputationSourceSummary: document.querySelector("#reputation-source-summary"),

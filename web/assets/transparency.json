@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "kind": "corpus_transparency",
-  "generated_at": "2026-08-29T12:00:00Z",
+  "generated_at": "2026-08-29T14:10:00Z",
   "methodology_version": "1.0.0",
   "registry_reviewed_at": "2026-08-29",
   "coverage": {
@@ -28,14 +28,11 @@
           "US"
         ],
         "risk_capable": true,
-        "runtime_status": "unavailable",
-        "last_successful_ingest": null,
-        "freshness": "unavailable",
+        "runtime_status": "success",
+        "last_successful_ingest": "2026-08-29T14:00:09Z",
+        "freshness": "current",
         "freshness_max_age_seconds": 2592000,
-        "gaps": [
-          "last_successful_ingest_unavailable",
-          "source_currently_unavailable"
-        ]
+        "gaps": []
       },
       {
         "source_id": "nanpa_public_numbering",
@@ -98,22 +95,12 @@
         "risk_capable_sources": [
           "fcc_unwanted_call_complaints"
         ],
-        "last_successful_ingest": "2026-08-27T08:00:00Z",
-        "freshness": "mixed",
-        "gaps": [
-          "source_currently_unavailable"
-        ]
+        "last_successful_ingest": "2026-08-29T14:00:09Z",
+        "freshness": "current",
+        "gaps": []
       }
     ],
     "unavailable_sources": [
-      {
-        "source_id": "fcc_unwanted_call_complaints",
-        "jurisdictions": [
-          "US"
-        ],
-        "status": "unavailable",
-        "gap": "source_currently_unavailable"
-      },
       {
         "source_id": "wieheeftmijgebeld_nl",
         "jurisdictions": [
@@ -436,6 +423,43 @@
       ],
       "gaps": [],
       "notice": "Source counts describe coverage only; they are not trust, popularity, reputation, or safety scores."
+    },
+    "reputation_catalog": {
+      "source_id": "fcc_unwanted_call_complaints",
+      "dataset_id": "vakf-fz8e",
+      "status": "available",
+      "verification_status": "unverified",
+      "generated_at": "2026-08-29T14:00:09Z",
+      "source_updated_at": "2026-08-29T05:02:20Z",
+      "window_start": "2021-08-29",
+      "window_end": "2026-08-29",
+      "page_count": 49,
+      "grouped_row_count": 241200,
+      "unique_number_count": 236156,
+      "source_observation_count": 461955,
+      "indexed_observation_count": 258137,
+      "rejected_number_row_count": 2752,
+      "rejected_observation_count": 203818,
+      "category_counts": [
+        {
+          "category": "nuisance",
+          "observation_count": 143147
+        },
+        {
+          "category": "robocall",
+          "observation_count": 114990
+        }
+      ],
+      "first_observed_at": "2021-08-29",
+      "last_observed_at": "2026-08-28",
+      "freshness": "current",
+      "gaps": [],
+      "limitations": [
+        "FCC complaint records contain consumer-selected, unverified allegations.",
+        "Counts describe observations in one source, not independent corroboration or harmfulness.",
+        "Caller ID can be spoofed; a match does not identify a caller or subscriber.",
+        "No match does not establish that a displayed number or call is safe."
+      ]
     }
   },
   "corpus": {

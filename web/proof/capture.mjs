@@ -355,15 +355,16 @@ async function capture(browser, viewport, scenario) {
       coverageMetrics: coverage
         ? [
             "#metric-acm-ranges",
-            "#metric-acm-matchable",
-            "#metric-indexed-services",
+            "#metric-fcc-numbers",
+            "#metric-fcc-observations",
             "#metric-enabled-reputation",
           ].map((selector) => document.querySelector(selector)?.textContent)
         : null,
       coverageStates: coverage
         ? {
             official: document.querySelector("[data-availability='available'] .availability-label")?.textContent,
-            reputation: document.querySelector("[data-availability='unavailable'] .availability-label")?.textContent,
+            fcc: document.querySelector("[data-availability='reported'] .availability-label")?.textContent,
+            commercial: document.querySelector("[data-availability='unavailable'] .availability-label")?.textContent,
             sourceDecisions: document.querySelectorAll("#reputation-service-list li").length,
           }
         : null,
@@ -373,7 +374,11 @@ async function capture(browser, viewport, scenario) {
               getComputedStyle(document.querySelector("[data-availability='available'] .availability-label")).color,
               getComputedStyle(document.documentElement).getPropertyValue("--available-soft"),
             ),
-            reputation: contrast(
+            fcc: contrast(
+              getComputedStyle(document.querySelector("[data-availability='reported'] .availability-label")).color,
+              getComputedStyle(document.documentElement).getPropertyValue("--reported-soft"),
+            ),
+            commercial: contrast(
               getComputedStyle(document.querySelector("[data-availability='unavailable'] .availability-label")).color,
               getComputedStyle(document.documentElement).getPropertyValue("--unavailable-soft"),
             ),
@@ -404,10 +409,11 @@ async function capture(browser, viewport, scenario) {
         button.number === "0906-8844" &&
         button.region === "NL",
     ) ||
-    (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["74,984", "73,409", "15", "0"])) ||
+    (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["74,984", "236,156", "258,137", "1"])) ||
     (scenario.coverage && facts.coverageStates.official !== "Available · official context") ||
-    (scenario.coverage && facts.coverageStates.reputation !== "Not activated · reputation") ||
-    (scenario.coverage && facts.coverageStates.sourceDecisions !== 15) ||
+    (scenario.coverage && facts.coverageStates.fcc !== "Live · unverified complaints") ||
+    (scenario.coverage && facts.coverageStates.commercial !== "Unavailable · commercial sources") ||
+    (scenario.coverage && facts.coverageStates.sourceDecisions !== 16) ||
     (scenario.coverage && Math.min(...Object.values(facts.coverageContrast)) < 4.5)
   ) {
     throw new Error(`${scenario.name} failed visual facts: ${JSON.stringify(facts)}`);

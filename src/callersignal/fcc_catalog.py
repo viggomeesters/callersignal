@@ -110,9 +110,12 @@ class FCCCatalogMetadata:
     source_updated_at: str
     window_start: str
     window_end: str
+    page_count: int
+    grouped_row_count: int
     unique_number_count: int
     source_observation_count: int
     indexed_observation_count: int
+    rejected_number_row_count: int
     rejected_observation_count: int
     category_counts: dict[str, int]
     first_issue_date: str
@@ -138,14 +141,9 @@ def lookup_fcc_catalog(
     lookup_key: bytes,
 ) -> tuple[FCCCatalogMetadata, FCCCatalogRecord | None]:
     """Read one canonical US number from an immutable HMAC-keyed catalogue."""
-    if not isinstance(lookup_key, bytes) or len(lookup_key) < 32:
-        raise FCCCatalogReadError("FCC catalogue lookup key is missing or too short")
     if re.fullmatch(r"\+1[0-9]{10}", canonical_e164) is None:
         raise FCCCatalogReadError("FCC catalogue lookup requires canonical US E.164")
-    path = catalog_path.resolve()
-    if not path.is_file():
-        raise FCCCatalogReadError("Generated FCC catalogue is unavailable")
-    locator = f"file:{quote(str(path))}?mode=ro&immutable=1"
+    locator = _catalog_locator(catalog_path, lookup_key=lookup_key)
     keyed_number = hmac.new(
         lookup_key, canonical_e164.encode("utf-8"), hashlib.sha256
     ).hexdigest()
@@ -166,6 +164,29 @@ def lookup_fcc_catalog(
         raise FCCCatalogReadError(f"Generated FCC catalogue is invalid: {error}") from error
     record = _validated_catalog_record(dict(row)) if row is not None else None
     return metadata, record
+
+
+def read_fcc_catalog_metadata(
+    catalog_path: Path,
+    *,
+    lookup_key: bytes,
+) -> FCCCatalogMetadata:
+    """Read authenticated, public-safe coverage from an immutable catalogue."""
+    locator = _catalog_locator(catalog_path, lookup_key=lookup_key)
+    try:
+        with sqlite3.connect(locator, uri=True) as connection:
+            return _read_catalog_metadata(connection, lookup_key=lookup_key)
+    except sqlite3.Error as error:
+        raise FCCCatalogReadError(f"Generated FCC catalogue is invalid: {error}") from error
+
+
+def _catalog_locator(catalog_path: Path, *, lookup_key: bytes) -> str:
+    if not isinstance(lookup_key, bytes) or len(lookup_key) < 32:
+        raise FCCCatalogReadError("FCC catalogue lookup key is missing or too short")
+    path = catalog_path.resolve()
+    if not path.is_file():
+        raise FCCCatalogReadError("Generated FCC catalogue is unavailable")
+    return f"file:{quote(str(path))}?mode=ro&immutable=1"
 
 
 def build_fcc_catalog(
@@ -836,9 +857,12 @@ def _read_catalog_metadata(
         source_updated_at=_timestamp(source_updated_at),
         window_start=window_start.isoformat(),
         window_end=window_end.isoformat(),
+        page_count=page_count,
+        grouped_row_count=grouped_row_count,
         unique_number_count=unique_number_count,
         source_observation_count=source_observation_count,
         indexed_observation_count=indexed_observation_count,
+        rejected_number_row_count=rejected_number_row_count,
         rejected_observation_count=rejected_observation_count,
         category_counts=dict(sorted(category_counts.items())),
         first_issue_date=first_issue_date.isoformat(),

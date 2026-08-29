@@ -24,7 +24,7 @@ No bearer token is needed for the five public read tools. This command is the lo
 | `lookup_phone_number` | Normalize with explicit country semantics and return canonical evidence, gaps, calibrated risk, and action | Pinned rights-approved public sources; no lookup persistence |
 | `list_public_campaigns` | List campaigns that pass aggregate evidence and publication gates | Exact public HTTP campaign catalogue |
 | `get_public_campaign` | Read one eligible campaign by opaque identifier | Public aggregate fields and exact source coverage only |
-| `get_source_coverage` | Read complete ACM catalogue coverage plus indexed, advertised, enabled, and unavailable reputation-source coverage | Exact committed transparency snapshot; no raw number or report inventory |
+| `get_source_coverage` | Read complete ACM catalogue coverage, exact public-safe FCC aggregate coverage, and indexed, advertised, enabled, and unavailable reputation-source coverage | Exact shared transparency snapshot; no raw or keyed number inventory or complaint rows |
 | `get_methodology` | Read the versioned four-state risk policy | Machine-readable form of [`methodology.md`](methodology.md) |
 
 All five tools advertise `readOnlyHint: true`, `destructiveHint: false`, `idempotentHint: true`, and `openWorldHint: false`. “Closed world” means they read CallerSignal's bounded published corpus; it does not imply complete coverage or a safe-number guarantee.
@@ -112,7 +112,7 @@ PYTHONPATH=src uv run python -m callersignal.mcp_server
 
 Configure a client to launch `uv` with `run python -m callersignal.mcp_server`, set `PYTHONPATH=src`, and use the repository root as its working directory. The process writes only newline-delimited JSON-RPC to standard output and writes no lookup data to standard error.
 
-Both stdio tools return the same canonical object in `structuredContent` and as JSON text for older clients. Invalid arguments return `isError: true` without structured content. Source unavailability remains a successful lookup containing typed evidence gaps, not a protocol failure. Coverage lists official ACM totals and explicit reputation activation gaps; it never accepts a phone number and never presents source volume as trust.
+Both stdio tools return the same canonical object in `structuredContent` and as JSON text for older clients. Invalid arguments return `isError: true` without structured content. Source unavailability remains a successful lookup containing typed evidence gaps, not a protocol failure. Coverage lists official ACM totals, exact unverified FCC rolling-window and category totals, and explicit commercial activation gaps; it never accepts a phone number and never presents source volume as trust, corroboration, harmfulness, or safety.
 
 ## Deployment and observability boundary
 

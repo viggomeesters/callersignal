@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://callersignal.dev/schemas/fcc-catalog-release.schema.json",
+  "title": "CallerSignal public-safe FCC catalogue release metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "source_id",
+    "dataset_id",
+    "generated_at",
+    "source_updated_at",
+    "window_start",
+    "window_end",
+    "page_count",
+    "grouped_row_count",
+    "unique_number_count",
+    "source_observation_count",
+    "indexed_observation_count",
+    "rejected_number_row_count",
+    "rejected_observation_count",
+    "category_counts",
+    "first_issue_date",
+    "last_issue_date"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "fcc_unwanted_call_catalog_release" },
+    "source_id": { "const": "fcc_unwanted_call_complaints" },
+    "dataset_id": { "const": "vakf-fz8e" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "source_updated_at": { "type": "string", "format": "date-time" },
+    "window_start": { "type": "string", "format": "date" },
+    "window_end": { "type": "string", "format": "date" },
+    "page_count": { "type": "integer", "minimum": 1 },
+    "grouped_row_count": { "type": "integer", "minimum": 1 },
+    "unique_number_count": { "type": "integer", "minimum": 1 },
+    "source_observation_count": { "type": "integer", "minimum": 1 },
+    "indexed_observation_count": { "type": "integer", "minimum": 1 },
+    "rejected_number_row_count": { "type": "integer", "minimum": 0 },
+    "rejected_observation_count": { "type": "integer", "minimum": 0 },
+    "category_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nuisance", "robocall"],
+      "properties": {
+        "nuisance": { "type": "integer", "minimum": 0 },
+        "robocall": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "first_issue_date": { "type": "string", "format": "date" },
+    "last_issue_date": { "type": "string", "format": "date" }
+  }
+}

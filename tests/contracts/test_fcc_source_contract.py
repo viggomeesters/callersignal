@@ -105,3 +105,25 @@ def test_schema_rejects_a_forbidden_field_and_unsafe_semantic(
 
     with pytest.raises(ValidationError):
         validator.validate(unsafe)
+
+
+def test_fcc_catalog_release_is_public_safe_and_schema_valid() -> None:
+    release = json.loads(
+        (ROOT / "sources/fcc-catalog-release.json").read_text(encoding="utf-8")
+    )
+    schema = json.loads(
+        (ROOT / "schemas/fcc-catalog-release.schema.json").read_text(encoding="utf-8")
+    )
+    Draft202012Validator.check_schema(schema)
+    Draft202012Validator(schema, format_checker=FormatChecker()).validate(release)
+
+    assert release["source_observation_count"] == (
+        release["indexed_observation_count"] + release["rejected_observation_count"]
+    )
+    assert sum(release["category_counts"].values()) == release[
+        "indexed_observation_count"
+    ]
+    serialized = json.dumps(release)
+    assert "caller_id_number" not in serialized
+    assert "source_digest" not in serialized
+    assert "lookup_key" not in serialized

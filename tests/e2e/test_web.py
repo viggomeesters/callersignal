@@ -160,11 +160,13 @@ def test_page_has_semantic_lookup_form_status_and_metadata() -> None:
         "coverage",
         "coverage-no-match",
         "metric-acm-ranges",
-        "metric-acm-matchable",
-        "metric-indexed-services",
+        "metric-fcc-numbers",
+        "metric-fcc-observations",
         "metric-enabled-reputation",
         "official-catalog-title",
         "catalog-status-list",
+        "fcc-catalog-title",
+        "fcc-category-list",
         "reputation-coverage-title",
         "reputation-reason-list",
         "reputation-service-list",
@@ -242,6 +244,15 @@ def test_committed_transparency_asset_exposes_coverage_not_vanity_totals() -> No
     assert snapshot["coverage"]["reputation_sources"]["indexed_service_count"] == 16
     assert snapshot["coverage"]["reputation_sources"]["licensable_service_count"] == 4
     assert snapshot["coverage"]["reputation_sources"]["enabled_source_count"] == 1
+    reputation_catalog = snapshot["coverage"]["reputation_catalog"]
+    assert reputation_catalog["status"] == "available"
+    assert reputation_catalog["verification_status"] == "unverified"
+    assert reputation_catalog["unique_number_count"] == 236_156
+    assert reputation_catalog["indexed_observation_count"] == 258_137
+    assert reputation_catalog["category_counts"] == [
+        {"category": "nuisance", "observation_count": 143_147},
+        {"category": "robocall", "observation_count": 114_990},
+    ]
     assert snapshot["corpus"]["eligible_campaigns"] == 0
     assert snapshot["moderation"]["status"] == "not_approved"
     assert snapshot["interpretation"]["lookup_popularity_used_for_reputation"] is False
@@ -502,8 +513,12 @@ def test_vercel_routes_one_public_origin_to_static_web_and_canonical_api() -> No
     assert package["scripts"]["build:fcc"] == (
         "python3 scripts/build_fcc_catalog.py --json"
     )
+    assert package["scripts"]["build:transparency"] == (
+        "python3 scripts/build_transparency_snapshot.py"
+    )
     assert package["scripts"]["build:vercel"] == (
-        "npm run build:acm && npm run build:fcc && node scripts/stage_vercel_static.mjs"
+        "npm run build:acm && npm run build:fcc && npm run build:transparency && "
+        "node scripts/stage_vercel_static.mjs"
     )
     assert config["buildCommand"] == "npm run build:vercel"
     assert config["outputDirectory"] == "public"

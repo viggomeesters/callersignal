@@ -33,13 +33,13 @@ In JSON, `assessment.confidence` refers only to the strength of the available so
 
 ## Source coverage
 
-Use the agent-friendly human readout to separate available official context from unavailable reputation coverage:
+Use the agent-friendly human readout to separate official numbering context, the enabled unverified FCC complaint aggregate, and unavailable commercial coverage:
 
 ```bash
 PYTHONPATH=src uv run python -m callersignal.cli coverage
 ```
 
-It reports the full ACM imported and lookup-compatible range counts, destination and status coverage, freshness, indexed caller-report services, advertised licensing routes, enabled feeds, and grouped unavailable reasons. It ends with the invariant that coverage counts are not trust or safety scores.
+It reports the full ACM imported and lookup-compatible range counts, destination and status coverage, freshness, exact FCC rolling window and build/source times, keyed-number and observation counts, nuisance/robocall split, indexed caller-report services, advertised licensing routes, enabled sources, and grouped unavailable reasons. It says explicitly that FCC complaints are consumer-selected and unverified, repeated observations are not corroboration, and coverage counts are not trust or safety scores.
 
 `coverage --json` emits the exact committed `corpus_transparency` object returned by HTTP `GET /v1/coverage`, stdio and hosted MCP `get_source_coverage`, and rendered by the website. It accepts no number, requester field, or source credential.
 

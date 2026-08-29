@@ -10,6 +10,8 @@
   --accent-dark: #8e2819;
   --available: #174b3b;
   --available-soft: #e5f2ef;
+  --reported: #5e4b10;
+  --reported-soft: #f7f1d8;
   --unavailable-soft: #fbe9e7;
   --soft: #e3e8e3;
   --focus: #164c75;
@@ -1145,7 +1147,7 @@ h3 {
 
 .corpus-scorecard dd {
   margin: 0.5rem 0 0;
-  font-size: clamp(2.4rem, 4.4vw, 3.75rem);
+  font-size: clamp(1.85rem, 3.5vw, 3rem);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.04em;
@@ -1154,7 +1156,7 @@ h3 {
 
 .coverage-truth-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1px;
   margin-bottom: 2rem;
   border: 1px solid var(--line-strong);
@@ -1178,6 +1180,11 @@ h3 {
   background: linear-gradient(180deg, var(--unavailable-soft), var(--surface) 38%);
 }
 
+.coverage-ledger[data-availability="reported"] {
+  border-top-color: var(--reported);
+  background: linear-gradient(180deg, var(--reported-soft), var(--surface) 38%);
+}
+
 .coverage-ledger header {
   min-height: 6.5rem;
 }
@@ -1198,6 +1205,10 @@ h3 {
 
 [data-availability="unavailable"] .availability-label {
   color: var(--accent-dark);
+}
+
+[data-availability="reported"] .availability-label {
+  color: var(--reported);
 }
 
 .ledger-lead {
@@ -1247,6 +1258,39 @@ h3 {
   border: 1px solid var(--line);
   background: var(--line);
   list-style: none;
+}
+
+.fcc-category-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 1rem 0 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  background: var(--line);
+  list-style: none;
+}
+
+.fcc-category-list li {
+  min-width: 0;
+  padding: 0.8rem;
+  background: var(--surface);
+}
+
+.fcc-category-list strong,
+.fcc-category-list span {
+  display: block;
+}
+
+.fcc-category-list strong {
+  color: var(--reported);
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.fcc-category-list span {
+  color: var(--muted);
+  font-size: 0.72rem;
 }
 
 .register-status-list li {
@@ -1613,6 +1657,10 @@ footer p {
     width: min(100% - 1.25rem, 1180px);
   }
 
+  .corpus-scorecard dd {
+    font-size: 1.65rem;
+  }
+
   .site-header nav a:not(:last-child) {
     display: none;
   }
@@ -1736,10 +1784,11 @@ footer p {
 
 @media (max-width: 520px) {
   .corpus-scorecard dd {
-    font-size: clamp(1.9rem, 9vw, 2.25rem);
+    font-size: 1.55rem;
   }
 
-  .register-status-list {
+  .register-status-list,
+  .fcc-category-list {
     grid-template-columns: 1fr;
   }
 
