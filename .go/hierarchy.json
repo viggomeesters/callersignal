@@ -63,7 +63,9 @@
             "product-caller-source-catalog",
             "product-acm-bulk-import",
             "product-reputation-status-contract",
-            "product-authorized-reputation-ingestion"
+            "product-authorized-reputation-ingestion",
+            "product-fcc-complaint-source-contract",
+            "product-fcc-complaint-aggregate-import"
           ]
         },
         {
@@ -81,7 +83,10 @@
             "product-nl-public-safe-example",
             "product-acm-production-read-model",
             "product-source-coverage-surfaces",
-            "product-data-expansion-release"
+            "product-data-expansion-release",
+            "product-fcc-reputation-read-model",
+            "product-fcc-coverage-surfaces",
+            "product-fcc-reputation-release"
           ]
         },
         {

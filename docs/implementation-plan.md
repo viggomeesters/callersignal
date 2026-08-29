@@ -2,7 +2,7 @@
 
 ## Planning contract
 
-The repository foundation shipped at v0.1.0. CallerSignal v0.2.0 completed twenty-seven dependency-ordered product tasks: shared lookup and risk contracts, NL/GB/US adapters, CLI, stdio and hosted MCP, HTTP, web, caller campaigns, controlled report and storage foundations, private watches, verified organisation declarations, operational safety, public transparency, and release proof. Current `main` contains one completed public-safe Dutch example and seven reviewed data-expansion tasks. The reviewed `.go` JSON files are authoritative; this document remains the human-readable dependency and verification map for maintenance and extension work.
+The repository foundation shipped at v0.1.0. CallerSignal v0.2.0 completed twenty-seven dependency-ordered product tasks: shared lookup and risk contracts, NL/GB/US adapters, CLI, stdio and hosted MCP, HTTP, web, caller campaigns, controlled report and storage foundations, private watches, verified organisation declarations, operational safety, public transparency, and release proof. CallerSignal v0.3.0 added one public-safe Dutch example and seven rights-aware data-expansion tasks. Five reviewed tasks now define the next bounded slice: an FCC public-domain unwanted-call aggregate, privacy-preserving lookup projection, cross-surface coverage, and release proof. The reviewed `.go` JSON files are authoritative; this document remains the human-readable dependency and verification map for maintenance and extension work.
 
 Descriptions below define each task's contract; completion state comes only from its reviewed `.go` record.
 
@@ -312,6 +312,48 @@ Acceptance: the current official ACM catalogue is proven live with honest covera
 
 Verify: `make check` and strict public `repo-complete` validation.
 
+## Phase 11 — Public-domain complaint signal
+
+### `product-fcc-complaint-source-contract`
+
+Define a machine-validated source contract for the FCC Consumer Complaints Data — Unwanted Calls dataset before any row is processed.
+
+Acceptance: the registry, manifest, and service index prove the source, public-domain reuse basis, anonymous API route, permitted input fields, freshness rule, correction owner, and fail-closed behavior; consumer complaints remain explicitly unverified and never become official warnings, verified identity, harmfulness, or safety claims.
+
+Verify: `uv run pytest tests/contracts -q` and `make check`.
+
+### `product-fcc-complaint-aggregate-import`
+
+Depends on `product-fcc-complaint-source-contract`. Fetch a bounded rolling window through the manifest-declared Socrata API and build an immutable HMAC-keyed aggregate catalogue.
+
+Acceptance: metadata, licence, schema, date bounds, pagination, normalization, and replacement are validated; the projection contains no plaintext number inventory, raw complaint row, reporter data, narrative, or source response; only bounded category counts, dates, provenance, digest, and coverage totals remain.
+
+Verify: `uv run pytest tests/unit/test_fcc_catalog.py -q` and `make check`.
+
+### `product-fcc-reputation-read-model`
+
+Depends on `product-fcc-complaint-aggregate-import`. Add current FCC complaint observations to canonical US lookups through the privacy-preserving aggregate catalogue.
+
+Acceptance: evidence uses only neutral nuisance or robocall categories with count basis, freshness, provenance, and spoofing limitations; one source cannot produce `elevated_signals` or `official_warning`; missing, stale, invalid, conflicting, and no-match states fail closed and never mean safe.
+
+Verify: `uv run pytest tests/integration/test_lookup.py tests/adapters/test_us.py -q` and `make check`.
+
+### `product-fcc-coverage-surfaces`
+
+Depends on `product-fcc-reputation-read-model`. Expose exact aggregate coverage and limitations through HTTP, CLI, stdio MCP, hosted MCP, transparency data, and the public website.
+
+Acceptance: every surface agrees on source freshness, rolling window, unique-number count, observation count, category counts, and limitations; desktop and mobile proof distinguish official numbering context from one enabled unverified complaint source without presenting volume as trust or safety.
+
+Verify: `uv run pytest tests/integration tests/e2e/test_web.py -q`, `npm --prefix web test`, and `make check`.
+
+### `product-fcc-reputation-release`
+
+Depends on `product-fcc-coverage-surfaces`. Release the bounded FCC complaint-signal slice only after local, privacy, repository, production, browser, and protocol gates pass.
+
+Acceptance: the current manifest-declared public-domain aggregate is proven live; the repository and history contain no raw source-number inventory, complaint rows, generated reputation database, lookup key, credential, or Vercel state; public copy preserves the unverified, single-source, spoofing, and absence-is-not-safety boundaries.
+
+Verify: `make check` and strict public `repo-complete` validation.
+
 ## Dependency overview
 
 ```mermaid
@@ -391,6 +433,11 @@ flowchart TD
     ACMR --> EXPREL[product-data-expansion-release]
     INGEST --> EXPREL
     SURF --> EXPREL
+    EXPREL --> FCCSRC[product-fcc-complaint-source-contract]
+    FCCSRC --> FCCIMP[product-fcc-complaint-aggregate-import]
+    FCCIMP --> FCCREAD[product-fcc-reputation-read-model]
+    FCCREAD --> FCCSURF[product-fcc-coverage-surfaces]
+    FCCSURF --> FCCREL[product-fcc-reputation-release]
 ```
 
 Use `./go next .` rather than selecting from the diagram by eye; the repo-local workflow is the source of task state and eligibility.

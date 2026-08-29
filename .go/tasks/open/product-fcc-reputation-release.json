@@ -1,0 +1,46 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-fcc-reputation-release",
+  "project": "callersignal",
+  "status": "open",
+  "order": 820,
+  "depends_on": [
+    "product-fcc-coverage-surfaces"
+  ],
+  "summary": "Ship the first authorized reputation source",
+  "description": "Release and deploy the FCC public-domain complaint aggregate only after import, lookup, parity, privacy, browser, repository, and live protocol gates pass.",
+  "scope": {
+    "read": [
+      "**"
+    ],
+    "modify": [
+      "CHANGELOG.md",
+      "README.md",
+      "docs/architecture.md",
+      "docs/data-architecture.md",
+      "docs/implementation-plan.md",
+      "docs/public-readiness.md",
+      "tests/test_repository_structure.py",
+      "scripts/validate_repository.py"
+    ]
+  },
+  "acceptance": [
+    "The current FCC aggregate is built from the manifest-declared public-domain source and proven live on Vercel through a reserved or source-safe lookup plus cross-surface coverage parity.",
+    "Strict public repo-complete has zero blockers; the tree and history contain no source phone-number inventory, raw complaints, generated reputation database, HMAC lookup key, credential, or Vercel runtime state.",
+    "Release documentation and live UI state that FCC observations are unverified consumer complaints, one source is insufficient for elevated or official-warning states, caller ID can be spoofed, and absence is not safety."
+  ],
+  "verification": [
+    "make check && python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --remote-policy required --release-policy required --json-schema"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}

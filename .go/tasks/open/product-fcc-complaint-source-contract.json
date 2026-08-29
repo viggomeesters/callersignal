@@ -1,0 +1,46 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-fcc-complaint-source-contract",
+  "project": "callersignal",
+  "status": "open",
+  "order": 780,
+  "summary": "Adopt the FCC public-domain unwanted-call source",
+  "description": "Record the FCC Socrata dataset contract, public-domain reuse basis, exact allowed fields, unverified-complaint semantics, freshness, correction, and takedown behavior.",
+  "scope": {
+    "read": [
+      "sources/registry.json",
+      "sources/caller-report-services.json",
+      "schemas/source-registry.schema.json",
+      "schemas/caller-report-service-index.schema.json"
+    ],
+    "modify": [
+      "sources/registry.json",
+      "sources/caller-report-services.json",
+      "sources/fcc-complaints-manifest.json",
+      "schemas/fcc-complaints-manifest.schema.json",
+      "tests/contracts/test_fcc_source_contract.py",
+      "docs/source-rights.md",
+      "docs/data-safety.md",
+      "docs/implementation-plan.md"
+    ]
+  },
+  "acceptance": [
+    "The canonical source registry, FCC manifest, and caller-service index prove the FCC dataset is current, anonymously API-accessible, and licensed as Public Domain U.S. Government.",
+    "Only caller-ID number, issue date, and call/message type are permitted inputs; ticket IDs, advertiser numbers, reporter location, ZIP code, issue time, method, and narratives are forbidden.",
+    "The contract states that complaints are consumer-selected and unverified, defines correction/takedown and freshness behavior, and never equates an FCC row with an official warning, verified caller, harmfulness, or safety."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts -q && make check"
+  ],
+  "claim": {
+    "agent": null,
+    "claimed_at": null
+  },
+  "work_status": "pending",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": []
+}
