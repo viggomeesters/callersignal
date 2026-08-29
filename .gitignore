@@ -44,6 +44,7 @@ screenshots/private/
 .go/runs/*/
 
 # Tooling and operating-system state
+node_modules/
 .DS_Store
 .idea/
 .vscode/

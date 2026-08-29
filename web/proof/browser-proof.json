@@ -1,0 +1,177 @@
+{
+  "captured_at": "2026-08-29T06:29:27.378Z",
+  "fixture_as_of": "2026-08-29T06:20:00Z",
+  "fixture_policy": "reserved synthetic browser proof only",
+  "results": [
+    {
+      "scenario": "empty",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": null,
+      "riskHeadline": null,
+      "visibleRiskIcons": 0,
+      "resultTitleMatchesReservedFixture": null,
+      "focusedElement": "BODY",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "unknown",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": "insufficient_evidence",
+      "riskHeadline": "Not enough risk evidence",
+      "visibleRiskIcons": 1,
+      "resultTitleMatchesReservedFixture": true,
+      "focusedElement": "result-title",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "elevated",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": "elevated_signals",
+      "riskHeadline": "Multiple test sources share a warning pattern",
+      "visibleRiskIcons": 1,
+      "resultTitleMatchesReservedFixture": true,
+      "focusedElement": "result-title",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "official-warning",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": "official_warning",
+      "riskHeadline": "Official warning in a reserved test fixture",
+      "visibleRiskIcons": 1,
+      "resultTitleMatchesReservedFixture": true,
+      "focusedElement": "result-title",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "campaign-detail",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": null,
+      "riskHeadline": null,
+      "visibleRiskIcons": 0,
+      "resultTitleMatchesReservedFixture": null,
+      "focusedElement": "campaign-detail-title",
+      "detailTitle": "Reserved fixture impersonation pattern",
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "empty",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": null,
+      "riskHeadline": null,
+      "visibleRiskIcons": 0,
+      "resultTitleMatchesReservedFixture": null,
+      "focusedElement": "BODY",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "unknown",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": "insufficient_evidence",
+      "riskHeadline": "Not enough risk evidence",
+      "visibleRiskIcons": 1,
+      "resultTitleMatchesReservedFixture": true,
+      "focusedElement": "result-title",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "elevated",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": "elevated_signals",
+      "riskHeadline": "Multiple test sources share a warning pattern",
+      "visibleRiskIcons": 1,
+      "resultTitleMatchesReservedFixture": true,
+      "focusedElement": "result-title",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "official-warning",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": "official_warning",
+      "riskHeadline": "Official warning in a reserved test fixture",
+      "visibleRiskIcons": 1,
+      "resultTitleMatchesReservedFixture": true,
+      "focusedElement": "result-title",
+      "detailTitle": null,
+      "temporaryCopy": false,
+      "consoleErrors": []
+    },
+    {
+      "scenario": "campaign-detail",
+      "viewport": {
+        "width": 375,
+        "height": 812
+      },
+      "horizontalOverflow": 0,
+      "clipped": [],
+      "riskState": null,
+      "riskHeadline": null,
+      "visibleRiskIcons": 0,
+      "resultTitleMatchesReservedFixture": null,
+      "focusedElement": "campaign-detail-title",
+      "detailTitle": "Reserved fixture impersonation pattern",
+      "temporaryCopy": false,
+      "consoleErrors": []
+    }
+  ]
+}

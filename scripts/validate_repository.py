@@ -9,7 +9,14 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {"", ".json", ".jsonl", ".md", ".py", ".sh", ".toml", ".yaml", ".yml"}
-EXCLUDED_PARTS = {".git", ".venv", ".pytest_cache", ".ruff_cache", "__pycache__"}
+EXCLUDED_PARTS = {
+    ".git",
+    ".venv",
+    ".pytest_cache",
+    ".ruff_cache",
+    "__pycache__",
+    "node_modules",
+}
 ALLOWED_FICTIONAL_NUMBERS = {"202-555-0147"}
 
 
@@ -126,6 +133,7 @@ def check_ignore_policy() -> None:
         ".go/runs/latest.json",
         ".go/runs/resume.sh",
         ".go/runs/*/",
+        "node_modules/",
     }
     missing = sorted(required - set(ignore.splitlines()))
     if missing:

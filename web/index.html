@@ -6,12 +6,12 @@
     <meta name="theme-color" content="#f2f4ef">
     <meta
       name="description"
-      content="Check public, country-aware phone-number evidence without guessing who called."
+      content="Check a displayed phone number for public campaign evidence and get a concrete, spoofing-aware next step."
     >
     <meta property="og:title" content="CallerSignal, evidence before verdict">
     <meta
       property="og:description"
-      content="Inspect official numbering context, source evidence, gaps, and spoofing risk."
+      content="One calibrated answer, public campaign history, source coverage, and a concrete next step."
     >
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary">
@@ -29,6 +29,7 @@
         <span>CallerSignal</span>
       </a>
       <nav aria-label="Main navigation">
+        <a href="/campaigns">Campaigns</a>
         <a href="#method">Method</a>
         <a href="#agents">For agents</a>
         <a href="https://github.com/viggomeesters/callersignal">GitHub</a>
@@ -38,14 +39,14 @@
     <main>
       <section class="hero" id="lookup" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow">Public numbering evidence</p>
+          <p class="eyebrow">Caller campaign intelligence</p>
           <h1 id="hero-title">
-            <span>A number is a signal.</span>
-            <span>Not an identity.</span>
+            <span>Check the signal.</span>
+            <span>Know what to do.</span>
           </h1>
           <p class="hero-intro">
-            Normalize a displayed number, inspect official numbering evidence, and see what
-            remains unknown. No identity guesses.
+            One calibrated answer, public campaign history, and a concrete next step.
+            Never an identity guess.
           </p>
 
           <form id="lookup-form" class="lookup-form" novalidate>
@@ -116,7 +117,6 @@
             <p class="eyebrow">Interpreted number</p>
             <h2 id="result-title" tabindex="-1">Lookup result</h2>
           </div>
-          <p id="result-reference" class="result-reference"></p>
         </header>
 
         <section
@@ -152,7 +152,61 @@
               <span>Recommended next step</span>
               <p id="risk-action"></p>
             </div>
+            <dl class="coverage-strip" aria-label="Evidence coverage and recency">
+              <div>
+                <dt>Sources checked</dt>
+                <dd id="coverage-checked"></dd>
+              </div>
+              <div>
+                <dt>Sources responding</dt>
+                <dd id="coverage-current"></dd>
+              </div>
+              <div>
+                <dt>Risk-capable</dt>
+                <dd id="coverage-risk-capable"></dd>
+              </div>
+              <div>
+                <dt>Checked at</dt>
+                <dd id="coverage-as-of"></dd>
+              </div>
+            </dl>
           </div>
+        </section>
+
+        <div class="decision-grid">
+          <section id="safety-checklist" class="safety-checklist" aria-labelledby="safety-title">
+            <p class="section-kicker">Do this now</p>
+            <h3 id="safety-title">Stay in control of the next contact</h3>
+            <ol>
+              <li><strong>Do not call back from the missed-call screen.</strong><span>Use a trusted website, card, statement, or saved contact.</span></li>
+              <li><strong>Do not share codes, passwords, or payment details.</strong><span>Legitimate organisations do not need a one-time code to prove your identity.</span></li>
+              <li><strong>Pause urgent requests.</strong><span>Independently verify the request before moving money or changing access.</span></li>
+            </ol>
+          </section>
+
+          <section id="result-actions" class="result-actions" aria-labelledby="actions-title">
+            <p class="section-kicker">Contribute or monitor</p>
+            <h3 id="actions-title">Help without exposing yourself</h3>
+            <details class="action-card">
+              <summary>Report this call</summary>
+              <p>CallerSignal is not collecting reports on this site. The report contract permits structured categories only, requires moderation before aggregation, and forbids publishing reporter identity or free text.</p>
+            </details>
+            <details class="action-card">
+              <summary>Watch this number</summary>
+              <p>No notification address is accepted on this site. The private-watch contract requires address verification, explicit consent, revocation, expiry, and deletion before any delivery provider can be enabled.</p>
+            </details>
+          </section>
+        </div>
+
+        <section id="campaign-history" class="campaign-history" aria-labelledby="campaign-history-title">
+          <div class="section-heading">
+            <div>
+              <p class="section-kicker">Public campaign history</p>
+              <h3 id="campaign-history-title">Patterns linked to this displayed value</h3>
+            </div>
+            <span id="campaign-history-count" class="count-label"></span>
+          </div>
+          <div id="campaign-history-list" class="campaign-list" aria-live="polite"></div>
         </section>
 
         <div class="number-transcript" aria-label="Normalized number context">
@@ -174,7 +228,10 @@
           </div>
         </div>
 
-        <div class="result-grid">
+        <details id="technical-disclosure" class="technical-disclosure">
+          <summary>Inspect technical evidence and limitations</summary>
+          <p id="result-reference" class="result-reference"></p>
+          <div class="result-grid">
           <section class="assessment-panel" aria-labelledby="assessment-title">
             <p class="section-kicker">Evidence details</p>
             <h3 id="assessment-title">Why this result</h3>
@@ -215,7 +272,34 @@
             <ul id="sources-list" class="sources-list"></ul>
             <p id="generated-at" class="generated-at"></p>
           </section>
-        </div>
+          </div>
+        </details>
+      </section>
+
+      <section id="campaigns" class="campaign-index" aria-labelledby="campaigns-title">
+        <header class="campaign-index-heading">
+          <div>
+            <p class="eyebrow">Public, rights-approved aggregates</p>
+            <h2 id="campaigns-title">Public campaign index</h2>
+          </div>
+          <p>
+            Recurring patterns that meet a strict publication threshold. An empty index is
+            an honest coverage result, not a claim that calls are safe.
+          </p>
+        </header>
+        <p id="campaign-catalogue-status" class="catalogue-status" role="status" aria-live="polite">
+          Checking the public campaign corpus…
+        </p>
+        <div id="campaign-list" class="campaign-list"></div>
+        <article id="campaign-detail" class="campaign-detail" aria-labelledby="campaign-detail-title" hidden>
+          <a class="campaign-back" href="/campaigns">Back to campaign index</a>
+          <header>
+            <p id="campaign-detail-state" class="risk-state"></p>
+            <h3 id="campaign-detail-title" tabindex="-1"></h3>
+            <p id="campaign-detail-summary" class="campaign-detail-summary"></p>
+          </header>
+          <div id="campaign-detail-body"></div>
+        </article>
       </section>
 
       <section class="method" id="method" aria-labelledby="method-title">

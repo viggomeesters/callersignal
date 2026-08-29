@@ -8,12 +8,28 @@
       "destination": "/api/index"
     },
     {
+      "source": "/v1/campaigns",
+      "destination": "/api/campaigns"
+    },
+    {
+      "source": "/v1/campaigns/:campaign_id",
+      "destination": "/api/campaigns?campaign_id=:campaign_id"
+    },
+    {
       "source": "/healthz",
       "destination": "/api/healthz"
     },
     {
       "source": "/assets/:path*",
       "destination": "/web/assets/:path*"
+    },
+    {
+      "source": "/campaigns",
+      "destination": "/web/index"
+    },
+    {
+      "source": "/campaigns/:campaign_id",
+      "destination": "/web/index"
     },
     {
       "source": "/",

@@ -22,9 +22,12 @@ STATIC_FILES = {
 
 
 def app(environ, start_response):
-    if environ.get("PATH_INFO") == "/v1/lookup":
+    request_path = str(environ.get("PATH_INFO", "/"))
+    if request_path == "/v1/lookup" or request_path.startswith("/v1/campaigns"):
         return lookup_application(environ, start_response)
-    item = STATIC_FILES.get(str(environ.get("PATH_INFO", "/")))
+    if request_path == "/campaigns" or request_path.startswith("/campaigns/"):
+        request_path = "/"
+    item = STATIC_FILES.get(request_path)
     if item is None:
         body = b"Not found"
         start_response(
