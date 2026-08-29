@@ -117,9 +117,9 @@ def test_coverage_human_output_separates_available_context_from_missing_reputati
     assert "4 advertised licensing routes" in output
     assert "1 reputation feed enabled" in output
     assert "Official US complaint aggregate: available · unverified" in output
-    assert "236,156 keyed displayed numbers" in output
-    assert "258,137 indexed observations" in output
+    assert "238,327 keyed displayed numbers" in output
+    assert "260,504 indexed observations" in output
     assert "2021-08-29 through 2026-08-29" in output
-    assert "nuisance 143,147, robocall 114,990" in output
+    assert "nuisance 144,783, robocall 115,721" in output
     assert "counts are not corroboration" in output
     assert "Coverage counts are not trust or safety scores." in output

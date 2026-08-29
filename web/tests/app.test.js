@@ -301,13 +301,13 @@ test("transparency view model separates numbering, unverified complaints, and so
         source_updated_at: "2026-08-29T08:00:00Z",
         window_start: "2021-08-29",
         window_end: "2026-08-29",
-        unique_number_count: 236156,
+        unique_number_count: 238327,
         source_observation_count: 461955,
-        indexed_observation_count: 258137,
-        rejected_observation_count: 203818,
+        indexed_observation_count: 260504,
+        rejected_observation_count: 201451,
         category_counts: [
-          { category: "nuisance", observation_count: 143147 },
-          { category: "robocall", observation_count: 114990 },
+          { category: "nuisance", observation_count: 144783 },
+          { category: "robocall", observation_count: 115721 },
         ],
         freshness: "current",
         limitations: [
@@ -364,8 +364,8 @@ test("transparency view model separates numbering, unverified complaints, and so
   assert.deepEqual(view.metrics, {
     importedRanges: 74984,
     matchableRanges: 73409,
-    fccUniqueNumbers: 236156,
-    fccIndexedObservations: 258137,
+    fccUniqueNumbers: 238327,
+    fccIndexedObservations: 260504,
     enabledReputationSources: 1,
   });
   assert.deepEqual(view.corpusMetrics, {
@@ -379,7 +379,7 @@ test("transparency view model separates numbering, unverified complaints, and so
   assert.equal(view.reputation.services[0].reason, "commercial agreement and credentials required");
   assert.match(view.reputation.notice, /not trust or safety scores/);
   assert.equal(view.reputationCatalog.verificationStatus, "unverified");
-  assert.equal(view.reputationCatalog.categories[1].count, 114990);
+  assert.equal(view.reputationCatalog.categories[1].count, 115721);
   assert.match(view.reputationCatalog.limitations.join(" "), /not independent/);
   assert.equal(view.sources[0].scope, "Numbering context only");
   assert.equal(view.unavailableSources[0].gap, "reuse permission required");

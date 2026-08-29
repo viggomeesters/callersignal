@@ -409,7 +409,7 @@ async function capture(browser, viewport, scenario) {
         button.number === "0906-8844" &&
         button.region === "NL",
     ) ||
-    (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["74,984", "236,156", "258,137", "1"])) ||
+    (scenario.coverage && JSON.stringify(facts.coverageMetrics) !== JSON.stringify(["74,984", "238,327", "260,504", "1"])) ||
     (scenario.coverage && facts.coverageStates.official !== "Available · official context") ||
     (scenario.coverage && facts.coverageStates.fcc !== "Live · unverified complaints") ||
     (scenario.coverage && facts.coverageStates.commercial !== "Unavailable · commercial sources") ||

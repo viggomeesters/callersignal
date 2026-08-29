@@ -197,8 +197,8 @@ def test_source_coverage_route_returns_the_committed_cross_surface_projection() 
     assert coverage["coverage"]["reputation_sources"]["enabled_source_count"] == 1
     reputation_catalog = coverage["coverage"]["reputation_catalog"]
     assert reputation_catalog["verification_status"] == "unverified"
-    assert reputation_catalog["unique_number_count"] == 236_156
-    assert reputation_catalog["indexed_observation_count"] == 258_137
+    assert reputation_catalog["unique_number_count"] == 238_327
+    assert reputation_catalog["indexed_observation_count"] == 260_504
     assert post_status == "405 Method Not Allowed"
     assert post_headers["Allow"] == "GET"
     assert post_error["error"]["code"] == "method_not_allowed"

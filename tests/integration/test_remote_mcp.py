@@ -186,7 +186,7 @@ def test_public_lookup_campaign_coverage_and_methodology_calls_share_canonical_d
     )
     assert coverage["result"]["structuredContent"]["coverage"][
         "reputation_catalog"
-    ]["unique_number_count"] == 236_156
+    ]["unique_number_count"] == 238_327
     policy = methodology["result"]["structuredContent"]
     assert policy["methodology_version"] == "1.0.0"
     assert [item["state"] for item in policy["risk_states"]] == [

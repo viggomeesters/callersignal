@@ -2,7 +2,7 @@
 
 ## Current release state — 29 August 2026
 
-CallerSignal v0.3.0 is the current functional public release. The repository is
+CallerSignal v0.4.0 is the current functional public release. The repository is
 public at `viggomeesters/callersignal`, `main` is the default branch, and the
 read-only product is live at `https://callersignal.vercel.app/`. CLI, stdio MCP,
 Streamable HTTP MCP, HTTP, and web clients share the same versioned lookup and
@@ -11,8 +11,10 @@ public-safe source-coverage projection.
 
 The current official Dutch catalogue has 74,984 ranges, including 73,409
 lookup-compatible intervals, three register statuses, and 44 destination
-categories. CallerSignal indexes 15 caller-report services and four advertised
-licensing routes, but enables zero reputation feeds and zero eligible public
+categories. The public-domain FCC projection contains 238,327 HMAC-keyed
+displayed numbers and 260,504 admitted nuisance/robocall observations from a
+five-year source window. CallerSignal indexes sixteen caller-report services,
+enables only this unverified FCC aggregate, and has zero eligible public
 campaigns. It therefore does not call an unmatched number safe, identify its
 owner, or prove where a call originated. Permission-required sites are not
 scraped. Report collection, watch persistence, organisation publication, and
@@ -34,7 +36,7 @@ assets, the repo-local `.go` state, public-safety rules, whitespace, and package
 version consistency. This repository-local proof is authoritative and does not
 depend on GitHub Actions.
 
-The v0.3.0 release run completed with 253 Python tests and 8 web tests passing.
+The v0.4.0 release run completed with 300 Python tests and 8 web tests passing.
 
 Strict public validation uses:
 
@@ -44,7 +46,7 @@ python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootst
   --remote-policy required --release-policy required --json-schema
 ```
 
-The v0.3.0 release run returned `JA`, exit code `0`, and zero hard blockers. The
+The v0.4.0 release run returned `JA`, exit code `0`, and zero hard blockers. The
 profile covers repository identity and history, vision and design contracts,
 onboarding and public policies, local gates, remote metadata, live URL, hero
 assets, visual proof, release readiness, secrets, privacy, and large binaries.
@@ -61,7 +63,8 @@ Contract, unit, integration, parity, privacy, and end-to-end tests exercise:
   making either feature public in production;
 - exact corpus-transparency output with no popularity or raw-report leakage;
 - exact cross-surface source coverage with ACM digest, freshness, status and
-  destination coverage plus rights-aware reputation activation gaps;
+  destination coverage; FCC window, category and rejection totals; and
+  rights-aware reputation activation gaps;
 - a zero-request guarantee for every disabled caller-report source and bounded
   ingestion for a separately authorized feed;
 - hosted MCP discovery, initialization, nine tool declarations, public reads,
@@ -70,12 +73,13 @@ Contract, unit, integration, parity, privacy, and end-to-end tests exercise:
 - privacy-safe operational metrics, incident handling, deletion, correction,
   takedown, and abuse controls.
 
-Production deployment `dpl_FdrKqYExGUTVKudYwoDYSEgjZpUQ` reported `Ready` and
-owned the stable alias. Readback proves the homepage and health route, full
-ACM-backed Dutch lookup, HTTP source coverage, protocol discovery, public MCP source coverage,
-the locked protected-tool boundary, hostile-Origin rejection, and `no-store`
-responses. Exact immutable deployment and alias evidence is recorded in the
-repo-local release task.
+Production deployment `dpl_2Ap8eGWHvg5qVxV1moTxDRKcB46P`, built from pushed
+commit `53b39ed`, reported `Ready` and owned the stable alias. Readback proves
+the homepage and health route, the public-safe Dutch lookup, a reserved US
+lookup against the FCC catalogue, exact HTTP/MCP coverage parity, protocol
+discovery, all nine MCP tools, the locked protected-tool boundary,
+hostile-Origin rejection, and `no-store` responses. Exact immutable deployment
+and alias evidence is recorded in the repo-local release task.
 
 ## Visual proof
 
@@ -136,7 +140,7 @@ python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootst
   --remote-policy required --release-policy required --json-schema
 gh repo view viggomeesters/callersignal \
   --json name,url,visibility,defaultBranchRef,description,homepageUrl,repositoryTopics
-git ls-remote origin refs/heads/main refs/tags/v0.3.0
+git ls-remote origin refs/heads/main refs/tags/v0.4.0
 npx --yes vercel@latest inspect https://callersignal.vercel.app \
   --scope viggos-projects-eac4720a
 ```

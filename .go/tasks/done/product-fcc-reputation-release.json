@@ -1,0 +1,128 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-fcc-reputation-release",
+  "project": "callersignal",
+  "status": "done",
+  "order": 820,
+  "depends_on": [
+    "product-fcc-coverage-surfaces"
+  ],
+  "summary": "Ship the first authorized reputation source",
+  "description": "Release and deploy the FCC public-domain complaint aggregate only after import, lookup, parity, privacy, browser, repository, and live protocol gates pass.",
+  "scope": {
+    "read": [
+      "**"
+    ],
+    "modify": [
+      "CHANGELOG.md",
+      "README.md",
+      "sources/fcc-catalog-release.json",
+      "pyproject.toml",
+      "uv.lock",
+      "package.json",
+      "package-lock.json",
+      "web/package.json",
+      "web/package-lock.json",
+      "src/callersignal/mcp_server.py",
+      "src/callersignal/remote_mcp/application.py",
+      "docs/mcp.md",
+      "docs/web.md",
+      "docs/transparency.md",
+      "docs/source-rights.md",
+      "docs/operations.md",
+      "docs/architecture.md",
+      "docs/data-architecture.md",
+      "docs/implementation-plan.md",
+      "docs/public-readiness.md",
+      "web/assets/transparency.json",
+      "web/proof/browser-proof.json",
+      "web/proof/capture.mjs",
+      "web/proof/*.jpg",
+      "web/tests/app.test.js",
+      "tests/test_repository_structure.py",
+      "tests/e2e/test_web.py",
+      "tests/integration/test_http_api.py",
+      "tests/integration/test_cli.py",
+      "tests/integration/test_mcp.py",
+      "tests/integration/test_remote_mcp.py",
+      "tests/integration/test_transparency.py",
+      "scripts/validate_repository.py",
+      "src/callersignal/fcc_catalog.py",
+      "tests/unit/test_fcc_catalog.py"
+    ]
+  },
+  "acceptance": [
+    "The current FCC aggregate is built from the manifest-declared public-domain source and proven live on Vercel through a reserved or source-safe lookup plus cross-surface coverage parity.",
+    "Strict public repo-complete has zero blockers; the tree and history contain no source phone-number inventory, raw complaints, generated reputation database, HMAC lookup key, credential, or Vercel runtime state.",
+    "Release documentation and live UI state that FCC observations are unverified consumer complaints, one source is insufficient for elevated or official-warning states, caller ID can be spoofed, and absence is not safety."
+  ],
+  "verification": [
+    "make check && python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --remote-policy required --release-policy required --json-schema"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T16:19:16+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "review",
+  "review_history": [],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T16:38:50+02:00",
+      "task_id": "product-fcc-reputation-release",
+      "agent": "codex",
+      "summary": "changed_files=CHANGELOG.md,README.md,docs/mcp.md,docs/public-readiness.md,docs/transparency.md,docs/web.md,sources/fcc-catalog-release.json,tests/e2e/test_web.py,tests/integration/test_cli.py,tests/integration/test_http_api.py,tests/integration/test_mcp.py,tests/integration/test_remote_mcp.py,tests/integration/test_transparency.py,web/assets/transparency.json,web/proof/browser-proof.json,web/proof/capture.mjs,web/proof/*.jpg,web/tests/app.test.js,.go project state; verification=make check passed 300 Python and 8 web tests plus .go, documentation, asset, and public-safety gates; verification=repo-complete public validate status JA missing_hard_count=0; production=dpl_2Ap8eGWHvg5qVxV1moTxDRKcB46P Ready on stable alias, v0.4.0, homepage/health 200, FCC catalog available/current/unverified with 238327 keyed numbers and 260504 indexed observations, exact HTTP/MCP coverage parity, nine MCP tools, protected 401, hostile Origin 403, GET 405; lookup=public-safe NL 0906-8844 matched ACM blocked numbering context with insufficient_evidence and reserved US 202-555-0147 checked FCC with no_match/no_risk_evidence plus explicit absence-is-not-safety boundary; browser=12 production captures at 1440x1000 and 375x812, overflow/clipping/console/placeholder failures 0, status contrasts 8.68/7.44/7.26, desktop/mobile coverage and hero visually inspected; privacy=original-session personal-number history targets 2 matches 0, tracked sensitive paths 0, history sensitive paths 0, generated FCC database moved recoverably to Trash, secret is Vercel Hidden Production value and never read or logged; critic=approved because only FCC public-domain grouped data is ingested, commercial sources remain unqueried, plaintext/raw rows are excluded, one unverified source cannot elevate risk, caller ID spoofing and absence limits are explicit; Self-reflect: no durable agent/process improvement needed; the stale exact-count expectations exposed by the parser change were caught by existing gates and corrected in task scope, so no skill/memory/config change.",
+      "changed_files": [
+        "CHANGELOG.md",
+        "README.md",
+        "docs/mcp.md",
+        "docs/public-readiness.md",
+        "docs/transparency.md",
+        "docs/web.md",
+        "sources/fcc-catalog-release.json",
+        "tests/e2e/test_web.py",
+        "tests/integration/test_cli.py",
+        "tests/integration/test_http_api.py",
+        "tests/integration/test_mcp.py",
+        "tests/integration/test_remote_mcp.py",
+        "tests/integration/test_transparency.py",
+        "web/assets/transparency.json",
+        "web/proof/browser-proof.json",
+        "web/proof/capture.mjs",
+        "web/proof/*.jpg",
+        "web/tests/app.test.js",
+        ".go project state"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "repo-complete public validate status JA missing_hard_count=0",
+        "result": "repo-complete public validate status JA missing_hard_count=0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved because only FCC public-domain grouped data is ingested, commercial sources remain unqueried, plaintext/raw rows are excluded, one unverified source cannot elevate risk, caller ID spoofing and absence limits are explicit",
+        "skip_reason": null
+      }
+    }
+  ]
+}

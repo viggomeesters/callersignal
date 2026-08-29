@@ -9,7 +9,7 @@ All notable changes to CallerSignal are documented here. The format follows [Kee
 ### Added
 
 - A reproducible five-year import of the official FCC Consumer Complaints Data — Unwanted Calls dataset, using only caller ID, issue date, and call/message type from the public-domain source contract.
-- A deployment-secret HMAC-SHA256 SQLite projection containing 236,156 keyed displayed numbers and 258,137 admitted nuisance/robocall observations, with atomic replacement and authenticated public-safe metadata.
+- A deployment-secret HMAC-SHA256 SQLite projection containing 238,327 keyed displayed numbers and 260,504 admitted nuisance/robocall observations, with atomic replacement and authenticated public-safe metadata.
 - Conservative US lookup evidence from the FCC aggregate with count and first/last date basis, fixed low confidence, explicit unverified status, provenance, freshness, and spoofing limitations.
 - Exact FCC coverage parity across HTTP, CLI, stdio MCP, hosted MCP, and web, including the rolling window, build and source-update times, observation accounting, category split, rejection totals, and limitations.
 - A three-part coverage ledger that distinguishes official numbering context, live unverified complaints, and unavailable commercial feeds at desktop and 375-pixel mobile widths.

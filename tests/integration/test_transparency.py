@@ -352,12 +352,12 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
     reputation_catalog = committed["coverage"]["reputation_catalog"]
     assert reputation_catalog["status"] == "available"
     assert reputation_catalog["verification_status"] == "unverified"
-    assert reputation_catalog["unique_number_count"] == 236_156
-    assert reputation_catalog["indexed_observation_count"] == 258_137
+    assert reputation_catalog["unique_number_count"] == 238_327
+    assert reputation_catalog["indexed_observation_count"] == 260_504
     assert reputation_catalog["source_observation_count"] == 461_955
     assert reputation_catalog["category_counts"] == [
-        {"category": "nuisance", "observation_count": 143_147},
-        {"category": "robocall", "observation_count": 114_990},
+        {"category": "nuisance", "observation_count": 144_783},
+        {"category": "robocall", "observation_count": 115_721},
     ]
     assert committed["corpus"]["eligible_campaigns"] == 0
     assert committed["interpretation"]["no_matching_evidence"].startswith(

@@ -12,8 +12,8 @@ Snapshot time: **29 August 2026, 14:10 UTC**. Source registry review date: **29 
 | ACM lookup-compatible ranges | 73,409 | Rows with a validated canonical NL interval |
 | ACM register-status coverage | 73,221 assigned; 1,740 cooling off; 23 blocked | Neutral source statuses, not reputation labels |
 | ACM destination categories | 44 | Distinct official destination labels, without publishing the labels or holder inventory |
-| FCC keyed displayed numbers | 236,156 | Valid US numbers represented only by deployment-keyed HMAC values |
-| FCC indexed complaint observations | 258,137 | Admitted nuisance and robocall observations in the rolling window |
+| FCC keyed displayed numbers | 238,327 | Syntactically valid NANPA numbers represented only by deployment-keyed HMAC values |
+| FCC indexed complaint observations | 260,504 | Admitted nuisance and robocall observations in the rolling window |
 | FCC source observations | 461,955 | Admitted plus rejected observations; volume is not corroboration |
 | FCC categories | 143,147 nuisance; 114,990 robocall | Neutral source-native groups, always unverified |
 | Caller-report services indexed | 16 | Dated rights and integration discovery, not copied site records |
@@ -41,7 +41,7 @@ NL and GB still carry the explicit gap `no_risk_capable_source`; US has one risk
 
 The caller-report discovery index has the enabled public-domain FCC route, eleven services requiring publisher permission, and four services advertising a licensing or partnership route. The latter fifteen are unavailable to the runtime. Their individual integration channel, jurisdiction scope, reason, and blocking gates are public in the snapshot. The four advertised routes still require a completed commercial agreement, credentials, privacy approval, takedown ownership, and provenance controls. Counts describe coverage only; they are not trust, popularity, reputation, or safety scores.
 
-The FCC projection covers 29 August 2021 through 29 August 2026 and was built from the source update published at 05:02 UTC on 29 August 2026. It contains 241,200 grouped source rows, 236,156 unique keyed displayed numbers, and 258,137 admitted observations. Another 203,818 observations across 2,752 grouped caller-ID values failed the strict US-number boundary and were excluded. These are coverage and minimization facts. FCC complaint data is consumer-selected and unverified; one source and any number of its rows cannot identify a caller, prove harmfulness, create an FCC warning, replace independent corroboration, or establish safety by absence.
+The FCC projection covers 29 August 2021 through 29 August 2026 and was built from the source update published at 05:02 UTC on 29 August 2026. It contains 241,200 grouped source rows, 238,327 unique keyed displayed numbers, and 260,504 admitted observations. Another 201,451 observations across 572 grouped caller-ID values failed the strict syntactic NANPA boundary and were excluded. These are coverage and minimization facts. FCC complaint data is consumer-selected and unverified; one source and any number of its rows cannot identify a caller, prove harmfulness, create an FCC warning, replace independent corroboration, or establish safety by absence.
 
 ## What “no matching evidence” means
 
