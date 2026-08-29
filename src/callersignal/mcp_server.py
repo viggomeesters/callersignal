@@ -165,7 +165,7 @@ def handle_request(
                 "serverInfo": {
                     "name": "callersignal",
                     "title": "CallerSignal",
-                    "version": "0.3.0",
+                    "version": "0.4.0",
                     "description": "Evidence-backed read-only phone-number context.",
                     "websiteUrl": "https://github.com/viggomeesters/callersignal",
                 },

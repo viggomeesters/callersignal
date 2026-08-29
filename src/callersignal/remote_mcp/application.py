@@ -274,7 +274,7 @@ def _server_info() -> dict[str, Any]:
     return {
         "name": "callersignal",
         "title": "CallerSignal",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "description": "Evidence-backed caller-campaign intelligence with explicit unknowns.",
         "websiteUrl": CANONICAL_ORIGIN,
     }

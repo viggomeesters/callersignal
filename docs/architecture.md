@@ -2,7 +2,7 @@
 
 ## Status and intent
 
-CallerSignal v0.3.0 is a running read-only public lookup service backed by a validated production projection of the complete pinned Dutch ACM register plus public-safe GB and US fixtures. The normalization core, evidence ledger, country adapters, lookup orchestrator, calibrated assessment, caller-campaign model, corpus transparency, and CLI, stdio MCP, hosted MCP, HTTP, and web surfaces are implemented. Tested service boundaries also exist for licensed reputation feeds, controlled first-party reports, replaceable storage, private watches, verified organisation declarations, and privacy-safe operations, but those mutation paths remain disabled until their rights, credentials, identity, consent, moderation, retention, correction, deletion, and provider gates pass. Every surface keeps one domain truth and fails closed when evidence is missing or unreliable.
+CallerSignal v0.4.0 is a running read-only public lookup service backed by a validated production projection of the complete pinned Dutch ACM register, public-safe GB and US numbering fixtures, and a privacy-minimized five-year FCC unwanted-call complaint aggregate. The normalization core, evidence ledger, country adapters, lookup orchestrator, calibrated assessment, caller-campaign model, corpus transparency, and CLI, stdio MCP, hosted MCP, HTTP, and web surfaces are implemented. Tested service boundaries also exist for licensed reputation feeds, controlled first-party reports, replaceable storage, private watches, verified organisation declarations, and privacy-safe operations, but those mutation paths remain disabled until their rights, credentials, identity, consent, moderation, retention, correction, deletion, and provider gates pass. Every surface keeps one domain truth and fails closed when evidence is missing or unreliable.
 
 ## Context flow
 
@@ -19,6 +19,8 @@ flowchart LR
     I --> A
     J[Checksum-pinned ACM source] --> K[Privacy-minimized catalogue build]
     K --> E
+    N[Public-domain FCC complaints] --> O[HMAC-keyed aggregate build]
+    O --> E
     L[Rights-approved reputation feed] -. disabled until every gate passes .-> E
     M[Committed coverage projection] --> A
 ```

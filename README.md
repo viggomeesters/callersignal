@@ -6,11 +6,11 @@
 
 CallerSignal is an agent-first open-source project for answering “what can we responsibly say about this displayed phone number?” It normalizes a number with explicit country context, checks lawful country-specific evidence, and returns sources, gaps, confidence, and residual uncertainty instead of guessing a caller's identity.
 
-> **Current maturity:** `v0.3.0` is persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It implements the read-only NL, GB, and US lookup wedge across CLI, stdio MCP, Streamable HTTP MCP, HTTP, and web. Production NL lookups use a validated, holder-free projection of the complete pinned ACM register. The service does not identify a caller, query live subscriber data, accept reports, persist watches, or publish organisation declarations.
+> **Current maturity:** `v0.4.0` is persistently hosted at [callersignal.vercel.app](https://callersignal.vercel.app/). It implements the read-only NL, GB, and US lookup wedge across CLI, stdio MCP, Streamable HTTP MCP, HTTP, and web. Production uses a holder-free projection of the complete pinned ACM register and an HMAC-keyed five-year FCC unwanted-call complaint aggregate. The service does not identify a caller, query live subscriber data, accept reports, persist watches, or publish organisation declarations.
 
 The durable direction is a hybrid reputation model: official evidence first, then explicitly licensed or first-party moderated observations only after source-rights, privacy, and abuse gates pass. Every shared result now contains one calibrated risk state: `official_warning`, `elevated_signals`, `no_risk_evidence`, or `insufficient_evidence`. The website leads with that state, its basis, and a concrete next action while preserving the evidence and uncertainty underneath. `no_risk_evidence` requires a current eligible risk-capable source and never means that a number is safe; numbering context alone remains `insufficient_evidence`.
 
-> **Corpus reality, 29 August 2026:** the official ACM catalogue contains 74,984 ranges, of which 73,409 support canonical lookup. CallerSignal indexes 15 caller-report services and four advertised licensing routes, but enables zero reputation feeds and zero eligible public campaigns. “No matching evidence” therefore does not mean the displayed number is safe. See the versioned [corpus-transparency contract](docs/transparency.md).
+> **Corpus reality, 29 August 2026:** the official ACM catalogue contains 74,984 ranges, of which 73,409 support canonical lookup. The public-domain FCC projection contains 236,156 keyed displayed numbers and 258,137 admitted nuisance/robocall observations; those complaints are unverified and one source cannot elevate risk. CallerSignal indexes sixteen caller-report services, enables only the FCC aggregate, and has zero eligible public campaigns. “No matching evidence” never means the displayed number is safe. See the versioned [corpus-transparency contract](docs/transparency.md).
 
 ## Usage: read-only lookup
 
@@ -67,7 +67,7 @@ Existing “who called me?” experiences often lead with opaque labels, region 
 - every conclusion carries provenance, freshness, reason codes, confidence, gaps, and residual risk;
 - unknown stays unknown when evidence cannot support a stronger answer.
 
-The product wedge covers read-only official numbering evidence for the Netherlands, United Kingdom, and United States through shared CLI, MCP, HTTP, and web semantics. Caller-report enrichment remains disabled until compatible extraction and republication rights, credentials, privacy controls, correction, takedown, provenance, and operational gates are all proven.
+The product wedge covers read-only official numbering evidence for the Netherlands, United Kingdom, and United States plus conservative FCC complaint aggregates through shared CLI, MCP, HTTP, and web semantics. Commercial or permission-required caller-report enrichment remains disabled until compatible extraction and republication rights, credentials, privacy controls, correction, takedown, provenance, and operational gates are all proven.
 
 ## Repository map
 

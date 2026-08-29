@@ -90,5 +90,6 @@ No production adapter is selected in this repository revision. Vercel continues 
 ```console
 uv run pytest tests/storage -q
 uv run pytest tests/unit/test_acm_catalog.py -q
+uv run pytest tests/unit/test_fcc_catalog.py -q
 make check
 ```

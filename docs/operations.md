@@ -93,7 +93,7 @@ High traffic, repeated reports, or many lookups never become proof of fraud. Abu
 
 ## Licensed reputation refresh
 
-`activate_reputation_feeds` reads the service index and source registry together at process start. The checked-in state deliberately activates zero reputation feeds. A future production scheduler may pass transient, already-normalized lookup subjects to `ReputationRefreshScheduler`; the scheduler stores only a source-to-last-attempt timestamp and respects the source's reviewed refresh interval. Each adapter separately applies the contractual request window, so a large input batch cannot bypass provider limits.
+`activate_reputation_feeds` reads the service index and source registry together at process start. The checked-in state deliberately activates zero licensed or partner feeds; the enabled public-domain FCC aggregate uses its separate manifest-bounded build and immutable read path. A future production scheduler may pass transient, already-normalized lookup subjects to `ReputationRefreshScheduler`; the scheduler stores only a source-to-last-attempt timestamp and respects the source's reviewed refresh interval. Each adapter separately applies the contractual request window, so a large input batch cannot bypass provider limits.
 
 Before a scheduled run, verify that the provider agreement still covers extraction, caching or transient processing, transformation, and public display; that its credential is present in the deployment secret store; and that privacy, takedown, and provenance owners are available. Never put credentials, raw provider responses, number lists, or scheduler inputs in Git, `.go`, logs, build artifacts, or issue trackers.
 

@@ -5,7 +5,7 @@
   "shareable_delivery": "required",
   "id": "product-fcc-reputation-release",
   "project": "callersignal",
-  "status": "open",
+  "status": "active",
   "order": 820,
   "depends_on": [
     "product-fcc-coverage-surfaces"
@@ -19,6 +19,19 @@
     "modify": [
       "CHANGELOG.md",
       "README.md",
+      "pyproject.toml",
+      "uv.lock",
+      "package.json",
+      "package-lock.json",
+      "web/package.json",
+      "web/package-lock.json",
+      "src/callersignal/mcp_server.py",
+      "src/callersignal/remote_mcp/application.py",
+      "docs/mcp.md",
+      "docs/web.md",
+      "docs/transparency.md",
+      "docs/source-rights.md",
+      "docs/operations.md",
       "docs/architecture.md",
       "docs/data-architecture.md",
       "docs/implementation-plan.md",
@@ -36,10 +49,10 @@
     "make check && python3 /Users/viggomeesters/Dev/viggo-agent-skills/scripts/repo_complete_bootstrap.py --public --mode validate --path . --remote-policy required --release-policy required --json-schema"
   ],
   "claim": {
-    "agent": null,
-    "claimed_at": null
+    "agent": "codex",
+    "claimed_at": "2026-08-29T16:19:16+02:00"
   },
-  "work_status": "pending",
+  "work_status": "in_progress",
   "review_status": "none",
   "review_history": [],
   "evidence": []
