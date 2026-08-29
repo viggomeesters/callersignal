@@ -1,0 +1,95 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "id": "product-operational-safety",
+  "project": "callersignal",
+  "status": "done",
+  "order": 640,
+  "summary": "Add production observability, abuse controls, and privacy operations",
+  "description": "Make the service operable without logging sensitive request data by default.",
+  "depends_on": [
+    "product-http-read-api",
+    "product-private-watch-subscriptions",
+    "product-production-data-foundation",
+    "product-report-ingestion",
+    "product-reputation-aggregation",
+    "product-verified-organization-portfolios"
+  ],
+  "scope": {
+    "read": [
+      "docs/data-safety.md",
+      "src/callersignal/**"
+    ],
+    "modify": [
+      "src/callersignal/operations/**",
+      "tests/operations/**",
+      "docs/operations.md"
+    ]
+  },
+  "acceptance": [
+    "R-1: Metrics expose service health and coverage gaps without raw phone-number cardinality or personal request trails.",
+    "R-2: Incident, deletion, correction, source-takedown, and abuse-response runbooks are executable."
+  ],
+  "verification": [
+    "uv run pytest tests/operations -q"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T08:04:09+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-29T08:06:48+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved after observability and runbook review: health and coverage metrics cannot accept personal/request data or dynamic high-cardinality dimensions; all incident/deletion/correction/source-takedown/abuse workflows execute strictly in order with sanitized evidence handles; full gate is green."
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T08:06:48+02:00",
+      "task_id": "product-operational-safety",
+      "agent": "codex",
+      "summary": "changed_files=src/callersignal/operations/__init__.py,src/callersignal/operations/metrics.py,src/callersignal/operations/runbooks.py,tests/operations/test_metrics.py,tests/operations/test_runbooks.py,docs/operations.md,.go/tasks/active/product-operational-safety.json; verification=uv run pytest tests/operations -q (8 passed) && make check (184 Python and 5 web tests passed) && git diff --check (passed); critic=approved by focused self-review after checking bounded route/source/outcome/status/latency dimensions, absence of number/requester/cardinality inputs, metadata rejection, coverage-gap meaning, sanitized case/evidence handles, strict step order for five runbooks, stop conditions, roles, source disablement, correction rebuild, deletion processors/backups, and abuse non-reputation invariant",
+      "changed_files": [
+        "src/callersignal/operations/__init__.py",
+        "src/callersignal/operations/metrics.py",
+        "src/callersignal/operations/runbooks.py",
+        "tests/operations/test_metrics.py",
+        "tests/operations/test_runbooks.py",
+        "docs/operations.md",
+        ".go/tasks/active/product-operational-safety.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/operations -q (8 passed) && make check (184 Python and 5 web tests passed) && git diff --check (passed)",
+        "result": "uv run pytest tests/operations -q (8 passed) && make check (184 Python and 5 web tests passed) && git diff --check (passed)"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved by focused self-review after checking bounded route/source/outcome/status/latency dimensions, absence of number/requester/cardinality inputs, metadata rejection, coverage-gap meaning, sanitized case/evidence handles, strict step order for five runbooks, stop conditions, roles, source disablement, correction rebuild, deletion processors/backups, and abuse non-reputation invariant",
+        "skip_reason": null
+      }
+    }
+  ]
+}
