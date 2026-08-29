@@ -433,7 +433,7 @@
           "if": {
             "properties": {
               "source_type": { "const": "official_complaint_aggregate" },
-              "status": { "const": "authorized" }
+              "status": { "enum": ["authorized", "enabled"] }
             },
             "required": ["source_type", "status"]
           },

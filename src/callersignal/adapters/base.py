@@ -43,6 +43,7 @@ _REPUTATION_REASONS = {
 }
 _REPUTATION_SAMPLE_BASES = {
     "official_regulatory_observation",
+    "official_consumer_complaint_aggregate",
     "licensed_provider_aggregate",
     "moderated_community_aggregate",
     "source_no_match",
@@ -257,8 +258,37 @@ class AdapterResult:
         sample_basis = reputation.get("sample_basis")
         if sample_basis not in _REPUTATION_SAMPLE_BASES:
             raise AdapterContractError("Reputation sample basis is not supported.")
+        evidence_class = observation.get("evidence_class")
+        if (evidence_class == "official_complaint_aggregate") != (
+            sample_basis == "official_consumer_complaint_aggregate"
+        ):
+            raise AdapterContractError(
+                "Official complaint evidence requires its dedicated sample basis."
+            )
         if (category == "no_current_risk_match") != (sample_basis == "source_no_match"):
             raise AdapterContractError("No-match status requires the dedicated sample basis.")
+        aggregate = reputation.get("aggregate")
+        if sample_basis == "official_consumer_complaint_aggregate":
+            confidence = observation.get("confidence")
+            if (
+                observation.get("verification_status") != "unverified"
+                or isinstance(confidence, bool)
+                or not isinstance(confidence, int | float)
+                or not 0 <= confidence <= 0.49
+                or not isinstance(aggregate, Mapping)
+                or isinstance(aggregate.get("observation_count"), bool)
+                or not isinstance(aggregate.get("observation_count"), int)
+                or aggregate["observation_count"] < 1
+                or not isinstance(aggregate.get("first_observed_at"), str)
+                or not isinstance(aggregate.get("last_observed_at"), str)
+            ):
+                raise AdapterContractError(
+                    "Official complaint evidence requires an unverified bounded aggregate."
+                )
+        elif aggregate is not None:
+            raise AdapterContractError(
+                "Only official complaint evidence can carry this aggregate basis."
+            )
         if _REPUTATION_REASONS[category] not in observation.get("reason_codes", []):
             raise AdapterContractError("Reputation status requires its stable reason code.")
 

@@ -194,7 +194,7 @@ def test_source_coverage_route_returns_the_committed_cross_surface_projection() 
     assert headers["Cache-Control"] == "no-store"
     assert coverage == committed
     assert coverage["coverage"]["number_catalog"]["imported_range_count"] == 74_984
-    assert coverage["coverage"]["reputation_sources"]["enabled_source_count"] == 0
+    assert coverage["coverage"]["reputation_sources"]["enabled_source_count"] == 1
     assert post_status == "405 Method Not Allowed"
     assert post_headers["Allow"] == "GET"
     assert post_error["error"]["code"] == "method_not_allowed"

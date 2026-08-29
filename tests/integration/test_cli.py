@@ -115,5 +115,5 @@ def test_coverage_human_output_separates_available_context_from_missing_reputati
     assert "73,409 lookup-compatible ranges" in output
     assert "16 caller-report services indexed" in output
     assert "4 advertised licensing routes" in output
-    assert "0 reputation feeds enabled" in output
+    assert "1 reputation feed enabled" in output
     assert "Coverage counts are not trust or safety scores." in output

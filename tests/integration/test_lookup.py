@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
@@ -13,18 +14,20 @@ from callersignal.adapters.base import (
     EvidenceGap,
     SourceDeclaration,
 )
+from callersignal.adapters.us import FCCUnwantedCallAggregateAdapter
 from callersignal.evidence.ledger import EvidenceLedger
+from callersignal.fcc_catalog import build_fcc_catalog
 from callersignal.lookup import LookupService
 
 ROOT = Path(__file__).resolve().parents[2]
 NOW = datetime(2026, 8, 27, 9, 0, tzinfo=UTC)
 
 
-def service(*, adapters=None, ledger=None) -> LookupService:
+def service(*, adapters=None, ledger=None, now: datetime = NOW) -> LookupService:
     return LookupService(
         adapters=adapters,
         ledger=ledger,
-        clock=lambda: NOW,
+        clock=lambda: now,
         lookup_id_factory=lambda: "lkp_integration-example",
     )
 
@@ -97,11 +100,102 @@ def test_us_lookup_preserves_plan_scope_and_reserved_line_scope() -> None:
     }
     assert result["assessment"]["risk"]["state"] == "insufficient_evidence"
     assert result["assessment"]["risk"]["reason_codes"] == [
-        "no_risk_capable_source_checked"
+        "source_unavailable"
     ]
+    assert result["sources_checked"][1]["source_id"] == (
+        "fcc_unwanted_call_complaints"
+    )
+    assert result["sources_checked"][1]["risk_capable"] is True
+    assert result["sources_checked"][1]["status"] == "unavailable"
     assert result["assessment"]["risk"]["recommended_action"]["code"] == (
         "treat_as_unknown"
     )
+    lookup_validator().validate(result)
+
+
+def _fcc_adapter(tmp_path: Path) -> FCCUnwantedCallAggregateAdapter:
+    lookup_key = b"test-only-fcc-lookup-key-32-bytes"
+    payload = json.loads(
+        (ROOT / "tests/fixtures/fcc_unwanted_calls_sample.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    payload["metadata"]["rowsUpdatedAt"] = int(
+        datetime.fromisoformat(
+            payload.pop("source_updated_at").replace("Z", "+00:00")
+        ).timestamp()
+    )
+
+    def fetch_json(url: str, params: dict[str, str]) -> Any:
+        if not params:
+            return payload["metadata"]
+        offset = int(params["$offset"])
+        limit = int(params["$limit"])
+        return payload["rows"][offset : offset + limit]
+
+    output = tmp_path / "fcc.sqlite3"
+    build_fcc_catalog(
+        ROOT / "sources/fcc-complaints-manifest.json",
+        output,
+        lookup_key=lookup_key,
+        generated_at=datetime(2026, 8, 29, 12, 0, tzinfo=UTC),
+        fetch_json=fetch_json,
+    )
+    return FCCUnwantedCallAggregateAdapter(
+        catalog_path=output,
+        lookup_key=lookup_key,
+    )
+
+
+def test_one_fcc_source_reports_activity_but_cannot_elevate_risk(
+    tmp_path: Path,
+) -> None:
+    result = service(
+        adapters=(_fcc_adapter(tmp_path),),
+        now=datetime(2026, 8, 29, 13, 0, tzinfo=UTC),
+    ).lookup("202-555-0100", origin_region="US")
+
+    assert result["sources_checked"] == [
+        {
+            "source_id": "fcc_unwanted_call_complaints",
+            "jurisdiction": "US",
+            "status": "matched",
+            "risk_capable": True,
+            "checked_at": "2026-08-29T13:00:00Z",
+            "evidence_ids": [item["evidence_id"] for item in result["evidence"]],
+            "gap_ids": [],
+        }
+    ]
+    assert result["assessment"]["state"] == "reported_activity"
+    assert {item["value"] for item in result["assessment"]["conclusions"]} == {
+        "nuisance",
+        "robocall",
+    }
+    assert result["assessment"]["risk"]["state"] == "insufficient_evidence"
+    assert result["assessment"]["risk"]["reason_codes"] == ["risk_source_gap"]
+    assert result["assessment"]["risk"]["evidence_diversity"] == {
+        "evidence_count": 2,
+        "source_count": 1,
+        "source_ids": ["fcc_unwanted_call_complaints"],
+    }
+    assert result["assessment"]["risk"]["state"] not in {
+        "elevated_signals",
+        "official_warning",
+    }
+    lookup_validator().validate(result)
+
+
+def test_fcc_current_no_match_is_not_a_safe_verdict(tmp_path: Path) -> None:
+    result = service(
+        adapters=(_fcc_adapter(tmp_path),),
+        now=datetime(2026, 8, 29, 13, 0, tzinfo=UTC),
+    ).lookup("202-555-0147", origin_region="US")
+
+    risk = result["assessment"]["risk"]
+    assert risk["state"] == "no_risk_evidence"
+    assert risk["reason_codes"] == ["eligible_risk_sources_no_match"]
+    assert "not proof" in risk["summary"].lower()
+    assert result["evidence"] == []
     lookup_validator().validate(result)
 
 

@@ -93,6 +93,7 @@
             "provider_claim",
             "identity_claim",
             "regulatory_notice",
+            "official_complaint_aggregate",
             "licensed_reputation_observation",
             "community_report_aggregate"
           ]
@@ -173,10 +174,25 @@
             "sample_basis": {
               "enum": [
                 "official_regulatory_observation",
+                "official_consumer_complaint_aggregate",
                 "licensed_provider_aggregate",
                 "moderated_community_aggregate",
                 "source_no_match"
               ]
+            },
+            "aggregate": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "observation_count",
+                "first_observed_at",
+                "last_observed_at"
+              ],
+              "properties": {
+                "observation_count": { "type": "integer", "minimum": 1 },
+                "first_observed_at": { "type": "string", "format": "date-time" },
+                "last_observed_at": { "type": "string", "format": "date-time" }
+              }
             }
           },
           "allOf": [
@@ -232,6 +248,7 @@
               "evidence_class": {
                 "enum": [
                   "regulatory_notice",
+                  "official_complaint_aggregate",
                   "licensed_reputation_observation",
                   "community_report_aggregate"
                 ]
@@ -251,6 +268,28 @@
           },
           "else": {
             "not": { "required": ["reputation"] }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "evidence_class": { "const": "official_complaint_aggregate" }
+            },
+            "required": ["evidence_class"]
+          },
+          "then": {
+            "properties": {
+              "verification_status": { "const": "unverified" },
+              "confidence": { "maximum": 0.49 },
+              "reputation": {
+                "required": ["aggregate"],
+                "properties": {
+                  "sample_basis": {
+                    "const": "official_consumer_complaint_aggregate"
+                  }
+                }
+              }
+            }
           }
         }
       ]

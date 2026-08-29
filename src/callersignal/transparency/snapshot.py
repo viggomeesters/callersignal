@@ -312,7 +312,7 @@ def _reputation_source_coverage(
             licensable += 1
         registry_source = registered.get(service_id, {})
         is_enabled = (
-            reuse_status == "enabled"
+            reuse_status in {"enabled", "public_domain"}
             and integration.get("status") == "enabled"
             and activation.get("decision") == "enabled"
             and not activation.get("blocking_gates")

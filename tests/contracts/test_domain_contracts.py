@@ -159,6 +159,41 @@ def reputation_evidence() -> dict:
     return instance
 
 
+def official_complaint_evidence() -> dict:
+    instance = reputation_evidence()
+    instance["evidence_id"] = "ev_fcc-unverified-aggregate"
+    instance["source"].update(
+        {
+            "source_id": "fcc_unwanted_call_complaints",
+            "name": "FCC unwanted-call complaints",
+            "authority_type": "official_regulator",
+            "locator": "https://opendata.fcc.gov/example",
+            "reuse_basis": "Public-domain United States government dataset fixture.",
+            "license": "Public Domain U.S. Government",
+        }
+    )
+    instance["observation"].update(
+        {
+            "evidence_class": "official_complaint_aggregate",
+            "value": "robocall",
+            "verification_status": "unverified",
+            "confidence": 0.35,
+            "reason_codes": ["aggregate_status_robocall"],
+            "reputation": {
+                "category": "robocall",
+                "source_native_value": "Prerecorded Voice",
+                "sample_basis": "official_consumer_complaint_aggregate",
+                "aggregate": {
+                    "observation_count": 3,
+                    "first_observed_at": "2026-08-20T00:00:00Z",
+                    "last_observed_at": "2026-08-25T23:59:59Z",
+                },
+            },
+        }
+    )
+    return instance
+
+
 def lookup_result() -> dict:
     return {
         "schema_version": "1.0.0",
@@ -356,6 +391,45 @@ def test_reputation_status_has_a_bounded_neutral_contract(
             del instance["observation"]["reputation"]
         with pytest.raises(ValidationError):
             schema_validator.validate(instance)
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("verification_status", "verified"),
+        ("confidence", 0.5),
+    ],
+)
+def test_official_complaint_aggregate_is_always_unverified_and_low_confidence(
+    field: str,
+    value: object,
+    schemas: dict[str, dict],
+    registry: Registry,
+) -> None:
+    schema_validator = validator("source-evidence.schema.json", schemas, registry)
+    schema_validator.validate(official_complaint_evidence())
+    instance = official_complaint_evidence()
+    instance["observation"][field] = value
+
+    with pytest.raises(ValidationError):
+        schema_validator.validate(instance)
+
+
+def test_official_complaint_aggregate_requires_count_dates_and_dedicated_basis(
+    schemas: dict[str, dict], registry: Registry
+) -> None:
+    schema_validator = validator("source-evidence.schema.json", schemas, registry)
+    without_aggregate = official_complaint_evidence()
+    del without_aggregate["observation"]["reputation"]["aggregate"]
+    wrong_basis = official_complaint_evidence()
+    wrong_basis["observation"]["reputation"]["sample_basis"] = (
+        "licensed_provider_aggregate"
+    )
+
+    with pytest.raises(ValidationError):
+        schema_validator.validate(without_aggregate)
+    with pytest.raises(ValidationError):
+        schema_validator.validate(wrong_basis)
 
 
 @pytest.mark.parametrize(

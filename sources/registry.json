@@ -223,9 +223,9 @@
       "source_id": "fcc_unwanted_call_complaints",
       "name": "FCC Consumer Complaints Data - Unwanted Calls",
       "source_type": "official_complaint_aggregate",
-      "status": "authorized",
+      "status": "enabled",
       "adapter_id": "us_fcc_unwanted_call_aggregate",
-      "adapter_enabled": false,
+      "adapter_enabled": true,
       "jurisdictions": ["US"],
       "authority": {
         "type": "official_regulator",

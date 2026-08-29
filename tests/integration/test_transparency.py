@@ -237,7 +237,7 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
     )
 
     assert committed == rebuilt
-    assert committed["coverage"]["risk_capable_source_count"] == 0
+    assert committed["coverage"]["risk_capable_source_count"] == 1
     catalog = committed["coverage"]["number_catalog"]
     assert catalog["status"] == "available"
     assert catalog["imported_range_count"] == 74_984
@@ -248,10 +248,9 @@ def test_committed_public_snapshot_is_a_reproducible_zero_honest_projection() ->
     reputation = committed["coverage"]["reputation_sources"]
     assert reputation["indexed_service_count"] == 16
     assert reputation["licensable_service_count"] == 4
-    assert reputation["enabled_source_count"] == 0
-    assert reputation["unavailable_service_count"] == 16
+    assert reputation["enabled_source_count"] == 1
+    assert reputation["unavailable_service_count"] == 15
     assert {item["reason"] for item in reputation["unavailable_reasons"]} == {
-        "activation_requirements_incomplete",
         "commercial_agreement_and_credentials_required",
         "publisher_permission_required",
     }

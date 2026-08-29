@@ -14,7 +14,12 @@ from typing import Any
 
 import pytest
 
-from callersignal.fcc_catalog import FCCCatalogBuildError, build_fcc_catalog
+from callersignal.fcc_catalog import (
+    FCCCatalogBuildError,
+    FCCCatalogReadError,
+    build_fcc_catalog,
+    lookup_fcc_catalog,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = ROOT / "sources/fcc-complaints-manifest.json"
@@ -106,6 +111,7 @@ def test_builds_hmac_keyed_aggregate_without_plaintext_source_rows(
     assert metadata["unique_number_count"] == "2"
     assert json.loads(metadata["category_counts"]) == {"nuisance": 4, "robocall": 2}
     assert metadata["source_digest"] == summary.source_digest
+    assert len(metadata["metadata_authenticator"]) == 64
 
     database_bytes = output.read_bytes()
     for forbidden in (
@@ -330,3 +336,65 @@ def test_build_script_fails_before_network_when_secret_is_missing(tmp_path: Path
     assert result.stdout == ""
     assert "CALLERSIGNAL_REPUTATION_INDEX_KEY is required" in result.stderr
     assert not (tmp_path / "fcc.sqlite3").exists()
+
+
+def test_read_model_verifies_key_and_returns_only_bounded_aggregate(
+    tmp_path: Path,
+) -> None:
+    summary, output, _ = _build(tmp_path)
+
+    metadata, record = lookup_fcc_catalog(
+        output,
+        "+12025550100",
+        lookup_key=LOOKUP_KEY,
+    )
+
+    assert metadata.generated_at == summary.generated_at
+    assert metadata.source_updated_at == summary.source_updated_at
+    assert metadata.unique_number_count == 2
+    assert metadata.indexed_observation_count == 6
+    assert metadata.category_counts == {"nuisance": 4, "robocall": 2}
+    assert record is not None
+    assert record.nuisance_count == 3
+    assert record.robocall_count == 2
+    assert record.observation_count == 5
+    assert record.first_issue_date == "2026-08-01"
+    assert record.last_issue_date == "2026-08-12"
+    assert not hasattr(record, "phone_number")
+
+
+def test_read_model_rejects_key_mismatch_instead_of_returning_false_no_match(
+    tmp_path: Path,
+) -> None:
+    _, output, _ = _build(tmp_path)
+
+    with pytest.raises(FCCCatalogReadError, match="lookup key"):
+        lookup_fcc_catalog(
+            output,
+            "+12025550100",
+            lookup_key=b"different-test-only-lookup-key-32b",
+        )
+
+
+def test_read_model_rejects_invalid_schema_and_metadata(tmp_path: Path) -> None:
+    _, output, _ = _build(tmp_path)
+    with sqlite3.connect(output) as connection:
+        connection.execute(
+            "UPDATE catalog_metadata SET value = 'wrong-source' WHERE key = 'source_id'"
+        )
+        connection.commit()
+
+    with pytest.raises(FCCCatalogReadError, match="identity"):
+        lookup_fcc_catalog(output, "+12025550100", lookup_key=LOOKUP_KEY)
+
+
+def test_read_model_rejects_authenticated_metadata_tampering(tmp_path: Path) -> None:
+    _, output, _ = _build(tmp_path)
+    with sqlite3.connect(output) as connection:
+        connection.execute(
+            "UPDATE catalog_metadata SET value = '7' WHERE key = 'unique_number_count'"
+        )
+        connection.commit()
+
+    with pytest.raises(FCCCatalogReadError, match="authentication"):
+        lookup_fcc_catalog(output, "+12025550100", lookup_key=LOOKUP_KEY)

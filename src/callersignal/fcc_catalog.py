@@ -17,7 +17,7 @@ from dataclasses import dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 from callersignal.numbering import normalize_phone_number
 
@@ -100,6 +100,72 @@ class FCCCatalogBuildSummary:
     first_issue_date: str
     last_issue_date: str
     source_digest: str
+
+
+@dataclass(frozen=True)
+class FCCCatalogMetadata:
+    """Validated public-safe metadata from one immutable FCC catalogue."""
+
+    generated_at: str
+    source_updated_at: str
+    window_start: str
+    window_end: str
+    unique_number_count: int
+    source_observation_count: int
+    indexed_observation_count: int
+    rejected_observation_count: int
+    category_counts: dict[str, int]
+    first_issue_date: str
+    last_issue_date: str
+    source_digest: str
+
+
+@dataclass(frozen=True)
+class FCCCatalogRecord:
+    """One HMAC-selected complaint aggregate without a plaintext number."""
+
+    nuisance_count: int
+    robocall_count: int
+    observation_count: int
+    first_issue_date: str
+    last_issue_date: str
+
+
+def lookup_fcc_catalog(
+    catalog_path: Path,
+    canonical_e164: str,
+    *,
+    lookup_key: bytes,
+) -> tuple[FCCCatalogMetadata, FCCCatalogRecord | None]:
+    """Read one canonical US number from an immutable HMAC-keyed catalogue."""
+    if not isinstance(lookup_key, bytes) or len(lookup_key) < 32:
+        raise FCCCatalogReadError("FCC catalogue lookup key is missing or too short")
+    if re.fullmatch(r"\+1[0-9]{10}", canonical_e164) is None:
+        raise FCCCatalogReadError("FCC catalogue lookup requires canonical US E.164")
+    path = catalog_path.resolve()
+    if not path.is_file():
+        raise FCCCatalogReadError("Generated FCC catalogue is unavailable")
+    locator = f"file:{quote(str(path))}?mode=ro&immutable=1"
+    keyed_number = hmac.new(
+        lookup_key, canonical_e164.encode("utf-8"), hashlib.sha256
+    ).hexdigest()
+    try:
+        with sqlite3.connect(locator, uri=True) as connection:
+            connection.row_factory = sqlite3.Row
+            metadata = _read_catalog_metadata(connection, lookup_key=lookup_key)
+            row = connection.execute(
+                """
+                SELECT nuisance_count, robocall_count, observation_count,
+                       first_issue_date, last_issue_date
+                  FROM complaint_aggregates
+                 WHERE lookup_key = ?
+                """,
+                (keyed_number,),
+            ).fetchone()
+    except sqlite3.Error as error:
+        raise FCCCatalogReadError(f"Generated FCC catalogue is invalid: {error}") from error
+    record = _validated_catalog_record(dict(row)) if row is not None else None
+    return metadata, record
 
 
 def build_fcc_catalog(
@@ -465,12 +531,15 @@ def _build_database(
                 indexed_observation_count=indexed_observation_count,
                 rejected_number_row_count=rejected_number_row_count,
                 rejected_observation_count=rejected_observation_count,
-                category_counts=dict(sorted(category_counts.items())),
+                category_counts={
+                    category: category_counts.get(category, 0)
+                    for category in sorted(_CATEGORY_VALUES)
+                },
                 first_issue_date=first_issue_date.isoformat(),
                 last_issue_date=last_issue_date.isoformat(),
                 source_digest=source_digest,
             )
-            metadata = _catalog_metadata(manifest, summary)
+            metadata = _catalog_metadata(manifest, summary, lookup_key=lookup_key)
             connection.executemany(
                 "INSERT INTO catalog_metadata (key, value) VALUES (?, ?)",
                 metadata.items(),
@@ -578,9 +647,12 @@ def _source_date(value: str) -> date | None:
 
 
 def _catalog_metadata(
-    manifest: Mapping[str, Any], summary: FCCCatalogBuildSummary
+    manifest: Mapping[str, Any],
+    summary: FCCCatalogBuildSummary,
+    *,
+    lookup_key: bytes,
 ) -> dict[str, str]:
-    return {
+    metadata = {
         "schema_version": "1.0.0",
         "source_id": _SOURCE_ID,
         "dataset_id": _DATASET_ID,
@@ -607,7 +679,221 @@ def _catalog_metadata(
         "source_digest": summary.source_digest,
         "verification_status": "consumer_selected_unverified",
         "lookup_key_algorithm": "HMAC-SHA256",
+        "lookup_key_verifier": hmac.new(
+            lookup_key,
+            b"callersignal-fcc-catalog-key-v1",
+            hashlib.sha256,
+        ).hexdigest(),
     }
+    metadata["metadata_authenticator"] = hmac.new(
+        lookup_key,
+        json.dumps(
+            sorted(metadata.items()),
+            separators=(",", ":"),
+        ).encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    return metadata
+
+
+def _read_catalog_metadata(
+    connection: sqlite3.Connection,
+    *,
+    lookup_key: bytes,
+) -> FCCCatalogMetadata:
+    expected_columns = {
+        "lookup_key",
+        "nuisance_count",
+        "robocall_count",
+        "observation_count",
+        "first_issue_date",
+        "last_issue_date",
+    }
+    columns = {
+        str(row[1])
+        for row in connection.execute("PRAGMA table_info(complaint_aggregates)")
+    }
+    if columns != expected_columns:
+        raise FCCCatalogReadError("Generated FCC catalogue has an unexpected schema")
+    try:
+        values = dict(connection.execute("SELECT key, value FROM catalog_metadata"))
+    except sqlite3.Error as error:
+        raise FCCCatalogReadError("Generated FCC catalogue metadata is unavailable") from error
+    required = {
+        "schema_version",
+        "source_id",
+        "dataset_id",
+        "dataset_url",
+        "metadata_url",
+        "api_url",
+        "license",
+        "license_url",
+        "attribution",
+        "generated_at",
+        "source_updated_at",
+        "window_start",
+        "window_end",
+        "page_count",
+        "grouped_row_count",
+        "unique_number_count",
+        "source_observation_count",
+        "indexed_observation_count",
+        "rejected_number_row_count",
+        "rejected_observation_count",
+        "category_counts",
+        "first_issue_date",
+        "last_issue_date",
+        "source_digest",
+        "verification_status",
+        "lookup_key_algorithm",
+        "lookup_key_verifier",
+        "metadata_authenticator",
+    }
+    if set(values) != required:
+        raise FCCCatalogReadError("Generated FCC catalogue metadata is incomplete")
+    if (
+        values["schema_version"] != "1.0.0"
+        or values["source_id"] != _SOURCE_ID
+        or values["dataset_id"] != _DATASET_ID
+        or values["license"] != _LICENSE
+        or values["license_url"] != _LICENSE_URL
+        or values["attribution"] != _ATTRIBUTION
+        or values["verification_status"] != "consumer_selected_unverified"
+        or values["lookup_key_algorithm"] != "HMAC-SHA256"
+    ):
+        raise FCCCatalogReadError("Generated FCC catalogue identity is unsupported")
+    expected_verifier = hmac.new(
+        lookup_key,
+        b"callersignal-fcc-catalog-key-v1",
+        hashlib.sha256,
+    ).hexdigest()
+    if not hmac.compare_digest(values["lookup_key_verifier"], expected_verifier):
+        raise FCCCatalogReadError("Generated FCC catalogue lookup key does not match")
+    authenticated_values = {
+        key: value for key, value in values.items() if key != "metadata_authenticator"
+    }
+    expected_authenticator = hmac.new(
+        lookup_key,
+        json.dumps(
+            sorted(authenticated_values.items()),
+            separators=(",", ":"),
+        ).encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+    if not hmac.compare_digest(
+        values["metadata_authenticator"], expected_authenticator
+    ):
+        raise FCCCatalogReadError("Generated FCC catalogue metadata authentication failed")
+    if not all(
+        values[name].startswith("https://")
+        for name in ("dataset_url", "metadata_url", "api_url")
+    ):
+        raise FCCCatalogReadError("Generated FCC catalogue source URLs are invalid")
+    try:
+        generated_at = _parse_utc_timestamp(values["generated_at"])
+        source_updated_at = _parse_utc_timestamp(values["source_updated_at"])
+        window_start = date.fromisoformat(values["window_start"])
+        window_end = date.fromisoformat(values["window_end"])
+        first_issue_date = date.fromisoformat(values["first_issue_date"])
+        last_issue_date = date.fromisoformat(values["last_issue_date"])
+        page_count = int(values["page_count"])
+        grouped_row_count = int(values["grouped_row_count"])
+        unique_number_count = int(values["unique_number_count"])
+        source_observation_count = int(values["source_observation_count"])
+        indexed_observation_count = int(values["indexed_observation_count"])
+        rejected_number_row_count = int(values["rejected_number_row_count"])
+        rejected_observation_count = int(values["rejected_observation_count"])
+        category_counts = json.loads(values["category_counts"])
+    except (TypeError, ValueError, json.JSONDecodeError) as error:
+        raise FCCCatalogReadError(
+            "Generated FCC catalogue metadata values are invalid"
+        ) from error
+    if (
+        generated_at < source_updated_at
+        or window_start > window_end
+        or not window_start <= first_issue_date <= last_issue_date <= window_end
+        or page_count <= 0
+        or grouped_row_count <= 0
+        or unique_number_count <= 0
+        or source_observation_count <= 0
+        or indexed_observation_count <= 0
+        or rejected_number_row_count < 0
+        or rejected_observation_count < 0
+        or source_observation_count
+        != indexed_observation_count + rejected_observation_count
+        or not isinstance(category_counts, dict)
+        or set(category_counts) != _CATEGORY_VALUES
+        or any(
+            isinstance(value, bool) or not isinstance(value, int) or value < 0
+            for value in category_counts.values()
+        )
+        or sum(category_counts.values()) != indexed_observation_count
+        or _DIGEST_PATTERN.fullmatch(values["source_digest"]) is None
+    ):
+        raise FCCCatalogReadError("Generated FCC catalogue metadata values are invalid")
+    return FCCCatalogMetadata(
+        generated_at=_timestamp(generated_at),
+        source_updated_at=_timestamp(source_updated_at),
+        window_start=window_start.isoformat(),
+        window_end=window_end.isoformat(),
+        unique_number_count=unique_number_count,
+        source_observation_count=source_observation_count,
+        indexed_observation_count=indexed_observation_count,
+        rejected_observation_count=rejected_observation_count,
+        category_counts=dict(sorted(category_counts.items())),
+        first_issue_date=first_issue_date.isoformat(),
+        last_issue_date=last_issue_date.isoformat(),
+        source_digest=values["source_digest"],
+    )
+
+
+def _validated_catalog_record(row: dict[str, Any]) -> FCCCatalogRecord:
+    expected = {
+        "nuisance_count",
+        "robocall_count",
+        "observation_count",
+        "first_issue_date",
+        "last_issue_date",
+    }
+    if set(row) != expected:
+        raise FCCCatalogReadError("Generated FCC catalogue record schema is invalid")
+    nuisance = row["nuisance_count"]
+    robocall = row["robocall_count"]
+    total = row["observation_count"]
+    if (
+        isinstance(nuisance, bool)
+        or not isinstance(nuisance, int)
+        or nuisance < 0
+        or isinstance(robocall, bool)
+        or not isinstance(robocall, int)
+        or robocall < 0
+        or isinstance(total, bool)
+        or not isinstance(total, int)
+        or total <= 0
+        or nuisance + robocall != total
+    ):
+        raise FCCCatalogReadError("Generated FCC catalogue record counts are invalid")
+    try:
+        first = date.fromisoformat(row["first_issue_date"])
+        last = date.fromisoformat(row["last_issue_date"])
+    except (TypeError, ValueError) as error:
+        raise FCCCatalogReadError("Generated FCC catalogue record dates are invalid") from error
+    if first > last:
+        raise FCCCatalogReadError("Generated FCC catalogue record dates are invalid")
+    return FCCCatalogRecord(
+        nuisance_count=nuisance,
+        robocall_count=robocall,
+        observation_count=total,
+        first_issue_date=first.isoformat(),
+        last_issue_date=last.isoformat(),
+    )
+
+
+def _parse_utc_timestamp(value: str) -> datetime:
+    parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if parsed.tzinfo is None or parsed.utcoffset() is None:
+        raise ValueError("timestamp must be timezone-aware")
+    return parsed.astimezone(UTC)
 
 
 def _fetch(fetcher: JSONFetcher, url: str, params: dict[str, str]) -> Any:

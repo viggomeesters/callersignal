@@ -6,6 +6,8 @@ This document records CallerSignal's engineering posture, not legal advice or a 
 
 Public lookup is read-only and ephemeral. Public report submission, durable watch subscriptions, organisation challenges, and outbound notifications are disabled. Their processing purposes and engineering controls are documented below, but their lawful-basis status is **not approved**. Code proof does not authorize real personal-data processing.
 
+The enabled FCC public-domain importer is a separate source-specific path, not approval for first-party reporting. It minimizes the official complaint export during the build: only caller ID, issue date, and call/message type enter the process; valid displayed numbers are immediately replaced with secret-keyed HMAC values; and no plaintext number inventory, raw complaint row, narrative, ticket, advertiser field, reporter attribute, or requester history is retained. Public output is limited to neutral aggregate counts, dates, provenance, freshness, and explicit unverified/spoofing caveats.
+
 ## Data map
 
 | Data class | Purpose and fields | Lawful-basis review | Retention | Access and publication |

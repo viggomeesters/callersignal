@@ -91,17 +91,17 @@ def test_public_visibility_and_robots_never_enable_ingestion(index: dict) -> Non
     )
 
 
-def test_public_domain_fcc_api_is_the_only_authorized_index_route(index: dict) -> None:
-    authorized = [
+def test_public_domain_fcc_api_is_the_only_enabled_index_route(index: dict) -> None:
+    enabled = [
         service
         for service in index["services"]
-        if service["integration"]["status"] == "authorized"
+        if service["integration"]["status"] == "enabled"
     ]
 
-    assert [service["service_id"] for service in authorized] == [
+    assert [service["service_id"] for service in enabled] == [
         "fcc_unwanted_call_complaints"
     ]
-    source = authorized[0]
+    source = enabled[0]
     assert source["rights"]["reuse_status"] == "public_domain"
     assert source["integration"]["channel"] == "public_data_api"
     assert source["integration"]["requires_contract"] is False

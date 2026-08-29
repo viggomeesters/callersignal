@@ -7,6 +7,8 @@ from pathlib import Path
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker, ValidationError
 
+from callersignal.adapters.us import FCCUnwantedCallAggregateAdapter
+
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = ROOT / "sources/fcc-complaints-manifest.json"
 SCHEMA_PATH = ROOT / "schemas/fcc-complaints-manifest.schema.json"
@@ -43,14 +45,22 @@ def test_manifest_identity_and_rights_match_enabled_records(manifest: dict) -> N
     assert manifest["dataset_id"] == "vakf-fz8e"
     assert manifest["publisher"] == "Federal Communications Commission"
     assert manifest["license"]["name"] == "Public Domain U.S. Government"
-    assert source["status"] == "authorized"
+    assert source["status"] == "enabled"
     assert source["source_type"] == "official_complaint_aggregate"
     assert source["authority"]["name"] == manifest["publisher"]
     assert source["reuse"]["license"] == manifest["license"]["name"]
     assert service["rights"]["reuse_status"] == "public_domain"
-    assert service["integration"]["status"] == "authorized"
+    assert service["integration"]["status"] == "enabled"
     assert service["integration"]["requires_contract"] is False
     assert service["integration"]["requires_credentials"] is False
+
+    declaration = FCCUnwantedCallAggregateAdapter.declaration
+    assert source["adapter_id"] == declaration.adapter_id
+    assert source["adapter_enabled"] is True
+    assert source["stable_url"] == declaration.source_url
+    assert source["reuse"]["basis"] == declaration.reuse_basis
+    assert source["reuse"]["license"] == declaration.license
+    assert declaration.permitted_claim_types == ("reputation_status",)
 
 
 def test_manifest_allows_only_minimized_input_fields(manifest: dict) -> None:

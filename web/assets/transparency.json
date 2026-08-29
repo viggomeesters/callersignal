@@ -5,8 +5,8 @@
   "methodology_version": "1.0.0",
   "registry_reviewed_at": "2026-08-29",
   "coverage": {
-    "enabled_source_count": 3,
-    "risk_capable_source_count": 0,
+    "enabled_source_count": 4,
+    "risk_capable_source_count": 1,
     "sources": [
       {
         "source_id": "acm_number_register",
@@ -20,6 +20,22 @@
         "freshness": "current",
         "freshness_max_age_seconds": 2592000,
         "gaps": []
+      },
+      {
+        "source_id": "fcc_unwanted_call_complaints",
+        "name": "FCC Consumer Complaints Data - Unwanted Calls",
+        "jurisdictions": [
+          "US"
+        ],
+        "risk_capable": true,
+        "runtime_status": "unavailable",
+        "last_successful_ingest": null,
+        "freshness": "unavailable",
+        "freshness_max_age_seconds": 2592000,
+        "gaps": [
+          "last_successful_ingest_unavailable",
+          "source_currently_unavailable"
+        ]
       },
       {
         "source_id": "nanpa_public_numbering",
@@ -76,13 +92,16 @@
       {
         "jurisdiction": "US",
         "enabled_sources": [
+          "fcc_unwanted_call_complaints",
           "nanpa_public_numbering"
         ],
-        "risk_capable_sources": [],
+        "risk_capable_sources": [
+          "fcc_unwanted_call_complaints"
+        ],
         "last_successful_ingest": "2026-08-27T08:00:00Z",
-        "freshness": "current",
+        "freshness": "mixed",
         "gaps": [
-          "no_risk_capable_source"
+          "source_currently_unavailable"
         ]
       }
     ],
@@ -92,8 +111,8 @@
         "jurisdictions": [
           "US"
         ],
-        "status": "authorized",
-        "gap": "source_disabled"
+        "status": "unavailable",
+        "gap": "source_currently_unavailable"
       },
       {
         "source_id": "wieheeftmijgebeld_nl",
@@ -141,13 +160,9 @@
       "index_reviewed_at": "2026-08-29",
       "indexed_service_count": 16,
       "licensable_service_count": 4,
-      "enabled_source_count": 0,
-      "unavailable_service_count": 16,
+      "enabled_source_count": 1,
+      "unavailable_service_count": 15,
       "unavailable_reasons": [
-        {
-          "reason": "activation_requirements_incomplete",
-          "service_count": 1
-        },
         {
           "reason": "commercial_agreement_and_credentials_required",
           "service_count": 4
@@ -165,8 +180,8 @@
             "US"
           ],
           "integration_channel": "public_data_api",
-          "status": "unavailable",
-          "reason": "activation_requirements_incomplete",
+          "status": "enabled",
+          "reason": "all_activation_gates_passed",
           "blocking_gates": []
         },
         {

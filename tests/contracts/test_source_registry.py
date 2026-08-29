@@ -221,14 +221,14 @@ def test_current_registry_has_no_enabled_commercial_reputation_feed(registry: di
     assert all(source["feed"] is None for source in reputation_sources)
 
 
-def test_fcc_source_is_authorized_only_as_unverified_official_complaint_aggregate(
+def test_fcc_source_is_enabled_only_as_unverified_official_complaint_aggregate(
     registry: dict,
 ) -> None:
     source = _sources_by_id(registry)["fcc_unwanted_call_complaints"]
 
     assert source["source_type"] == "official_complaint_aggregate"
-    assert source["status"] == "authorized"
-    assert source["adapter_enabled"] is False
+    assert source["status"] == "enabled"
+    assert source["adapter_enabled"] is True
     assert source["risk_capable"] is True
     assert source["feed"] is None
     assert source["evidence_classes"] == [

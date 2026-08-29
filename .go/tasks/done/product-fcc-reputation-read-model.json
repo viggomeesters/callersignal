@@ -1,0 +1,135 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "required",
+  "id": "product-fcc-reputation-read-model",
+  "project": "callersignal",
+  "status": "done",
+  "order": 800,
+  "depends_on": [
+    "product-fcc-complaint-aggregate-import"
+  ],
+  "summary": "Use FCC aggregates as conservative reputation evidence",
+  "description": "Activate the FCC aggregate in canonical US lookups and map only source-native unwanted-call and robocall observations into bounded reputation evidence without treating complaint count as proof, corroboration, identity, or safety.",
+  "scope": {
+    "read": [
+      "src/callersignal/adapters/us.py",
+      "src/callersignal/fcc_catalog.py",
+      "src/callersignal/assessment.py",
+      "schemas/source-evidence.schema.json"
+    ],
+    "modify": [
+      "src/callersignal/adapters/us.py",
+      "src/callersignal/lookup.py",
+      "src/callersignal/cli.py",
+      "src/callersignal/fcc_catalog.py",
+      "schemas/source-evidence.schema.json",
+      "schemas/source-registry.schema.json",
+      "schemas/caller-report-service-index.schema.json",
+      "sources/caller-report-services.json",
+      "sources/registry.json",
+      "tests/unit/test_fcc_catalog.py",
+      "tests/contracts/test_domain_contracts.py",
+      "tests/contracts/test_source_registry.py",
+      "tests/contracts/test_caller_report_service_index.py",
+      "tests/contracts/test_fcc_source_contract.py",
+      "tests/adapters/test_us.py",
+      "tests/integration/test_lookup.py",
+      "tests/integration/test_cli.py",
+      "tests/integration/test_mcp.py",
+      "tests/integration/test_http_api.py",
+      "tests/integration/test_transparency.py",
+      "tests/e2e/test_web.py",
+      "package.json",
+      "vercel.json",
+      "scripts/stage_vercel_static.mjs",
+      "src/callersignal/transparency/snapshot.py",
+      "web/assets/transparency.json",
+      "docs/methodology.md",
+      "docs/data-architecture.md",
+      "docs/source-rights.md",
+      "docs/privacy.md"
+    ]
+  },
+  "acceptance": [
+    "Canonical US lookup reads the immutable HMAC-keyed FCC projection and returns only current source-native nuisance or robocall observations with count basis, provenance, freshness, bounded confidence, and explicit unverified-complaint and spoofing limitations.",
+    "One FCC source cannot independently produce elevated_signals or official_warning, complaint count cannot substitute for source diversity, no-match never becomes safe, and unsupported categories are rejected.",
+    "Missing key, missing/stale/invalid catalogue, invalid digest/metadata, absent number, malformed input, and conflicting observations fail closed with typed source coverage."
+  ],
+  "verification": [
+    "uv run pytest tests/integration/test_lookup.py tests/adapters/test_us.py -q && make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-29T15:42:08+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "review",
+  "review_history": [],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-29T16:03:54+02:00",
+      "task_id": "product-fcc-reputation-read-model",
+      "agent": "codex",
+      "summary": "changed_files=docs/data-architecture.md,docs/methodology.md,docs/privacy.md,docs/source-rights.md,schemas/caller-report-service-index.schema.json,schemas/source-evidence.schema.json,schemas/source-registry.schema.json,sources/caller-report-services.json,sources/registry.json,src/callersignal/adapters/base.py,src/callersignal/adapters/us.py,src/callersignal/cli.py,src/callersignal/fcc_catalog.py,src/callersignal/lookup.py,src/callersignal/transparency/snapshot.py,tests/adapters/test_us.py,tests/contracts/test_caller_report_service_index.py,tests/contracts/test_domain_contracts.py,tests/contracts/test_fcc_source_contract.py,tests/contracts/test_source_registry.py,tests/e2e/test_web.py,tests/integration/test_cli.py,tests/integration/test_http_api.py,tests/integration/test_lookup.py,tests/integration/test_transparency.py,tests/unit/test_fcc_catalog.py,web/assets/transparency.json,.go/tasks/active/product-fcc-reputation-read-model.json; verification=uv run pytest focused suite (119 passed), make check (288 Python and 8 web tests passed), full FCC build (236156 HMAC-keyed numbers and 258137 indexed observations), sqlite integrity_check ok, git diff --check passed, ./go validate . passed; critic=approved after checking fixed low confidence, unverified-only FCC semantics, HMAC key verification, authenticated metadata, immutable point lookup, source-native categories, one-source non-elevation, no-match-not-safe, fail-closed key/catalog/freshness paths, public-domain activation accounting, plaintext-number exclusion, and stale documentation; Self-reflect: Activation truth must be tested across rights vocabulary, registry state, runtime availability, and public coverage because a public-domain source can be operational without carrying the licensed-feed reuse label.",
+      "changed_files": [
+        "docs/data-architecture.md",
+        "docs/methodology.md",
+        "docs/privacy.md",
+        "docs/source-rights.md",
+        "schemas/caller-report-service-index.schema.json",
+        "schemas/source-evidence.schema.json",
+        "schemas/source-registry.schema.json",
+        "sources/caller-report-services.json",
+        "sources/registry.json",
+        "src/callersignal/adapters/base.py",
+        "src/callersignal/adapters/us.py",
+        "src/callersignal/cli.py",
+        "src/callersignal/fcc_catalog.py",
+        "src/callersignal/lookup.py",
+        "src/callersignal/transparency/snapshot.py",
+        "tests/adapters/test_us.py",
+        "tests/contracts/test_caller_report_service_index.py",
+        "tests/contracts/test_domain_contracts.py",
+        "tests/contracts/test_fcc_source_contract.py",
+        "tests/contracts/test_source_registry.py",
+        "tests/e2e/test_web.py",
+        "tests/integration/test_cli.py",
+        "tests/integration/test_http_api.py",
+        "tests/integration/test_lookup.py",
+        "tests/integration/test_transparency.py",
+        "tests/unit/test_fcc_catalog.py",
+        "web/assets/transparency.json",
+        ".go/tasks/active/product-fcc-reputation-read-model.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest focused suite (119 passed), make check (288 Python and 8 web tests passed), full FCC build (236156 HMAC-keyed numbers and 258137 indexed observations), sqlite integrity_check ok, git diff --check passed, ./go validate . passed",
+        "result": "uv run pytest focused suite (119 passed), make check (288 Python and 8 web tests passed), full FCC build (236156 HMAC-keyed numbers and 258137 indexed observations), sqlite integrity_check ok, git diff --check passed, ./go validate . passed"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": null,
+        "model": null,
+        "billing_mode": "unknown"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "unknown",
+        "billing_mode": "unknown",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after checking fixed low confidence, unverified-only FCC semantics, HMAC key verification, authenticated metadata, immutable point lookup, source-native categories, one-source non-elevation, no-match-not-safe, fail-closed key/catalog/freshness paths, public-domain activation accounting, plaintext-number exclusion, and stale documentation",
+        "skip_reason": null
+      }
+    }
+  ]
+}

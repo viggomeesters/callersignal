@@ -132,6 +132,8 @@ def _human_coverage(snapshot: Mapping[str, Any]) -> str:
         f"{item['reason'].replace('_', ' ')} ({item['service_count']})"
         for item in reputation["unavailable_reasons"]
     )
+    enabled_reputation_sources = reputation["enabled_source_count"]
+    reputation_feed_label = "feed" if enabled_reputation_sources == 1 else "feeds"
     return "\n".join(
         (
             f"Official NL number catalogue: {catalog['status']}",
@@ -144,7 +146,10 @@ def _human_coverage(snapshot: Mapping[str, Any]) -> str:
             "Caller-reputation coverage: unavailable",
             f"- {reputation['indexed_service_count']:,} caller-report services indexed",
             f"- {reputation['licensable_service_count']:,} advertised licensing routes",
-            f"- {reputation['enabled_source_count']:,} reputation feeds enabled",
+            (
+                f"- {enabled_reputation_sources:,} reputation "
+                f"{reputation_feed_label} enabled"
+            ),
             f"- Unavailable reasons: {reasons}",
             "",
             "Coverage counts are not trust or safety scores.",

@@ -11,7 +11,10 @@ from uuid import uuid4
 from callersignal.adapters.base import CountryAdapter, EvidenceGap
 from callersignal.adapters.gb import UnitedKingdomProtectedNumbersAdapter
 from callersignal.adapters.nl import NetherlandsNumberRegisterAdapter
-from callersignal.adapters.us import UnitedStatesNumberingAdapter
+from callersignal.adapters.us import (
+    FCCUnwantedCallAggregateAdapter,
+    UnitedStatesNumberingAdapter,
+)
 from callersignal.assessment import assess_risk
 from callersignal.evidence.ledger import EvidenceLedger
 from callersignal.numbering import normalize_phone_number
@@ -49,6 +52,7 @@ class LookupService:
             NetherlandsNumberRegisterAdapter(),
             UnitedKingdomProtectedNumbersAdapter(),
             UnitedStatesNumberingAdapter(),
+            FCCUnwantedCallAggregateAdapter(),
         )
         self._ledger = ledger
         self._clock = clock or (lambda: datetime.now(UTC))

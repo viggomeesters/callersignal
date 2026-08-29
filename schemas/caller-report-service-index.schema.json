@@ -226,7 +226,7 @@
             "properties": {
               "rights": {
                 "properties": {
-                  "reuse_status": { "const": "enabled" },
+                  "reuse_status": { "enum": ["enabled", "public_domain"] },
                   "permission_reference": { "$ref": "#/$defs/httpsUri" }
                 }
               },
@@ -281,13 +281,13 @@
                   "channel": { "const": "public_data_api" },
                   "requires_contract": { "const": false },
                   "requires_credentials": { "const": false },
-                  "status": { "const": "authorized" },
+                  "status": { "enum": ["authorized", "enabled"] },
                   "permitted_fields": { "minItems": 1 }
                 }
               },
               "activation": {
                 "properties": {
-                  "decision": { "const": "authorized_for_build" },
+                  "decision": { "enum": ["authorized_for_build", "enabled"] },
                   "blocking_gates": { "maxItems": 0 }
                 }
               }
