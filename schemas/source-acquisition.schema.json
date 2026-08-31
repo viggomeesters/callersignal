@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://callersignal.dev/schemas/source-acquisition.schema.json",
+  "title": "CallerSignal source acquisition contract",
+  "description": "A fail-closed design contract for evaluating a licensed risk source before registry enablement.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "kind",
+    "source_id",
+    "jurisdiction",
+    "reviewed_at",
+    "status",
+    "selection",
+    "primary_evidence",
+    "proposed_contract",
+    "activation_gates",
+    "runtime",
+    "next_action"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0.0" },
+    "kind": { "const": "source_acquisition" },
+    "source_id": { "type": "string", "pattern": "^[a-z0-9]+(?:[_-][a-z0-9]+)*$" },
+    "jurisdiction": { "type": "string", "pattern": "^[A-Z]{2}$" },
+    "reviewed_at": { "type": "string", "format": "date" },
+    "status": { "enum": ["selected_for_contract_review", "rejected"] },
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "reasons", "alternatives"],
+      "properties": {
+        "decision": { "type": "string", "minLength": 30 },
+        "reasons": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 20 }
+        },
+        "alternatives": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source_id", "decision", "reason"],
+            "properties": {
+              "source_id": { "type": "string", "minLength": 3 },
+              "decision": { "enum": ["defer", "reject"] },
+              "reason": { "type": "string", "minLength": 30 }
+            }
+          }
+        }
+      }
+    },
+    "primary_evidence": {
+      "type": "array",
+      "minItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url", "publisher", "claim", "checked_at"],
+        "properties": {
+          "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+          "publisher": { "type": "string", "minLength": 3 },
+          "claim": { "type": "string", "minLength": 30 },
+          "checked_at": { "type": "string", "format": "date" }
+        }
+      }
+    },
+    "proposed_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "integration_channel",
+        "request_mode",
+        "subject_format",
+        "evidence_class",
+        "permitted_provider_fields",
+        "prohibited_provider_fields",
+        "negative_score_floor",
+        "score_ceiling",
+        "positive_score_policy",
+        "category_policy",
+        "no_match_policy",
+        "assessment_limit",
+        "storage",
+        "logging"
+      ],
+      "properties": {
+        "integration_channel": { "const": "licensed_live_api" },
+        "request_mode": { "const": "transient_point_lookup" },
+        "subject_format": { "const": "e164" },
+        "evidence_class": { "const": "licensed_reputation_observation" },
+        "permitted_provider_fields": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "opaque_source_record_id",
+              "reputation_score",
+              "category_label",
+              "observed_at"
+            ]
+          }
+        },
+        "prohibited_provider_fields": {
+          "type": "array",
+          "minItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "caller_name",
+              "comment_text",
+              "comment_author",
+              "area",
+              "postal_code",
+              "lookup_count",
+              "raw_phone_inventory",
+              "raw_provider_payload",
+              "positive_safety_label"
+            ]
+          }
+        },
+        "negative_score_floor": { "type": "integer", "minimum": 1, "maximum": 9 },
+        "score_ceiling": { "const": 9 },
+        "positive_score_policy": { "const": "discard_not_safe_evidence" },
+        "category_policy": { "const": "allowlist_and_contract_mapping_required" },
+        "no_match_policy": { "const": "insufficient_evidence" },
+        "assessment_limit": { "const": "unverified_single_source_observation_only" },
+        "storage": { "const": "no_plaintext_number_raw_response_or_lookup_history" },
+        "logging": { "const": "metadata_only_without_number_or_response_body" }
+      }
+    },
+    "activation_gates": {
+      "type": "array",
+      "minItems": 13,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["gate_id", "status", "requirement"],
+        "properties": {
+          "gate_id": {
+            "enum": [
+              "executed_agreement",
+              "extraction_right",
+              "cache_right",
+              "derived_label_right",
+              "public_display_right",
+              "nl_territory",
+              "attribution_terms",
+              "privacy_and_dpa",
+              "correction_objection_deletion",
+              "audit_and_provenance",
+              "termination_and_purge",
+              "credential_and_endpoint",
+              "fields_freshness_and_rate_limits"
+            ]
+          },
+          "status": { "enum": ["required", "passed"] },
+          "requirement": { "type": "string", "minLength": 30 },
+          "evidence_reference": {
+            "oneOf": [
+              { "type": "string", "format": "uri", "pattern": "^https://" },
+              { "type": "null" }
+            ]
+          }
+        }
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "registry_entry_present", "adapter", "expected_network_requests"],
+      "properties": {
+        "enabled": { "const": false },
+        "registry_entry_present": { "const": false },
+        "adapter": { "const": "generic_authorized_reputation_feed" },
+        "expected_network_requests": { "const": 0 }
+      }
+    },
+    "next_action": { "type": "string", "minLength": 40 }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "status": { "const": "selected_for_contract_review" } },
+        "required": ["status"]
+      },
+      "then": {
+        "properties": {
+          "runtime": {
+            "properties": {
+              "enabled": { "const": false },
+              "registry_entry_present": { "const": false },
+              "expected_network_requests": { "const": 0 }
+            }
+          },
+          "activation_gates": {
+            "contains": {
+              "type": "object",
+              "properties": { "status": { "const": "required" } },
+              "required": ["status"]
+            }
+          }
+        }
+      }
+    }
+  ]
+}

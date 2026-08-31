@@ -144,7 +144,7 @@
       ]
     },
     "reputation_sources": {
-      "index_reviewed_at": "2026-08-29",
+      "index_reviewed_at": "2026-08-31",
       "indexed_service_count": 16,
       "licensable_service_count": 4,
       "enabled_source_count": 1,
@@ -274,7 +274,9 @@
         {
           "service_id": "tellows",
           "name": "tellows",
-          "jurisdictions": [],
+          "jurisdictions": [
+            "NL"
+          ],
           "integration_channel": "licensed_api",
           "status": "unavailable",
           "reason": "commercial_agreement_and_credentials_required",

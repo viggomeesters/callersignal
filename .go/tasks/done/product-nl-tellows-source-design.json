@@ -1,0 +1,135 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "product-nl-tellows-source-design",
+  "project": "callersignal",
+  "order": 755,
+  "status": "done",
+  "summary": "Design and validate the first additional Dutch risk source",
+  "description": "Select tellows as the first Netherlands licensed-risk candidate, record a machine-valid acquisition contract from current primary-source evidence, define the minimum privacy-safe field and semantic boundary, and prove the source remains inert until written rights, privacy, takedown, provenance, credentials, and contract gates pass.",
+  "scope": {
+    "read": [
+      "sources/caller-report-services.json",
+      "sources/registry.json",
+      "schemas/caller-report-service-index.schema.json",
+      "schemas/source-registry.schema.json",
+      "src/callersignal/reputation/ingest.py",
+      "src/callersignal/reputation/feed.py",
+      "tests/contracts/test_caller_report_service_index.py",
+      "tests/integration/test_reputation_ingest.py",
+      "docs/source-rights.md",
+      "docs/data-safety.md",
+      "docs/architecture.md",
+      ".go/architecture/briefs/public-evidence-platform.json"
+    ],
+    "modify": [
+      "sources/caller-report-services.json",
+      "sources/tellows-nl-acquisition.json",
+      "schemas/source-acquisition.schema.json",
+      "tests/contracts/test_source_acquisition.py",
+      "docs/source-rights.md",
+      "docs/data-safety.md",
+      "docs/implementation-plan.md",
+      "scripts/validate_repository.py",
+      "tests/test_repository_structure.py",
+      "web/assets/transparency.json"
+    ]
+  },
+  "depends_on": [
+    "product-authorized-reputation-ingestion"
+  ],
+  "acceptance": [
+    "A machine-valid acquisition contract selects tellows for NL using current primary-source evidence and explicitly records why Hiya is not the first fit.",
+    "The contract admits only bounded aggregate risk fields and forbids names, comments, location, lookup demand, raw inventories, positive safety claims, and copied production payloads.",
+    "The source remains disabled and makes zero runtime requests until an executed agreement explicitly covers extraction, caching, derived labels, public display, territory, attribution, correction, deletion, audit, termination, and credentials.",
+    "Source-specific schema tests, existing source-registry and ingestion tests, architecture conformance, and make check pass."
+  ],
+  "verification": [
+    "uv run pytest tests/contracts/test_source_acquisition.py tests/contracts/test_caller_report_service_index.py tests/contracts/test_source_registry.py tests/integration/test_reputation_ingest.py -q",
+    "make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-31T14:30:08+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-31T14:39:39+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved: schema-valid acquisition contract; primary tellows and Hiya evidence; 13 required activation gates; tellows remains rights_not_enabled with zero transport construction; 36 focused and 306 full Python tests plus 8 web tests passed; architecture conformance passed with zero deviations and waivers.",
+      "transaction_id": "173f454e8ae04e318315a56895059eff"
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-31T14:39:39+02:00",
+      "task_id": "product-nl-tellows-source-design",
+      "agent": "codex",
+      "summary": "summary=Selected and validated tellows as the first Dutch licensed-risk contract candidate while keeping all runtime authority disabled; verification=uv run pytest tests/contracts/test_source_acquisition.py tests/contracts/test_caller_report_service_index.py tests/contracts/test_source_registry.py tests/integration/test_reputation_ingest.py -q && PATH=\"/opt/homebrew/bin:$PATH\" make check; result=rc=0, 36 focused tests, 306 total Python tests, 8 web tests, workflow validation, documentation, assets, transparency reproducibility, and public-safety gates passed; critic=approved after primary-source fit review, provenance-date correction, fail-closed activation readback, phone-record scan, secret/privacy review, and architecture conformance; self_reflect=no durable agent/process improvement needed, no skill/memory/config change; runtime=codex-desktop; billing_mode=subscription",
+      "changed_files": [
+        ".go/architecture/events.jsonl",
+        ".go/hierarchy.json",
+        ".go/runs/events.jsonl",
+        "docs/data-safety.md",
+        "docs/implementation-plan.md",
+        "docs/source-rights.md",
+        "scripts/validate_repository.py",
+        "sources/caller-report-services.json",
+        "tests/test_repository_structure.py",
+        "web/assets/transparency.json",
+        ".go/tasks/active/product-nl-tellows-source-design.json",
+        "schemas/source-acquisition.schema.json",
+        "sources/tellows-nl-acquisition.json",
+        "tests/contracts/test_source_acquisition.py"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/contracts/test_source_acquisition.py tests/contracts/test_caller_report_service_index.py tests/contracts/test_source_registry.py tests/integration/test_reputation_ingest.py -q && PATH=\"/opt/homebrew/bin:$PATH\" make check",
+        "result": "rc=0, 36 focused tests, 306 total Python tests, 8 web tests, workflow validation, documentation, assets, transparency reproducibility, and public-safety gates passed"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": "codex-desktop",
+        "model": null,
+        "billing_mode": "subscription"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "codex-desktop",
+        "billing_mode": "subscription",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after primary-source fit review, provenance-date correction, fail-closed activation readback, phone-record scan, secret/privacy review, and architecture conformance",
+        "skip_reason": null
+      }
+    }
+  ],
+  "architecture": {
+    "impact": "material",
+    "scope_refs": [
+      "public-evidence-platform"
+    ],
+    "concerns": [
+      "integration",
+      "data",
+      "security"
+    ],
+    "decision_ids": [
+      "public-evidence-boundary-v1"
+    ],
+    "conformance_required": true,
+    "human_gate": "none"
+  }
+}

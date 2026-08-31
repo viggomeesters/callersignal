@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0.0",
   "kind": "caller_report_service_index",
-  "reviewed_at": "2026-08-29",
+  "reviewed_at": "2026-08-31",
   "discovery": {
     "scope": "Dutch and international consumer services that expose caller-report, caller-reputation, spam-label, or business-verification capabilities.",
     "queries": [
@@ -181,7 +181,9 @@
       "name": "tellows",
       "service_url": "https://www.tellows.com/",
       "coverage_scope": "international",
-      "jurisdictions": [],
+      "jurisdictions": [
+        "NL"
+      ],
       "languages": ["de", "en", "es", "fr", "it", "nl"],
       "capabilities": ["number_lookup", "community_reports", "aggregate_reputation", "category_labels", "licensed_api", "partner_feed"],
       "public_report_pages_present": true,
@@ -193,9 +195,9 @@
       },
       "rights": {
         "terms_url": "https://www.tellows.com/s/about-en/tellows-api-partnership-program",
-        "reviewed_at": "2026-08-29",
+        "reviewed_at": "2026-08-31",
         "reuse_status": "licensed_access_available",
-        "evidence": "The operator advertises Scorelist, Live, and Reputation API partnership products; CallerSignal has no agreement or credentials.",
+        "evidence": "The operator runs a Dutch service and advertises country-filtered Scorelist and Live API partnership products; CallerSignal has no agreement, approved downstream rights, or credentials.",
         "permission_reference": null
       },
       "integration": {
@@ -208,7 +210,7 @@
       "activation": {
         "decision": "evaluate_license",
         "blocking_gates": ["commercial_terms", "credentials", "privacy", "takedown", "provenance"],
-        "next_action": "Request pricing and written rights for aggregate score, category, count, freshness, caching, and public display."
+        "next_action": "Use sources/tellows-nl-acquisition.json to request written rights and operational terms for a minimized Dutch Live API point lookup."
       }
     },
     {

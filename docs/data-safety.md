@@ -48,6 +48,8 @@ A country adapter cannot ship until it has an `enabled` entry in the machine-val
 
 Scraping or republishing third-party caller databases without explicit permission is outside scope. A permissive `robots.txt` only describes crawl access; it is not a license or privacy approval. Search snippets, ratings, report counts, phone-number lists, user narratives, and derived aggregates remain prohibited when reuse rights or personal-data status are unclear. Such a source must be `permission_required`, with no adapter, no evidence classes, zero permitted fields, and no copied records. See [`docs/source-rights.md`](source-rights.md) for the enablement procedure and current decisions.
 
+Licensed-source acquisition contracts are also fail-closed. A selected commercial candidate remains outside the enabled registry until a signed agreement and named privacy approval cover the exact territory, fields, processing, caching, public display, derived labels, attribution, correction, deletion, audit, termination, and purge behavior. The tellows NL candidate admits only an opaque source record identifier, a current risk score, an allowlisted category, and observation time. It explicitly rejects names, comments, authors, location, lookup volume, raw number inventories, raw responses, and positive safety labels. Selection alone must construct no adapter and generate no network request.
+
 Official and licensed feeds are not blanket-approved either. Only the fields and evidence classes named in the registry may enter fixtures or public results. Expanding a source's fields, quantity, cadence, use case, or jurisdiction requires a new review before ingestion.
 
 ### Public complaint aggregates

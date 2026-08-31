@@ -1,0 +1,171 @@
+{
+  "schema_version": "1.0.0",
+  "kind": "source_acquisition",
+  "source_id": "tellows",
+  "jurisdiction": "NL",
+  "reviewed_at": "2026-08-31",
+  "status": "selected_for_contract_review",
+  "selection": {
+    "decision": "Evaluate a tellows Live API partnership as CallerSignal's first additional Dutch risk source; do not activate it before every contractual and operational gate passes.",
+    "reasons": [
+      "tellows operates a Dutch-language caller-report service and advertises access to reported numbers across more than fifty countries.",
+      "The provider advertises Live and Scorelist API partnerships for caller protection, lookup integrations, and country-filtered results.",
+      "The existing generic licensed-feed boundary can consume a minimized point-lookup projection without adding provider-specific verdict logic."
+    ],
+    "alternatives": [
+      {
+        "source_id": "hiya",
+        "decision": "defer",
+        "reason": "Hiya's public Number Reputation API documentation is oriented to registered business numbers and requires authority to represent third-party businesses, so it is not the first fit for arbitrary inbound Dutch lookups."
+      },
+      {
+        "source_id": "whoscall",
+        "decision": "defer",
+        "reason": "Whoscall advertises enterprise data routes, but its public materials do not establish Dutch coverage and field-level public-display terms as directly as the tellows partnership route."
+      }
+    ]
+  },
+  "primary_evidence": [
+    {
+      "url": "https://www.tellows.nl/",
+      "publisher": "tellows",
+      "claim": "The provider operates a Dutch-language caller-report service and advertises business API access to its database.",
+      "checked_at": "2026-08-31"
+    },
+    {
+      "url": "https://www.tellows.com/s/about-en/tellows-api-partnership-program",
+      "publisher": "tellows",
+      "claim": "The partnership page advertises Live and Scorelist APIs, country filters, scores, categories, comments, search counts, and integration into caller-protection products.",
+      "checked_at": "2026-08-31"
+    },
+    {
+      "url": "https://www.tellows.com/s/about-en/terms-of-use",
+      "publisher": "tellows",
+      "claim": "The provider describes its score as a user-generated ranking from one to nine and does not grant CallerSignal a reuse licence through public access alone.",
+      "checked_at": "2026-08-31"
+    },
+    {
+      "url": "https://blog.tellows.com/2014/03/tellows-app-android-ios-caller-identification/",
+      "publisher": "tellows",
+      "claim": "The provider's published caller-identification explanation describes scores seven through nine as its most untrustworthy range; an executed agreement must confirm current API semantics before mapping.",
+      "checked_at": "2026-08-31"
+    },
+    {
+      "url": "https://www.tellows.nl/s/about-nl/privacy",
+      "publisher": "tellows",
+      "claim": "The privacy policy confirms that submitted ratings and comments are used to classify phone numbers and documents data-subject rights and removal channels.",
+      "checked_at": "2026-08-31"
+    },
+    {
+      "url": "https://developer.hiya.com/docs/guides/voice-protection/number-reputation/get-started",
+      "publisher": "Hiya",
+      "claim": "The alternative API requires a service agreement and is publicly documented around registered business numbers and authorization to represent third-party companies.",
+      "checked_at": "2026-08-31"
+    }
+  ],
+  "proposed_contract": {
+    "integration_channel": "licensed_live_api",
+    "request_mode": "transient_point_lookup",
+    "subject_format": "e164",
+    "evidence_class": "licensed_reputation_observation",
+    "permitted_provider_fields": [
+      "opaque_source_record_id",
+      "reputation_score",
+      "category_label",
+      "observed_at"
+    ],
+    "prohibited_provider_fields": [
+      "caller_name",
+      "comment_text",
+      "comment_author",
+      "area",
+      "postal_code",
+      "lookup_count",
+      "raw_phone_inventory",
+      "raw_provider_payload",
+      "positive_safety_label"
+    ],
+    "negative_score_floor": 7,
+    "score_ceiling": 9,
+    "positive_score_policy": "discard_not_safe_evidence",
+    "category_policy": "allowlist_and_contract_mapping_required",
+    "no_match_policy": "insufficient_evidence",
+    "assessment_limit": "unverified_single_source_observation_only",
+    "storage": "no_plaintext_number_raw_response_or_lookup_history",
+    "logging": "metadata_only_without_number_or_response_body"
+  },
+  "activation_gates": [
+    {
+      "gate_id": "executed_agreement",
+      "status": "required",
+      "requirement": "CallerSignal and tellows must execute a provider agreement covering the exact product and intended public service."
+    },
+    {
+      "gate_id": "extraction_right",
+      "status": "required",
+      "requirement": "The agreement must permit automated point lookup of Dutch E.164 subjects through the documented API."
+    },
+    {
+      "gate_id": "cache_right",
+      "status": "required",
+      "requirement": "The agreement must state whether normalized aggregate observations may be cached and for exactly how long."
+    },
+    {
+      "gate_id": "derived_label_right",
+      "status": "required",
+      "requirement": "The agreement must permit CallerSignal's bounded mapping from provider score and category to an unverified evidence observation."
+    },
+    {
+      "gate_id": "public_display_right",
+      "status": "required",
+      "requirement": "The agreement must permit the minimized result to be displayed through public web, HTTP, CLI, and MCP surfaces."
+    },
+    {
+      "gate_id": "nl_territory",
+      "status": "required",
+      "requirement": "The agreement and technical product must explicitly include Netherlands data and Dutch end-user use."
+    },
+    {
+      "gate_id": "attribution_terms",
+      "status": "required",
+      "requirement": "Required provider attribution, deeplinks, branding, and explanatory language must be recorded before implementation."
+    },
+    {
+      "gate_id": "privacy_and_dpa",
+      "status": "required",
+      "requirement": "Controller roles, lawful basis, data-processing terms, minimization, transfers, retention, and security responsibilities require approval."
+    },
+    {
+      "gate_id": "correction_objection_deletion",
+      "status": "required",
+      "requirement": "CallerSignal needs executable correction, objection, deletion, appeal, and provider-removal routing for projected observations."
+    },
+    {
+      "gate_id": "audit_and_provenance",
+      "status": "required",
+      "requirement": "Every admitted observation must retain provider identity, retrieval time, opaque record identity, mapping version, and bounded digest."
+    },
+    {
+      "gate_id": "termination_and_purge",
+      "status": "required",
+      "requirement": "Contract termination, permission revocation, source takedown, cache purge, and derived-data deletion behavior must be explicit."
+    },
+    {
+      "gate_id": "credential_and_endpoint",
+      "status": "required",
+      "requirement": "A production API endpoint, scoped credential, authentication scheme, secret owner, and rotation process must be verified."
+    },
+    {
+      "gate_id": "fields_freshness_and_rate_limits",
+      "status": "required",
+      "requirement": "The response schema, exact field semantics, category mapping, freshness, rate limits, timeout, outage, and drift behavior must be fixed."
+    }
+  ],
+  "runtime": {
+    "enabled": false,
+    "registry_entry_present": false,
+    "adapter": "generic_authorized_reputation_feed",
+    "expected_network_requests": 0
+  },
+  "next_action": "Request a written tellows partnership proposal answering every activation gate; then submit the agreement references and field contract for named human privacy and commercial approval before any registry or runtime change."
+}

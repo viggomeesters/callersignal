@@ -294,6 +294,14 @@ Acceptance: authorized feeds admit only permitted aggregate status fields; disab
 
 Verify: `uv run pytest tests/integration/test_reputation_ingest.py tests/contracts/test_source_registry.py -q` (authorization, zero-request, normalization, rate, schedule, outage, drift, and stale proofs) and `make check`.
 
+### `product-nl-tellows-source-design`
+
+Depends on `product-authorized-reputation-ingestion`. Select and validate the first additional Dutch licensed-risk candidate without granting runtime authority. Record current primary-source evidence, provider fit, a minimized field and semantic boundary, every contractual and operational activation gate, and an explicit zero-request state.
+
+Acceptance: the tellows Live API route is selected for contract review because it advertises Dutch and country-filtered caller-protection integration; Hiya is explicitly deferred as an own/registered-business-number product fit; only opaque record ID, score, allowlisted category, and observation time are proposed; names, comments, location, lookup demand, bulk inventories, raw payloads, and positive safety claims remain prohibited; no provider registry entry, adapter, credential, or network request is activated.
+
+Verify: `uv run pytest tests/contracts/test_source_acquisition.py tests/contracts/test_caller_report_service_index.py tests/contracts/test_source_registry.py tests/integration/test_reputation_ingest.py -q` and `make check`.
+
 ### `product-source-coverage-surfaces`
 
 Depends on `product-acm-production-read-model` and `product-authorized-reputation-ingestion`. Expose one privacy-safe source-coverage projection through HTTP, CLI, stdio MCP, hosted MCP, transparency data, and the public website.
