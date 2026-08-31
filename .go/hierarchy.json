@@ -68,7 +68,8 @@
             "product-fcc-complaint-source-contract",
             "product-fcc-complaint-aggregate-import",
             "product-nl-tellows-source-design",
-            "product-acm-release-pin-refresh"
+            "product-acm-release-pin-refresh",
+            "product-vercel-deploy-input-boundary"
           ]
         },
         {

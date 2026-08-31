@@ -1,0 +1,37 @@
+# Local credentials and Vercel project state
+.env
+.env.*
+.secrets/
+secrets/
+credentials/
+.vercel/
+
+# Generated and private data; production rebuilds required catalogues
+downloads/
+public/
+private/
+data/private/
+data/generated/
+exports/
+recordings/
+screenshots/private/
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.db
+*.log
+
+# Local dependencies, environments, caches, and editor state
+node_modules/
+web/node_modules/
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.DS_Store
+.idea/
+.vscode/

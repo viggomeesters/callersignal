@@ -370,6 +370,14 @@ Acceptance: the current manifest-declared public-domain aggregate is proven live
 
 Verify: `make check` and strict public `repo-complete` validation.
 
+### `product-vercel-deploy-input-boundary`
+
+Depends on `product-fcc-reputation-release`. Harden manual Vercel deployment input so local secrets, project-link state, downloaded or generated catalogues, staged output, private artifacts, dependencies, logs, and caches cannot be uploaded. Keep tracked source, manifests, schemas, build scripts, API functions, and web source available so production rebuilds every required artifact remotely.
+
+Acceptance: `.vercelignore` contains every required sensitive and generated-state exclusion; repository tests enforce both the denylist and required source availability; a fresh manual deploy uploads the bounded source bundle, reaches `Ready`, owns the stable production alias, and passes live homepage, health, coverage, and MCP checks.
+
+Verify: `uv run pytest tests/test_repository_structure.py -q`, `make check`, and a production deployment with alias readback.
+
 ## Dependency overview
 
 ```mermaid

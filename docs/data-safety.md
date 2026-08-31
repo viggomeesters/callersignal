@@ -50,6 +50,8 @@ Scraping or republishing third-party caller databases without explicit permissio
 
 Licensed-source acquisition contracts are also fail-closed. A selected commercial candidate remains outside the enabled registry until a signed agreement and named privacy approval cover the exact territory, fields, processing, caching, public display, derived labels, attribution, correction, deletion, audit, termination, and purge behavior. The tellows NL candidate admits only an opaque source record identifier, a current risk score, an allowlisted category, and observation time. It explicitly rejects names, comments, authors, location, lookup volume, raw number inventories, raw responses, and positive safety labels. Selection alone must construct no adapter and generate no network request.
 
+Manual Vercel deployment has an independent input boundary in [`.vercelignore`](../.vercelignore). Local credentials, Vercel link state, downloaded or generated ACM/FCC catalogues, staged `public/` output, private data directories, database files, logs, dependencies, virtual environments, and caches never enter the upload bundle. Vercel receives the tracked source, manifests, schemas, build scripts, API functions, and web source; the authenticated remote build regenerates the required catalogues and bounded static output. A successful local build does not authorize uploading its generated runtime state.
+
 Official and licensed feeds are not blanket-approved either. Only the fields and evidence classes named in the registry may enter fixtures or public results. Expanding a source's fields, quantity, cadence, use case, or jurisdiction requires a new review before ingestion.
 
 ### Public complaint aggregates

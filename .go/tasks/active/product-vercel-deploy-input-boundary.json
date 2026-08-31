@@ -1,0 +1,65 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "product-vercel-deploy-input-boundary",
+  "project": "callersignal",
+  "order": 830,
+  "status": "active",
+  "summary": "Harden the Vercel deployment input boundary",
+  "description": "Prevent manual Vercel deployments from uploading ignored local secrets, generated ACM/FCC catalogues, staged public output, dependencies, caches, or private artifacts. Add a tested .vercelignore while preserving remote build generation and the existing production function bundle.",
+  "scope": {
+    "read": [
+      ".gitignore",
+      "vercel.json",
+      "scripts/stage_vercel_static.mjs",
+      "docs/data-safety.md",
+      "docs/web.md",
+      "tests/test_repository_structure.py"
+    ],
+    "modify": [
+      ".vercelignore",
+      "tests/test_repository_structure.py",
+      "docs/data-safety.md",
+      "docs/implementation-plan.md",
+      "scripts/validate_repository.py"
+    ]
+  },
+  "acceptance": [
+    "Vercel deployment input explicitly excludes local secrets, .vercel state, downloads, staged public output, private/generated data, dependencies, caches, logs, and database files.",
+    "Repository tests prove every required exclusion while tracked source, API, web, manifest, and build files remain available to the remote build.",
+    "A fresh manual deployment uploads only the bounded source bundle, rebuilds catalogues remotely, reaches Ready, owns the production alias, and passes live health, coverage, and MCP checks."
+  ],
+  "verification": [
+    "uv run pytest tests/test_repository_structure.py -q",
+    "make check"
+  ],
+  "depends_on": [
+    "product-fcc-reputation-release"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-31T14:51:14+02:00"
+  },
+  "work_status": "in_progress",
+  "review_status": "none",
+  "review_history": [],
+  "evidence": [],
+  "architecture": {
+    "impact": "material",
+    "scope_refs": [
+      "public-evidence-platform"
+    ],
+    "concerns": [
+      "integration",
+      "data",
+      "security"
+    ],
+    "decision_ids": [
+      "public-evidence-boundary-v1"
+    ],
+    "conformance_required": true,
+    "human_gate": "none"
+  }
+}

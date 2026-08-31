@@ -41,9 +41,9 @@ def test_public_repository_files_are_present() -> None:
 
 def test_task_graph_is_complete_and_acyclic() -> None:
     tasks = all_tasks()
-    assert len(tasks) == 49
+    assert len(tasks) == 50
     assert len([task for task in tasks if task.startswith("foundation-")]) == 6
-    assert len([task for task in tasks if task.startswith("product-")]) == 42
+    assert len([task for task in tasks if task.startswith("product-")]) == 43
 
     visiting: set[str] = set()
     visited: set[str] = set()
@@ -153,3 +153,42 @@ def test_public_safety_scan_excludes_generated_vercel_runtime() -> None:
     validator = (ROOT / "scripts/validate_repository.py").read_text(encoding="utf-8")
 
     assert '".vercel"' in validator
+
+
+def test_vercel_input_excludes_local_generated_and_sensitive_state() -> None:
+    entries = set((ROOT / ".vercelignore").read_text(encoding="utf-8").splitlines())
+
+    assert {
+        ".env",
+        ".env.*",
+        ".vercel/",
+        "downloads/",
+        "public/",
+        "private/",
+        "data/private/",
+        "data/generated/",
+        "exports/",
+        "recordings/",
+        "screenshots/private/",
+        "*.sqlite",
+        "*.sqlite3",
+        "*.db",
+        "*.log",
+        "node_modules/",
+        "web/node_modules/",
+        ".venv/",
+        "__pycache__/",
+        ".pytest_cache/",
+        ".ruff_cache/",
+    } <= entries
+    assert {
+        "api/",
+        "src/",
+        "web/",
+        "sources/",
+        "schemas/",
+        "scripts/",
+        "vercel.json",
+        "package.json",
+        "pyproject.toml",
+    }.isdisjoint(entries)
