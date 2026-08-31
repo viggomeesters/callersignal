@@ -1,0 +1,110 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "product-vercel-deploy-input-boundary",
+  "project": "callersignal",
+  "order": 830,
+  "status": "done",
+  "summary": "Harden the Vercel deployment input boundary",
+  "description": "Prevent manual Vercel deployments from uploading ignored local secrets, generated ACM/FCC catalogues, staged public output, dependencies, caches, or private artifacts. Add a tested .vercelignore while preserving remote build generation and the existing production function bundle.",
+  "scope": {
+    "read": [
+      ".gitignore",
+      "vercel.json",
+      "scripts/stage_vercel_static.mjs",
+      "docs/data-safety.md",
+      "docs/web.md",
+      "tests/test_repository_structure.py"
+    ],
+    "modify": [
+      ".vercelignore",
+      "tests/test_repository_structure.py",
+      "docs/data-safety.md",
+      "docs/implementation-plan.md",
+      "scripts/validate_repository.py"
+    ]
+  },
+  "acceptance": [
+    "Vercel deployment input explicitly excludes local secrets, .vercel state, downloads, staged public output, private/generated data, dependencies, caches, logs, and database files.",
+    "Repository tests prove every required exclusion while tracked source, API, web, manifest, and build files remain available to the remote build.",
+    "A fresh manual deployment uploads only the bounded source bundle, rebuilds catalogues remotely, reaches Ready, owns the production alias, and passes live health, coverage, and MCP checks."
+  ],
+  "verification": [
+    "uv run pytest tests/test_repository_structure.py -q",
+    "make check"
+  ],
+  "depends_on": [
+    "product-fcc-reputation-release"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-31T14:51:14+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-31T15:02:46+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved: .vercelignore reduced the real upload from 42.5MB to 99.4KB; 307 Python and 8 web tests plus all repository gates passed; architecture conformance has zero deviations/waivers; deployment dpl_FAj79hp7gfY5QC2kFgCHVVh6zuhu is Ready and aliased to callersignal.vercel.app; live homepage, health, coverage, ACM pin, tellows-disabled state, and MCP 0.4.0 readbacks passed.",
+      "transaction_id": "bfdca8aae2cd4fe18eb88334b8328447"
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-31T15:02:46+02:00",
+      "task_id": "product-vercel-deploy-input-boundary",
+      "agent": "codex",
+      "summary": "summary=Added and validated an independent Vercel deployment-input boundary, then proved a bounded remote rebuild and live production release; verification=uv run pytest tests/test_repository_structure.py -q && PATH=\"/opt/homebrew/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/viggomeesters/.codex/tmp/arg0/codex-arg041vxa5:/Users/viggomeesters/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/viggomeesters/.antigravity/antigravity/bin:/Users/viggomeesters/.bun/bin:/Users/viggomeesters/bin:/Users/viggomeesters/.local/bin:/Users/viggomeesters/.lucid/bin:/Users/viggomeesters/.opencode/bin:/opt/homebrew/opt/python/libexec/bin:/Users/viggomeesters/.cargo/bin:/Users/viggomeesters/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources\" make check && npx vercel@latest deploy --prod --yes --scope viggos-projects-eac4720a && live homepage/health/coverage/MCP readback; result=rc=0, 10 focused tests, 307 total Python tests, 8 web tests, all repository gates, 99.4KB upload, deployment dpl_FAj79hp7gfY5QC2kFgCHVVh6zuhu Ready, stable alias active, homepage 200, health ok, coverage 4 enabled sources, MCP 0.4.0; critic=approved after denylist/source-availability regression test, architecture conformance, zero deviations/waivers, recoverable local-state cleanup, Vercel inspect, and live API readback; self_reflect=no global agent/process change needed; the repo-specific deployment boundary defect was fixed and regression-tested in this task; runtime=codex-desktop; billing_mode=subscription",
+      "changed_files": [
+        ".go/architecture/events.jsonl"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/test_repository_structure.py -q && PATH=\"/opt/homebrew/bin:/usr/local/bin:/System/Cryptexes/App/usr/bin:/usr/bin:/bin:/usr/sbin:/sbin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/local/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/bin:/var/run/com.apple.security.cryptexd/codex.system/bootstrap/usr/appleinternal/bin:/pkg/env/global/bin:/Library/Apple/usr/bin:/opt/homebrew/bin:/Users/viggomeesters/.codex/tmp/arg0/codex-arg041vxa5:/Users/viggomeesters/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/override:/Users/viggomeesters/.antigravity/antigravity/bin:/Users/viggomeesters/.bun/bin:/Users/viggomeesters/bin:/Users/viggomeesters/.local/bin:/Users/viggomeesters/.lucid/bin:/Users/viggomeesters/.opencode/bin:/opt/homebrew/opt/python/libexec/bin:/Users/viggomeesters/.cargo/bin:/Users/viggomeesters/.cache/codex-runtimes/codex-primary-runtime/dependencies/bin/fallback:/Applications/ChatGPT.app/Contents/Resources\" make check && npx vercel@latest deploy --prod --yes --scope viggos-projects-eac4720a && live homepage/health/coverage/MCP readback",
+        "result": "rc=0, 10 focused tests, 307 total Python tests, 8 web tests, all repository gates, 99.4KB upload, deployment dpl_FAj79hp7gfY5QC2kFgCHVVh6zuhu Ready, stable alias active, homepage 200, health ok, coverage 4 enabled sources, MCP 0.4.0"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": "codex-desktop",
+        "model": null,
+        "billing_mode": "subscription"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "codex-desktop",
+        "billing_mode": "subscription",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after denylist/source-availability regression test, architecture conformance, zero deviations/waivers, recoverable local-state cleanup, Vercel inspect, and live API readback",
+        "skip_reason": null
+      }
+    }
+  ],
+  "architecture": {
+    "impact": "material",
+    "scope_refs": [
+      "public-evidence-platform"
+    ],
+    "concerns": [
+      "integration",
+      "data",
+      "security"
+    ],
+    "decision_ids": [
+      "public-evidence-boundary-v1"
+    ],
+    "conformance_required": true,
+    "human_gate": "none"
+  }
+}
