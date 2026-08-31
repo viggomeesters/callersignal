@@ -2,9 +2,9 @@
 
 ## Repository contract
 
-CallerSignal uses repo-local `.go` state as the source of truth. Never mirror workflow state to a vault or global task queue. Read `.go/project.json`, `.go/vision.json`, `.go/hierarchy.json`, `.go/architecture-principles.json`, the selected task, and `docs/vision.json` before changing product or foundation state.
+CallerSignal uses repo-local `.go` state as the source of truth. Never mirror workflow state to a vault or global task queue. Read `.go/project.json`, `.go/vision.json`, `.go/hierarchy.json`, `.go/architecture-principles.json`, the selected task, and `docs/vision.json` before changing product or foundation state. Resolve the highest annotated stack release and require `./go doctor` to report an exact compatible pinned ref, `ready=true`, and no development override before workflow mutation.
 
-Run `./go validate .`, `./go status .`, and `./go next .`. Claim exactly one dependency-eligible task. Its `scope.modify`, acceptance criteria, and verification commands bound the work. Preserve unrelated and user-owned changes; do not use destructive reset or broad cleanup.
+Run `./go validate .`, `./go status .`, and `./go next .`. Before claiming consequential work, use `./go architecture classify` and `./go architecture readback` when the task changes a source, public schema, integration, trust boundary, privacy or security behavior, storage, migration, quality attribute, or deployment data path. Material work must reference an accepted brief and governing decision; foundational work also requires a named human gate. Claim exactly one dependency-eligible task. Its `scope.modify`, acceptance criteria, verification commands, and applicable architecture bound the work. Preserve unrelated and user-owned changes; do not use destructive reset or broad cleanup.
 
 ## Required completion loop
 
@@ -12,8 +12,9 @@ Run `./go validate .`, `./go status .`, and `./go next .`. Claim exactly one dep
 2. Update tests, schemas, and public docs with contract changes.
 3. Run every task verification command and `make check`.
 4. Inspect the diff for secrets, personal data, unsafe fixtures, generated state, unfinished markers, and overclaimed maturity.
-5. Finish with structured evidence containing changed files, exact verification commands with `rc=0`, and critic outcome.
-6. Record an explicit approved or needs-fix review decision.
+5. For every applicable material scope, record architecture conformance against its principles, governing decisions, and measurable quality attributes; satisfy any declared human gate without impersonating a human approver.
+6. Finish with structured evidence containing changed files, exact verification commands with `rc=0`, architecture evidence where applicable, and critic outcome.
+7. Record an explicit approved or needs-fix review decision.
 
 Canonical task and ledger events belong in `.go`; locks, per-run directories, resume files, and latest-run snapshots do not. The pinned launcher may cache the workflow stack outside the repository.
 

@@ -84,3 +84,21 @@ Secrets and private data may exist only in ignored local configuration or an app
 `.go` is the source of truth for objectives, dependency order, acceptance, verification, evidence, and task state. `docs/vision.json` is the tested design contract. `make check` is the authoritative repository-local gate and validates both without depending on a hosted CI runtime.
 
 Decisions that change a public boundary, schema, source-reuse basis, storage model, moderation policy, or supported claim require an architecture decision record and corresponding updates to the vision contract and affected `.go` tasks.
+
+## Conditional architecture governance
+
+CallerSignal activates the Go workflow stack's conditional architecture lane for consequential work without retroactively turning ordinary or historical tasks into architecture ceremony. The accepted [`public-evidence-platform`](../.go/architecture/briefs/public-evidence-platform.json) brief governs the current read-only source-to-assessment pipeline, public contracts, cross-surface delivery, and deployment data boundary. Decision `public-evidence-boundary-v1` in `.go/decisions/events.jsonl` records why those components form one governed scope.
+
+New tasks are classified before claim when they change a source, public schema, integration, trust boundary, privacy or security behavior, storage, migration, quality attribute, or deployment data path. Local reversible changes continue through the normal task critic. Material changes must reference an accepted brief and governing decision and must record conformance for every applicable scope. Foundational changes also stop for a named human decision or risk-acceptance gate; an automation identity cannot satisfy it.
+
+The architecture brief makes five properties measurable: cross-surface semantic parity, rights-gated source activation, privacy-minimized public state, fail-closed uncertainty, and fresh-clone operability. Normal test and release evidence remains canonical in `.go/evidence/events.jsonl`; architecture events reference that proof rather than duplicating it. Deviations remain visible until repaired or covered by a reasoned, named-owner, time-bounded waiver.
+
+Operator readback is executable:
+
+```console
+./go architecture validate . --json
+./go architecture status . --json
+./go architecture readback . --task-id <task-id> --json
+```
+
+After verified material work, record one conformance event per applicable scope with explicit principle, decision, and quality-attribute checks. This architecture state governs future consequential changes; it deliberately does not backfill briefs, reviews, or waivers for already completed tasks.

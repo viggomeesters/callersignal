@@ -1,0 +1,148 @@
+{
+  "schema": "go-workflow.architecture-brief.v1",
+  "kind": "architecture_brief",
+  "id": "public-evidence-platform",
+  "project": "callersignal",
+  "title": "Public evidence and assessment boundary",
+  "status": "accepted",
+  "owner": "repository-maintainers",
+  "outcomes": [
+    "Every public surface renders one versioned country-aware evidence and assessment truth.",
+    "Every enabled source enters through a rights-approved, provenance-complete, privacy-minimized projection.",
+    "Uncertainty, source failure, spoofing risk, and absence of evidence remain explicit and actionable."
+  ],
+  "scope": {
+    "in": [
+      "Phone-number normalization, source evidence, assessment, campaign, and transparency contracts.",
+      "Rights-approved source manifests, ingestion adapters, generated read models, and freshness controls.",
+      "Read-only CLI, stdio MCP, hosted MCP, HTTP, web, and Vercel delivery boundaries.",
+      "Public safety language, source coverage, provenance, and operational failure semantics."
+    ],
+    "out": [
+      "Public first-party report collection and moderation.",
+      "Persistent private watches, organisation submissions, and outbound notifications.",
+      "Selection of a future mutable store, queue, analytics platform, identity provider, or licensed reputation vendor.",
+      "Subscriber, caller, current-provider, reachability, location, guilt, or safety attribution."
+    ],
+    "systems": [
+      "callersignal-domain-core",
+      "country-evidence-adapters",
+      "acm-and-fcc-catalog-builders",
+      "corpus-transparency-projection",
+      "cli-mcp-http-web-surfaces",
+      "vercel-read-only-runtime"
+    ],
+    "boundaries": [
+      "Untrusted phone input and explicit region context enter the normalization boundary.",
+      "External regulator, numbering, and complaint data enter only through reviewed source manifests and minimization builders.",
+      "Generated catalogues expose bounded evidence observations without raw source rows, holder data, plaintext inventories, or secrets.",
+      "The deterministic domain result crosses into transport and presentation adapters without a second verdict path.",
+      "Deployment secrets cross only into build and read-model authentication; they never reach clients, logs, fixtures, or Git."
+    ]
+  },
+  "stakeholders": [
+    {
+      "role": "people-and-agents-checking-calls",
+      "concerns": [
+        "A prominent but calibrated answer.",
+        "Traceable evidence, limitations, and a safe next action.",
+        "No unsupported identity or safety claim."
+      ],
+      "decision_rights": [
+        "Expect stable versioned public contracts and correction-aware evidence."
+      ]
+    },
+    {
+      "role": "repository-maintainers",
+      "concerns": [
+        "Cross-surface semantic parity.",
+        "Replaceable adapters and deterministic local gates.",
+        "Operationally supportable source and deployment boundaries."
+      ],
+      "decision_rights": [
+        "Approve reversible implementation choices within accepted architecture decisions.",
+        "Require a new decision when a material boundary or quality attribute changes."
+      ]
+    },
+    {
+      "role": "repository-owner-and-risk-owner",
+      "concerns": [
+        "Data rights, privacy, public safety, and hard-to-reverse commitments.",
+        "Named accountability for exceptions and residual risk."
+      ],
+      "decision_rights": [
+        "Approve new personal-data processing, public mutation, identity claims, providers, and foundational trust-boundary changes.",
+        "Grant or reject time-bounded architecture waivers and risk acceptance."
+      ]
+    },
+    {
+      "role": "source-publishers-and-regulators",
+      "concerns": [
+        "Licence and reuse compliance.",
+        "Accurate provenance, permitted fields, correction, and takedown behavior."
+      ],
+      "decision_rights": [
+        "Define source access and reuse terms that CallerSignal must honor."
+      ]
+    }
+  ],
+  "constraints": [
+    "A displayed number is evidence context and never proof of caller, subscriber, provider, reachability, guilt, or safety.",
+    "National input requires an explicit origin region; E.164 is the canonical internal number representation.",
+    "Lookup demand, numbering facts, identity claims, reports, source observations, and assessments remain separate.",
+    "Only documented official, public-domain, explicitly licensed, or approved first-party moderated evidence may affect reputation.",
+    "One unverified source cannot produce elevated_signals or official_warning, regardless of observation count.",
+    "Source failure, staleness, conflict, or unsupported coverage fails closed to a typed evidence gap.",
+    "CLI, MCP, HTTP, and web consume the shared domain contracts and may not calculate independent verdicts.",
+    "Raw complaints, plaintext or keyed number inventories, source-holder fields, lookup histories, credentials, and generated databases are excluded from Git and public responses.",
+    "Public mutation remains disabled until privacy, identity, consent, moderation, retention, correction, deletion, appeal, rate, and provider controls have executable proof."
+  ],
+  "quality_attributes": [
+    {
+      "id": "cross-surface-semantic-parity",
+      "scenario": "A canonical lookup, campaign, methodology, or coverage result is exposed through multiple public interfaces.",
+      "measure": "Contract or semantic mismatches across CLI, stdio MCP, hosted MCP, HTTP, and web in the canonical gate.",
+      "threshold": 0
+    },
+    {
+      "id": "rights-gated-source-activation",
+      "scenario": "A source is proposed or activated for numbering or reputation evidence.",
+      "measure": "Enabled sources missing validated authority, reuse basis, permitted fields, provenance, freshness, outage, correction, or takedown controls.",
+      "threshold": 0
+    },
+    {
+      "id": "privacy-minimized-public-state",
+      "scenario": "Repository state, build artifacts, public responses, screenshots, or release evidence are produced.",
+      "measure": "Committed or publicly exposed secrets, raw complaint rows, holder data, personal lookup history, or plaintext/keyed number inventories.",
+      "threshold": 0
+    },
+    {
+      "id": "fail-closed-uncertainty",
+      "scenario": "Input is ambiguous or invalid, a source is unavailable, stale, conflicting, unsupported, or returns no match.",
+      "measure": "Cases that produce a safety, identity, elevated, or official-warning claim without the required eligible evidence and typed residual uncertainty.",
+      "threshold": 0
+    },
+    {
+      "id": "fresh-clone-operability",
+      "scenario": "A new developer or agent clones the repository and validates the public read-only product.",
+      "measure": "Required repository, workflow, schema, documentation, asset, privacy, or test gates that cannot be run from documented prerequisites.",
+      "threshold": 0
+    }
+  ],
+  "risks": [
+    "Caller ID spoofing or number portability can make displayed-number evidence look like caller identity.",
+    "External source formats, semantics, licences, availability, or correction paths can change without notice.",
+    "Dynamic build-time catalogues can drift from committed transparency expectations if generation and parity gates diverge.",
+    "A transport or UI can accidentally create a second verdict path or overstate source confidence as safety probability.",
+    "Secrets, raw source rows, personal reports, or lookup histories can leak through generated artifacts, logs, screenshots, or workflow evidence.",
+    "Pressure for coverage can bypass source rights, minimization, moderation, or independent-corroboration controls."
+  ],
+  "open_questions": [
+    "Which explicitly licensed caller-reputation provider, if any, should become the next independent source?",
+    "Which identity, storage, queue, and notification architecture should govern future private watches and verified organisation submissions?",
+    "Which named human roles will approve future foundational trust-boundary changes and time-bounded risk waivers?"
+  ],
+  "decision_ids": [
+    "public-evidence-boundary-v1"
+  ]
+}

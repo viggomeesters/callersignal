@@ -1,0 +1,123 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "foundation-architecture-lane-adoption",
+  "project": "callersignal",
+  "status": "done",
+  "summary": "Adopt scoped architecture governance",
+  "description": "Materialize the v0.3.14 conditional architecture lane for CallerSignal with one accepted governing brief, one accepted decision, measurable quality attributes, agent operating guidance, and executable readback/conformance proof.",
+  "scope": {
+    "read": [
+      "AGENTS.md",
+      ".go/project.json",
+      ".go/vision.json",
+      ".go/architecture-principles.json",
+      ".go/decisions/events.jsonl",
+      "docs/vision.json",
+      "docs/architecture.md",
+      "docs/agent-contract.md"
+    ],
+    "modify": [
+      "AGENTS.md",
+      ".go/architecture/briefs/public-evidence-platform.json",
+      ".go/architecture/events.jsonl",
+      ".go/decisions/events.jsonl",
+      "docs/architecture.md",
+      "docs/agent-contract.md",
+      "scripts/validate_repository.py",
+      "tests/test_repository_structure.py"
+    ]
+  },
+  "acceptance": [
+    "The exact highest annotated go-workflow-stack release is pinned and doctor proves exact_ref, compatible, ready, and no development override.",
+    "An accepted public-evidence-platform architecture brief and accepted governing decision define bounded systems, trust boundaries, stakeholders, constraints, risks, and measurable quality attributes without backfilling historical architecture theater.",
+    "AGENTS and agent onboarding explain when to classify material work, resolve applicable architecture, record conformance, and stop for a named human gate.",
+    "Architecture validate, status, task readback, conformance, full repository gates, and clean public-safety checks pass."
+  ],
+  "verification": [
+    "PATH=\"/opt/homebrew/bin:$PATH\" ./go doctor . --platform auto --agent codex --json",
+    "PATH=\"/opt/homebrew/bin:$PATH\" ./go architecture validate . --json && PATH=\"/opt/homebrew/bin:$PATH\" ./go architecture status . --json && PATH=\"/opt/homebrew/bin:$PATH\" ./go architecture readback . --task-id foundation-architecture-lane-adoption --json",
+    "make check"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-31T11:48:48+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-31T11:57:50+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved after exact v0.3.14 doctor proof, valid architecture readback, passed conformance, make check rc=0, and manual diff/privacy review.",
+      "transaction_id": "87b25c925e594af1a20c6db504d90741"
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-31T11:57:50+02:00",
+      "task_id": "foundation-architecture-lane-adoption",
+      "agent": "codex",
+      "summary": "summary=Adopted the v0.3.14 conditional architecture lane with one scoped accepted brief and governing decision; verification=PATH=\"/opt/homebrew/bin:$PATH\" make check; result=rc=0, 300 Python tests, 8 web tests, workflow validation, documentation, assets, and public-safety gates passed; critic=approved after manual scope, architecture-theater, privacy, secrets, placeholders, generated-state, and claim review; self_reflect=no durable agent/process improvement needed, no skill/memory/config change; runtime=codex-desktop; billing_mode=subscription",
+      "changed_files": [
+        ".go/decisions/events.jsonl",
+        ".go/hierarchy.json",
+        ".go/runs/events.jsonl",
+        "AGENTS.md",
+        "docs/agent-contract.md",
+        "docs/architecture.md",
+        "scripts/validate_repository.py",
+        "tests/test_repository_structure.py",
+        ".go/architecture/briefs/public-evidence-platform.json",
+        ".go/architecture/events.jsonl",
+        ".go/tasks/active/foundation-architecture-lane-adoption.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "PATH=\"/opt/homebrew/bin:$PATH\" make check",
+        "result": "rc=0, 300 Python tests, 8 web tests, workflow validation, documentation, assets, and public-safety gates passed"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": "codex-desktop",
+        "model": null,
+        "billing_mode": "subscription"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "codex-desktop",
+        "billing_mode": "subscription",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after manual scope, architecture-theater, privacy, secrets, placeholders, generated-state, and claim review",
+        "skip_reason": null
+      }
+    }
+  ],
+  "architecture": {
+    "impact": "material",
+    "scope_refs": [
+      "public-evidence-platform"
+    ],
+    "concerns": [
+      "integration",
+      "data",
+      "security"
+    ],
+    "decision_ids": [
+      "public-evidence-boundary-v1"
+    ],
+    "conformance_required": true,
+    "human_gate": "none"
+  }
+}

@@ -41,8 +41,8 @@ def test_public_repository_files_are_present() -> None:
 
 def test_task_graph_is_complete_and_acyclic() -> None:
     tasks = all_tasks()
-    assert len(tasks) == 46
-    assert len([task for task in tasks if task.startswith("foundation-")]) == 5
+    assert len(tasks) == 47
+    assert len([task for task in tasks if task.startswith("foundation-")]) == 6
     assert len([task for task in tasks if task.startswith("product-")]) == 40
 
     visiting: set[str] = set()
