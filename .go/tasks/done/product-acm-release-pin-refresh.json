@@ -1,0 +1,120 @@
+{
+  "schema": "go-workflow.repo-local.task.v1",
+  "kind": "task",
+  "execution_mode": "agent",
+  "shareable_delivery": "none",
+  "id": "product-acm-release-pin-refresh",
+  "project": "callersignal",
+  "order": 735,
+  "status": "done",
+  "summary": "Refresh the validated ACM release pin",
+  "description": "Repair the production build after the official ACM ZIP digest changed while its validated schema, byte sizes, row counts, status counts, destination count, and newest mutation remained identical. Pin the newly retrieved official artifact, regenerate the privacy-safe transparency projection, and prove the full source and deployment build contract.",
+  "scope": {
+    "read": [
+      "sources/acm-bulk-manifest.json",
+      "scripts/build_acm_catalog.py",
+      "src/callersignal/acm_catalog.py",
+      "tests/unit/test_acm_catalog.py",
+      "docs/data-architecture.md",
+      "docs/source-rights.md",
+      "web/assets/transparency.json"
+    ],
+    "modify": [
+      "sources/acm-bulk-manifest.json",
+      "web/assets/transparency.json",
+      "docs/implementation-plan.md",
+      "scripts/validate_repository.py",
+      "tests/test_repository_structure.py"
+    ]
+  },
+  "acceptance": [
+    "The newly downloaded official ACM archive is pinned by its exact SHA-256 and retrieval time after full structural, schema, row, range, status, and catalogue expectation validation.",
+    "The privacy-safe transparency snapshot is reproducible from the refreshed manifest and no holder, subscriber, raw row, or private data enters Git.",
+    "The focused ACM tests, full repository gates, and Vercel production build pass."
+  ],
+  "verification": [
+    "uv run pytest tests/unit/test_acm_catalog.py tests/integration/test_transparency.py -q",
+    "make check",
+    "npm run build:vercel"
+  ],
+  "depends_on": [
+    "product-acm-bulk-import"
+  ],
+  "claim": {
+    "agent": "codex",
+    "claimed_at": "2026-08-31T14:43:26+02:00"
+  },
+  "work_status": "completed",
+  "review_status": "approved",
+  "review_history": [
+    {
+      "created_at": "2026-08-31T14:49:22+02:00",
+      "agent": "codex",
+      "status": "approved",
+      "evidence": "Approved: official ACM SHA c27fc4e0 pinned after complete build validation; expected coverage unchanged; 17 focused tests, 306 full Python tests, 8 web tests, public-safety gates, production-equivalent build, and architecture conformance passed.",
+      "transaction_id": "9a6d8119c5d3464fa5728027fbd5c9a2"
+    }
+  ],
+  "evidence": [
+    {
+      "schema": "go-workflow.finish-evidence.v1",
+      "created_at": "2026-08-31T14:49:22+02:00",
+      "task_id": "product-acm-release-pin-refresh",
+      "agent": "codex",
+      "summary": "summary=Refreshed the official ACM archive pin after safe checksum drift and proved the privacy-minimized production build; verification=uv run pytest tests/unit/test_acm_catalog.py tests/integration/test_transparency.py -q && PATH=\"/opt/homebrew/bin:$PATH\" make check && PATH=\"/opt/homebrew/bin:$PATH\" CALLERSIGNAL_REPUTATION_INDEX_KEY=<ephemeral-test-key> npm run build:vercel; result=rc=0, official archive schema and 74,984 rows validated, 17 focused tests, 306 total Python tests, 8 web tests, repository gates, and production-equivalent build passed; critic=approved after archive member, byte size, CSV size, row/range/status/destination/newest-mutation parity, holder-free projection, ignored generated data, and manifest/transparency reproducibility review; self_reflect=no durable agent/process improvement needed, no skill/memory/config change; runtime=codex-desktop; billing_mode=subscription",
+      "changed_files": [
+        ".go/architecture/events.jsonl",
+        ".go/hierarchy.json",
+        ".go/runs/events.jsonl",
+        "docs/implementation-plan.md",
+        "scripts/validate_repository.py",
+        "sources/acm-bulk-manifest.json",
+        "tests/test_repository_structure.py",
+        "web/assets/transparency.json",
+        ".go/tasks/active/product-acm-release-pin-refresh.json"
+      ],
+      "no_diff": false,
+      "verification": {
+        "command": "uv run pytest tests/unit/test_acm_catalog.py tests/integration/test_transparency.py -q && PATH=\"/opt/homebrew/bin:$PATH\" make check && PATH=\"/opt/homebrew/bin:$PATH\" CALLERSIGNAL_REPUTATION_INDEX_KEY=<ephemeral-test-key> npm run build:vercel",
+        "result": "rc=0, official archive schema and 74,984 rows validated, 17 focused tests, 306 total Python tests, 8 web tests, repository gates, and production-equivalent build passed"
+      },
+      "runtime": {
+        "agent": "codex",
+        "runtime": "codex-desktop",
+        "model": null,
+        "billing_mode": "subscription"
+      },
+      "usage": {
+        "schema": "go-workflow.usage-attribution.v1",
+        "runtime_kind": "codex-desktop",
+        "billing_mode": "subscription",
+        "owner": "codex",
+        "model": null,
+        "token_estimate": null,
+        "api_equivalent_cost_usd": null,
+        "provider_invoice_cost_usd": null,
+        "cost_label": "api_equivalent_not_invoice_cost"
+      },
+      "review": {
+        "outcome": "approved after archive member, byte size, CSV size, row/range/status/destination/newest-mutation parity, holder-free projection, ignored generated data, and manifest/transparency reproducibility review",
+        "skip_reason": null
+      }
+    }
+  ],
+  "architecture": {
+    "impact": "material",
+    "scope_refs": [
+      "public-evidence-platform"
+    ],
+    "concerns": [
+      "integration",
+      "data",
+      "security"
+    ],
+    "decision_ids": [
+      "public-evidence-boundary-v1"
+    ],
+    "conformance_required": true,
+    "human_gate": "none"
+  }
+}

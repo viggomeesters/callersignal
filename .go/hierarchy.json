@@ -67,7 +67,8 @@
             "product-authorized-reputation-ingestion",
             "product-fcc-complaint-source-contract",
             "product-fcc-complaint-aggregate-import",
-            "product-nl-tellows-source-design"
+            "product-nl-tellows-source-design",
+            "product-acm-release-pin-refresh"
           ]
         },
         {

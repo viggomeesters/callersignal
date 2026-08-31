@@ -117,11 +117,11 @@ def load_tasks() -> dict[str, dict]:
 
 def check_task_graph() -> None:
     tasks = load_tasks()
-    if len(tasks) != 48:
-        fail(f"expected 48 repository tasks, found {len(tasks)}")
+    if len(tasks) != 49:
+        fail(f"expected 49 repository tasks, found {len(tasks)}")
     product = {task_id for task_id in tasks if task_id.startswith("product-")}
     foundation = {task_id for task_id in tasks if task_id.startswith("foundation-")}
-    if len(product) != 41 or len(foundation) != 6:
+    if len(product) != 42 or len(foundation) != 6:
         fail(f"unexpected task split: {len(foundation)} foundation, {len(product)} product")
 
     visiting: set[str] = set()

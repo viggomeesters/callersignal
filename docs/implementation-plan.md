@@ -270,6 +270,14 @@ Acceptance: archive, checksum, schema, rows, ranges, and duplicate identifiers f
 
 Verify: `uv run pytest tests/unit/test_acm_catalog.py -q`, `make build-acm-catalog`, and `make check`.
 
+### `product-acm-release-pin-refresh`
+
+Depends on `product-acm-bulk-import`. Refresh the immutable ACM archive pin when the official ZIP digest changes, but only after the archive member, CSV schema, byte sizes, row and range validation, status counts, destination count, newest mutation, and privacy-minimized build all match reviewed expectations.
+
+Acceptance: the official HTTPS artifact has an exact reviewed digest and retrieval time; the generated range catalogue contains no holder or subscriber projection; the transparency snapshot is reproducible; checksum drift still fails closed; focused, repository, and production-build gates pass.
+
+Verify: `uv run pytest tests/unit/test_acm_catalog.py tests/integration/test_transparency.py -q`, `make check`, and `npm run build:vercel`.
+
 ### `product-reputation-status-contract`
 
 Depends on `product-caller-source-catalog`. Define source-neutral aggregate spam, phishing, scam, telemarketing, robocall, nuisance, and current-no-match observations under the existing calibrated four-state assessment contract.

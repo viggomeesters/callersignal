@@ -16,7 +16,7 @@
         ],
         "risk_capable": false,
         "runtime_status": "success",
-        "last_successful_ingest": "2026-08-29T11:23:00Z",
+        "last_successful_ingest": "2026-08-31T12:42:17Z",
         "freshness": "current",
         "freshness_max_age_seconds": 2592000,
         "gaps": []
@@ -80,7 +80,7 @@
           "acm_number_register"
         ],
         "risk_capable_sources": [],
-        "last_successful_ingest": "2026-08-29T11:23:00Z",
+        "last_successful_ingest": "2026-08-31T12:42:17Z",
         "freshness": "current",
         "gaps": [
           "no_risk_capable_source"
@@ -133,8 +133,8 @@
         }
       ],
       "destination_category_count": 44,
-      "source_sha256": "sha256:372478fa8f23eb49e9152074f2b4c09c321a1871dce404135777ba51ae163da0",
-      "retrieved_at": "2026-08-29T11:23:00Z",
+      "source_sha256": "sha256:c27fc4e0b69452036dea36db6e63a7779471048245ed4e37f561f1890ddf5f6c",
+      "retrieved_at": "2026-08-31T12:42:17Z",
       "source_newest_mutation_at": "2026-08-28T11:21:06Z",
       "freshness": "current",
       "gaps": [],
